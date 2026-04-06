@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import { Document, Types } from 'mongoose';
 
 // User types
@@ -346,14 +345,6 @@ export interface IOwnerPaymentSettings extends Document {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-}
-
-// Express Request with User
-export interface AuthRequest extends Request {
-  user?: IUser;
-  property?: IProperty;
-  staffAssignment?: IPropertyStaff;
-  accessLevel?: 'owner' | 'manager' | 'marketing' | 'technician' | 'guard' | 'cleaner' | 'admin';
 }
 
 // API Response types

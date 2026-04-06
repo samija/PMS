@@ -2,7 +2,7 @@
 
 ## What We've Built
 
-You now have a professional, enterprise-grade service layer implemented for your Property Management System. Here's what changed:
+You now have a professional, enterprise-grade service layer implemented for Enderase. Here's what changed:
 
 ### Files Created (11 new files)
 

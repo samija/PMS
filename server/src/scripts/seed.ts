@@ -14,7 +14,7 @@ import PropertyStaff from '../models/PropertyStaff';
 
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/pms';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/enderase';
 
 // Ethiopian property data based on real Addis Ababa market research
 const seedData = async () => {

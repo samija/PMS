@@ -6,7 +6,8 @@ import {
   createTestProperty,
   createTestUnit,
   createTestTenant,
-} from './helpers';
+} from './helpers.js';
+import paymentRoutes from '../../routes/paymentRoutes.js';
 
 setupTestDB();
 
@@ -16,7 +17,6 @@ describe('Payment API', () => {
   beforeAll(async () => {
     app = express();
     app.use(express.json());
-    const paymentRoutes = (await import('../../routes/paymentRoutes.js')).default;
     app.use('/api/payments', paymentRoutes);
     app.use((err: any, _req: any, res: any, _next: any) => {
       res.status(err.statusCode || 500).json({ success: false, message: err.message });

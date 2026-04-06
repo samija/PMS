@@ -1,4 +1,4 @@
-import { format, parseISO, isToday, isPast, isFuture } from 'date-fns';
+import { format, parseISO, isToday, isPast } from 'date-fns';
 import { CalendarIcon, Clock, AlertCircle, CheckCircle } from 'lucide-react';
 import Badge from '../ui/Badge';
 import { CalendarDay } from '../../types';

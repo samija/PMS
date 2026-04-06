@@ -29,7 +29,7 @@ export abstract class BasePaymentGateway implements IPaymentGateway {
    * Generate a unique transaction reference
    * Format: {PREFIX}-{TIMESTAMP}-{RANDOM}
    */
-  generateTransactionRef(prefix: string = 'PMS'): string {
+  generateTransactionRef(prefix: string = 'ENDER'): string {
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(2, 8).toUpperCase();
     return `${prefix}-${timestamp}-${random}`;

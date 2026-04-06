@@ -1,10 +1,10 @@
 # Payment Gateway Integration Guide
 
-This document provides comprehensive information about the multi-gateway payment integration implemented in the Property Management System (PMS).
+This document provides comprehensive information about the multi-gateway payment integration implemented in Enderase.
 
 ## Overview
 
-The PMS now supports multiple payment gateways:
+Enderase now supports multiple payment gateways:
 - **Chapa** - Ethiopian payment gateway (existing)
 - **Telebirr** - Ethio Telecom mobile money service (new)
 - **Santim Pay** - Payment aggregator supporting multiple methods (new)
@@ -356,7 +356,7 @@ For issues related to:
 - **Chapa:** developer@chapa.co
 - **Telebirr:** Ethio Telecom customer service
 - **Santim Pay:** info@santimpay.com
-- **PMS Integration:** Create an issue in the repository
+- **Enderase Integration:** Create an issue in the repository
 
 ## References
 

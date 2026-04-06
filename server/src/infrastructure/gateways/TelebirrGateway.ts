@@ -117,11 +117,11 @@ export class TelebirrGateway extends BasePaymentGateway {
     const signature = this.generateSignature(signParams);
 
     // Build full request payload
-    const telebirrPayload: TelebirrInitializePayload = {
+    const telebirrPayload = {
       ...signParams,
       appKey: this.appKey,
       sign: signature,
-    };
+    } as TelebirrInitializePayload;
 
     try {
       const response = await axios.post<TelebirrInitializeResponse>(

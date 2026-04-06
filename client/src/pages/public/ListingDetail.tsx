@@ -305,11 +305,11 @@ export default function ListingDetail() {
                 +251 911 123 456
               </a>
               <a
-                href="mailto:contact@pms.com"
+                href="mailto:contact@enderase.com"
                 className="flex items-center gap-3 text-gray-600 hover:text-primary-600"
               >
                 <Mail className="h-5 w-5" />
-                contact@pms.com
+                contact@enderase.com
               </a>
             </div>
           </Card>

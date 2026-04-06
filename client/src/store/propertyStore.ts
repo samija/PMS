@@ -22,7 +22,7 @@ export const usePropertyStore = create<PropertyState>()(
       clearSelectedProperty: () => set({ selectedProperty: null }),
     }),
     {
-      name: 'pms-property-context',
+      name: 'enderase-property-context',
     }
   )
 );

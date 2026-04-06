@@ -99,11 +99,12 @@ export interface MockPropertyData {
   waitingListType: string;
   createdAt: Date;
   updatedAt: Date;
+  save: jest.Mock;
 }
 
 export const createMockProperty = (overrides: Partial<MockPropertyData> = {}): MockPropertyData => {
   const now = new Date();
-  return {
+  const property: MockPropertyData = {
     _id: new Types.ObjectId(),
     ownerId: new Types.ObjectId(),
     name: 'Test Property',
@@ -124,8 +125,11 @@ export const createMockProperty = (overrides: Partial<MockPropertyData> = {}): M
     waitingListType: 'both',
     createdAt: now,
     updatedAt: now,
+    save: jest.fn(),
     ...overrides,
   };
+  property.save.mockResolvedValue(property);
+  return property;
 };
 
 export const createMockPropertyModel = () => {
@@ -404,13 +408,13 @@ export const createMockPaymentGateway = () => {
     initializePayment: jest.fn().mockResolvedValue({
       success: true,
       checkoutUrl: 'https://checkout.chapa.co/test-checkout',
-      transactionRef: 'PMS-test-tx-ref',
+      transactionRef: 'ENDER-test-tx-ref',
       gatewayReference: 'chapa-ref-123',
     }),
     verifyPayment: jest.fn().mockResolvedValue({
       success: true,
       status: 'success',
-      transactionRef: 'PMS-test-tx-ref',
+      transactionRef: 'ENDER-test-tx-ref',
       gatewayReference: 'chapa-ref-123',
       amount: 15000,
       currency: 'ETB',
@@ -418,12 +422,12 @@ export const createMockPaymentGateway = () => {
     }),
     verifyWebhookSignature: jest.fn().mockResolvedValue(true),
     parseWebhookData: jest.fn().mockReturnValue({
-      transactionRef: 'PMS-test-tx-ref',
+      transactionRef: 'ENDER-test-tx-ref',
       status: 'success',
       gatewayReference: 'chapa-ref-123',
       amount: 15000,
     }),
-    generateTransactionRef: jest.fn().mockReturnValue('PMS-test-tx-ref-' + Date.now()),
+    generateTransactionRef: jest.fn().mockReturnValue('ENDER-test-tx-ref-' + Date.now()),
   };
 };
 
@@ -456,6 +460,7 @@ export const createChainableDocumentQuery = <T>(result: T) => {
     limit: jest.fn().mockReturnThis(),
     select: jest.fn().mockResolvedValue(result),
     exec: jest.fn().mockResolvedValue(result),
+    then: jest.fn((resolve: (value: T) => any) => Promise.resolve(result).then(resolve)),
   };
   return chainable;
 };

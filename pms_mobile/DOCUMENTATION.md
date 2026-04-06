@@ -1,8 +1,8 @@
-# PMS Mobile - Documentation
+# Enderase Mobile - Documentation
 
 ## Overview
 
-PMS (Property Management System) is a Flutter mobile application for an Ethiopian-market property rental platform. It provides tenants and property owners mobile access to manage rentals, payments, maintenance, and notifications.
+Enderase is a Flutter mobile application for an Ethiopian-market property rental platform. It provides tenants and property owners mobile access to manage rentals, payments, maintenance, and notifications.
 
 **Tech Stack:** Flutter 3.x | Riverpod | GoRouter | Dio | Material 3 | Clean Architecture
 

@@ -86,11 +86,11 @@ describe('PaymentService', () => {
       mockUserModel.findById.mockResolvedValue(mockUser);
       mockPaymentModel.create.mockResolvedValue(mockCreatedPayment);
 
-      mockPaymentGateway.generateTransactionRef.mockReturnValue('PMS-test-tx-123');
+      mockPaymentGateway.generateTransactionRef.mockReturnValue('ENDER-test-tx-123');
       mockPaymentGateway.initializePayment.mockResolvedValue({
         success: true,
         checkoutUrl: 'https://checkout.example.com/pay',
-        transactionRef: 'PMS-test-tx-123',
+        transactionRef: 'ENDER-test-tx-123',
         gatewayReference: 'gateway-ref-123',
       });
 
@@ -187,7 +187,7 @@ describe('PaymentService', () => {
   });
 
   describe('verifyPayment', () => {
-    const txRef = 'PMS-test-tx-123';
+    const txRef = 'ENDER-test-tx-123';
 
     it('should successfully verify a completed payment', async () => {
       // Arrange
@@ -300,7 +300,12 @@ describe('PaymentService', () => {
         ownerId: new Types.ObjectId(ownerId),
       });
       const mockCreatedPayment = createMockPayment({
-        ...createManualPaymentData,
+        tenantId: new Types.ObjectId(createManualPaymentData.tenantId),
+        ownerId: new Types.ObjectId(createManualPaymentData.ownerId),
+        amount: createManualPaymentData.amount,
+        type: createManualPaymentData.type,
+        month: createManualPaymentData.month,
+        year: createManualPaymentData.year,
         status: 'completed',
         paymentMethod: 'manual',
       });
@@ -355,7 +360,11 @@ describe('PaymentService', () => {
       // Arrange
       const mockTenant = createMockTenant({ _id: new Types.ObjectId(tenantId) });
       const mockCreatedPayment = createMockPayment({
-        ...submitBankTransferData,
+        tenantId: new Types.ObjectId(submitBankTransferData.tenantId),
+        amount: submitBankTransferData.amount,
+        type: submitBankTransferData.type,
+        month: submitBankTransferData.month,
+        year: submitBankTransferData.year,
         status: 'pending',
         paymentMethod: 'bank_transfer',
         bankTransferApprovalStatus: 'pending_approval',
@@ -719,7 +728,7 @@ describe('PaymentService', () => {
 
   describe('handleWebhook', () => {
     const webhookData = {
-      tx_ref: 'PMS-test-tx-123',
+      tx_ref: 'ENDER-test-tx-123',
       status: 'success',
       reference: 'chapa-ref-123',
     };

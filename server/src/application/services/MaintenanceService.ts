@@ -184,7 +184,7 @@ export class MaintenanceService implements IMaintenanceService {
       throw new NotFoundError('Maintenance request', requestId);
     }
 
-    return request;
+    return request as unknown as IMaintenance;
   }
 
   /**

@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import logger from '../config/logger.js';
 
 interface EmailOptions {
   to: string;
@@ -15,7 +16,7 @@ const createTransporter = () => {
   const pass = process.env.SMTP_PASS;
 
   if (!host || !user || !pass) {
-    console.warn('Email configuration incomplete. Email notifications will be disabled.');
+    logger.warn('Email configuration incomplete. Email notifications will be disabled.');
     return null;
   }
 
@@ -42,11 +43,11 @@ export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
     }
 
     if (!transporter) {
-      console.log('Email transporter not configured. Skipping email:', options.subject);
+      logger.info('Email transporter not configured. Skipping email:', options.subject);
       return false;
     }
 
-    const from = process.env.EMAIL_FROM || 'noreply@pms.com';
+    const from = process.env.EMAIL_FROM || 'noreply@enderase.com';
 
     await transporter.sendMail({
       from,
@@ -56,10 +57,10 @@ export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
       text: options.text || options.html.replace(/<[^>]*>/g, ''),
     });
 
-    console.log('Email sent successfully to:', options.to);
+    logger.info('Email sent successfully to:', options.to);
     return true;
   } catch (error) {
-    console.error('Failed to send email:', error);
+    logger.error('Failed to send email:', error);
     return false;
   }
 };
@@ -128,10 +129,10 @@ export const getPaymentReminderTemplate = (data: {
 
           <p>Please ensure your payment is made on time to avoid any late fees.</p>
 
-          <p>Thank you,<br>Property Management System</p>
+          <p>Thank you,<br>Enderase</p>
         </div>
         <div class="footer">
-          <p>This is an automated message from PMS. Please do not reply to this email.</p>
+          <p>This is an automated message from Enderase. Please do not reply to this email.</p>
         </div>
       </div>
     </body>
@@ -201,10 +202,10 @@ export const getOverdueWarningTemplate = (data: {
 
           <p>If you have already made this payment, please disregard this notice and contact us with your payment receipt.</p>
 
-          <p>Thank you,<br>Property Management System</p>
+          <p>Thank you,<br>Enderase</p>
         </div>
         <div class="footer">
-          <p>This is an automated message from PMS. Please do not reply to this email.</p>
+          <p>This is an automated message from Enderase. Please do not reply to this email.</p>
         </div>
       </div>
     </body>

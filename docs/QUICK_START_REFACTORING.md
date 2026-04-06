@@ -1,6 +1,6 @@
 # Quick Start: Refactoring Guide
 
-This guide will help you start refactoring your PMS application in small, manageable steps.
+This guide will help you start refactoring your Enderase application in small, manageable steps.
 
 ## Step 1: Install Required Dependencies
 

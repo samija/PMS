@@ -119,7 +119,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-bold text-gray-900">
-                Why Property Owners Love PMS
+                Why Property Owners Love Enderase
               </h2>
               <p className="mt-4 text-lg text-gray-600">
                 Join thousands of property owners who have simplified their operations with our
@@ -219,7 +219,7 @@ export default function Home() {
             Ready to Transform Your Property Management?
           </h2>
           <p className="mt-4 text-lg text-primary-100">
-            Join PMS today and experience the easiest way to manage your properties.
+            Join Enderase today and experience the easiest way to manage your properties.
           </p>
           <div className="mt-8">
             <Link to="/register">

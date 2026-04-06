@@ -66,8 +66,8 @@ export class SubscriptionService implements ISubscriptionService {
 
     const plan = (owner as any).subscriptionPlan || 'free';
     const limits = this.getPlanLimits(plan);
-    const Unit = (await import('../../models/Unit.js')).default;
-    const unitCount = await Unit.countDocuments({ property: propertyId });
+    const UnitModel = (await import('../../models/Unit.js')).default as unknown as import('mongoose').Model<any>;
+    const unitCount = await UnitModel.countDocuments({ property: propertyId });
 
     return unitCount < limits.maxUnitsPerProperty;
   }
@@ -78,8 +78,8 @@ export class SubscriptionService implements ISubscriptionService {
 
     const plan = (user as any).subscriptionPlan || 'free';
     const limits = this.getPlanLimits(plan);
-    const PropertyStaff = (await import('../../models/PropertyStaff.js')).default;
-    const staffCount = await PropertyStaff.countDocuments({ ownerId });
+    const PropertyStaffModel = (await import('../../models/PropertyStaff.js')).default as unknown as import('mongoose').Model<any>;
+    const staffCount = await PropertyStaffModel.countDocuments({ ownerId });
 
     return staffCount < limits.maxStaff;
   }

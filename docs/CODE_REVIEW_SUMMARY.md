@@ -1,4 +1,4 @@
-# Code Review Summary - Property Management System
+# Code Review Summary - Enderase
 
 ## Critical Issues Fixed
 

@@ -1,10 +1,9 @@
-import { Response } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { IPayrollService } from '../domain/interfaces/IServices.js';
 
-export const generatePayroll = async (req: AuthRequest, res: Response): Promise<void> => {
+export const generatePayroll = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPayrollService>(TYPES.PayrollService);
     const { propertyId } = req.params;
@@ -17,7 +16,7 @@ export const generatePayroll = async (req: AuthRequest, res: Response): Promise<
   }
 };
 
-export const getPayrollRecords = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getPayrollRecords = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPayrollService>(TYPES.PayrollService);
     const { propertyId } = req.params;
@@ -36,7 +35,7 @@ export const getPayrollRecords = async (req: AuthRequest, res: Response): Promis
   }
 };
 
-export const getPayrollDetail = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getPayrollDetail = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPayrollService>(TYPES.PayrollService);
     const { propertyId, id } = req.params;
@@ -48,7 +47,7 @@ export const getPayrollDetail = async (req: AuthRequest, res: Response): Promise
   }
 };
 
-export const approvePayroll = async (req: AuthRequest, res: Response): Promise<void> => {
+export const approvePayroll = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPayrollService>(TYPES.PayrollService);
     const { propertyId, id } = req.params;
@@ -60,7 +59,7 @@ export const approvePayroll = async (req: AuthRequest, res: Response): Promise<v
   }
 };
 
-export const markPayrollAsPaid = async (req: AuthRequest, res: Response): Promise<void> => {
+export const markPayrollAsPaid = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPayrollService>(TYPES.PayrollService);
     const { propertyId, id } = req.params;

@@ -68,7 +68,7 @@ export class PaymentService implements IPaymentService {
     const paymentGateway = PaymentGatewayFactory.getGateway(gatewayType);
 
     // Generate unique transaction reference
-    const txRef = paymentGateway.generateTransactionRef('PMS');
+    const txRef = paymentGateway.generateTransactionRef('ENDER');
 
     // Create pending payment record
     const paymentData: any = {
@@ -111,7 +111,7 @@ export class PaymentService implements IPaymentService {
       callbackUrl: `${baseUrl}/api/payments/webhook/${gatewayType}`,
       returnUrl: `${frontendUrl}/payment/success?tx_ref=${txRef}`,
       customization: {
-        title: 'PMS Payment',
+        title: 'Enderase Payment',
         description: `${type} payment for ${month}/${year}`,
       },
     });
@@ -322,7 +322,7 @@ export class PaymentService implements IPaymentService {
       throw new NotFoundError('Payment', paymentId);
     }
 
-    return payment;
+    return payment as unknown as IPayment;
   }
 
   /**

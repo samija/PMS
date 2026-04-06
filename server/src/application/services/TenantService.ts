@@ -148,7 +148,7 @@ export class TenantService implements ITenantService {
       throw new NotFoundError('Tenant', tenantId);
     }
 
-    return tenant;
+    return tenant as unknown as ITenant;
   }
 
   async updateTenant(
@@ -235,7 +235,7 @@ export class TenantService implements ITenantService {
       throw new NotFoundError('Active tenancy');
     }
 
-    return tenant;
+    return tenant as unknown as ITenant;
   }
 
   // Document Management Methods

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Eye, MousePointer, Calendar, XCircle } from 'lucide-react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
+import Button from '../ui/Button';
 import { FeaturedBadge } from './FeaturedBadge';
 
 interface Promotion {
@@ -69,7 +69,7 @@ export const PromotionCard: React.FC<PromotionCardProps> = ({ promotion, onCance
 
       {promotion.isActive && !isExpired && onCancel && (
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={() => onCancel(promotion._id)}
           className="w-full text-red-600 border-red-200 hover:bg-red-50"

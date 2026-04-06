@@ -1,11 +1,10 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import User from '../models/User.js';
 import Tenant from '../models/Tenant.js';
 import Unit from '../models/Unit.js';
 import Property from '../models/Property.js';
 import Payment from '../models/Payment.js';
 import PaymentSchedule from '../models/PaymentSchedule.js';
-import { AuthRequest } from '../types/index.js';
 import { TenantService } from '../application/services/TenantService.js';
 import { PaymentScheduleService } from '../application/services/PaymentScheduleService.js';
 
@@ -13,7 +12,7 @@ import { PaymentScheduleService } from '../application/services/PaymentScheduleS
 const tenantService = new TenantService(User, Tenant, Unit, Property);
 const scheduleService = new PaymentScheduleService(PaymentSchedule, Payment, Tenant);
 
-export const createTenant = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const createTenant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
     if (!ownerId) {
@@ -51,7 +50,7 @@ export const createTenant = async (req: AuthRequest, res: Response, next: NextFu
   }
 };
 
-export const getTenants = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getTenants = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
     if (!ownerId) {
@@ -70,7 +69,7 @@ export const getTenants = async (req: AuthRequest, res: Response, next: NextFunc
   }
 };
 
-export const getTenant = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getTenant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const ownerId = req.user?._id.toString();
@@ -91,7 +90,7 @@ export const getTenant = async (req: AuthRequest, res: Response, next: NextFunct
   }
 };
 
-export const updateTenant = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const updateTenant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const ownerId = req.user?._id.toString();
@@ -113,7 +112,7 @@ export const updateTenant = async (req: AuthRequest, res: Response, next: NextFu
   }
 };
 
-export const terminateTenant = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const terminateTenant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const ownerId = req.user?._id.toString();
@@ -136,7 +135,7 @@ export const terminateTenant = async (req: AuthRequest, res: Response, next: Nex
 };
 
 // Tenant portal endpoints
-export const getMyTenancy = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getMyTenancy = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
 
@@ -157,7 +156,7 @@ export const getMyTenancy = async (req: AuthRequest, res: Response, next: NextFu
 };
 
 // Document management endpoints
-export const uploadDocument = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const uploadDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const { type, name } = req.body;
@@ -195,7 +194,7 @@ export const uploadDocument = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const getDocuments = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getDocuments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const ownerId = req.user?._id.toString();
@@ -216,7 +215,7 @@ export const getDocuments = async (req: AuthRequest, res: Response, next: NextFu
   }
 };
 
-export const deleteDocument = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const deleteDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id, docId } = req.params;
     const ownerId = req.user?._id.toString();

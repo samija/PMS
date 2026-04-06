@@ -2,14 +2,13 @@ import { Request, Response, NextFunction } from 'express';
 import Payment from '../models/Payment.js';
 import Tenant from '../models/Tenant.js';
 import User from '../models/User.js';
-import { AuthRequest } from '../types/index.js';
 import { PaymentService } from '../application/services/PaymentService.js';
 import { PaymentGatewayFactory } from '../infrastructure/factories/PaymentGatewayFactory.js';
 
 // Create service instance
 const paymentService = new PaymentService(Payment, Tenant, User);
 
-export const initializePayment = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const initializePayment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const result = await paymentService.initializePayment(req.body);
 
@@ -94,7 +93,7 @@ export const getAvailableGateways = async (req: Request, res: Response, next: Ne
   }
 };
 
-export const getPayments = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getPayments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
     const userRole = req.user?.role;
@@ -115,7 +114,7 @@ export const getPayments = async (req: AuthRequest, res: Response, next: NextFun
   }
 };
 
-export const getPayment = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getPayment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const payment = await paymentService.getPayment(id);
@@ -129,7 +128,7 @@ export const getPayment = async (req: AuthRequest, res: Response, next: NextFunc
   }
 };
 
-export const createManualPayment = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const createManualPayment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
 
@@ -153,7 +152,7 @@ export const createManualPayment = async (req: AuthRequest, res: Response, next:
   }
 };
 
-export const getPaymentStats = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getPaymentStats = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
 
@@ -174,7 +173,7 @@ export const getPaymentStats = async (req: AuthRequest, res: Response, next: Nex
   }
 };
 
-export const submitBankTransfer = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const submitBankTransfer = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const file = req.file as Express.Multer.File;
 
@@ -203,7 +202,7 @@ export const submitBankTransfer = async (req: AuthRequest, res: Response, next: 
   }
 };
 
-export const approvePayment = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const approvePayment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const approverId = req.user?._id.toString();
@@ -225,7 +224,7 @@ export const approvePayment = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const rejectPayment = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const rejectPayment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const approverId = req.user?._id.toString();
@@ -247,7 +246,7 @@ export const rejectPayment = async (req: AuthRequest, res: Response, next: NextF
   }
 };
 
-export const getPendingApprovalPayments = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getPendingApprovalPayments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
 
@@ -270,7 +269,7 @@ export const getPendingApprovalPayments = async (req: AuthRequest, res: Response
   }
 };
 
-export const getPaymentCalendar = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getPaymentCalendar = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
     const userRole = req.user?.role;
@@ -294,7 +293,7 @@ export const getPaymentCalendar = async (req: AuthRequest, res: Response, next: 
   }
 };
 
-export const getPaymentReminders = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getPaymentReminders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
     const userRole = req.user?.role;

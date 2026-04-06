@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Clock, ArrowRight } from 'lucide-react';
+import { CheckCircle, Clock } from 'lucide-react';
 import type { MaintenanceRequest } from '../../types';
 
 interface MaintenanceTimelineProps {

@@ -1,8 +1,8 @@
-# PMS Business Model - Revenue Strategy
+# Enderase Business Model - Revenue Strategy
 
 ## Executive Summary
 
-PMS (Property Management System) is a SaaS platform for the Ethiopian rental market, connecting property owners with tenants through digital property management, payment processing, and marketplace listings. Revenue comes from **subscription fees**, **transaction commissions**, **marketplace fees**, and **premium services**.
+Enderase is a SaaS property management platform for the Ethiopian rental market, connecting property owners with tenants through digital property management, payment processing, and marketplace listings. Revenue comes from **subscription fees**, **transaction commissions**, **marketplace fees**, and **premium services**.
 
 ---
 
@@ -23,15 +23,15 @@ PMS (Property Management System) is a SaaS platform for the Ethiopian rental mar
 
 | Method | Fee | Who Pays | Notes |
 |--------|-----|----------|-------|
-| **Chapa** | 1.5% of transaction | Tenant (passed through) | PMS earns markup over Chapa's base fee |
+| **Chapa** | 1.5% of transaction | Tenant (passed through) | Enderase earns markup over Chapa's base fee |
 | **Telebirr** | 1.0% of transaction | Tenant | Lower fee drives adoption |
 | **SantimPay** | 1.5% of transaction | Tenant | Alternative gateway |
 | **Bank Transfer** | Flat 25 ETB | Tenant | Manual verification fee |
-| **PMS Commission** | 0.5% on top | Built into gateway fee | PMS's margin on each transaction |
+| **Enderase Commission** | 0.5% on top | Built into gateway fee | Enderase's margin on each transaction |
 
 **Example:** A building with 50 units at avg. 8,000 ETB/month rent:
 - Monthly rent volume: 400,000 ETB
-- PMS commission (0.5%): 2,000 ETB/month per building
+- Enderase commission (0.5%): 2,000 ETB/month per building
 - Scale to 100 buildings: 200,000 ETB/month recurring
 
 ### 3. Listing Marketplace Fees (Growth Revenue)
@@ -61,7 +61,7 @@ PMS (Property Management System) is a SaaS platform for the Ethiopian rental mar
 
 - **Market Reports:** Sell rental market data (avg. rents by subcity, vacancy rates) to real estate developers and investors
 - **Advertising:** Allow moving companies, furniture stores, and home services to advertise to new tenants
-- **API Access:** Charge third-party apps to integrate with PMS data (real estate portals, fintech apps)
+- **API Access:** Charge third-party apps to integrate with Enderase data (real estate portals, fintech apps)
 
 ---
 
@@ -132,10 +132,10 @@ PMS (Property Management System) is a SaaS platform for the Ethiopian rental mar
 
 ### Acquisition Channels
 
-1. **Telegram Community** — Ethiopian landlords are active on Telegram. Create "PMS Landlords Ethiopia" group, share tips, drive signups.
+1. **Telegram Community** — Ethiopian landlords are active on Telegram. Create "Enderase Landlords Ethiopia" group, share tips, drive signups.
 2. **Referral Program** — Owner invites owner → both get 1 month free. Owner invites tenant → both get featured on marketplace.
 3. **Building Managers** — On-ground sales: visit apartment complexes, demo the app to building managers.
-4. **Real Estate Agents** — Partner with agents who can recommend PMS to their clients.
+4. **Real Estate Agents** — Partner with agents who can recommend Enderase to their clients.
 5. **Social Media** — Facebook, TikTok ads targeting "Ethiopian landlord", "rental in Addis Ababa".
 
 ---
@@ -144,7 +144,7 @@ PMS (Property Management System) is a SaaS platform for the Ethiopian rental mar
 
 1. **Ethiopian-first:** ETB currency, Chapa/Telebirr integration, Amharic language support
 2. **Mobile-first:** Tenants use phones, not laptops — the mobile app is the primary interface
-3. **Marketplace + Management:** Competitors do one or the other. PMS does both, creating a flywheel: more listings → more tenants → more owners → more listings
+3. **Marketplace + Management:** Competitors do one or the other. Enderase does both, creating a flywheel: more listings → more tenants → more owners → more listings
 4. **Payment integration:** Automated rent collection removes the #1 pain point for landlords
 5. **Low-cost:** 499 ETB/month is accessible to solo landlords earning 50,000+ ETB/month in rent
 
@@ -177,7 +177,7 @@ PMS (Property Management System) is a SaaS platform for the Ethiopian rental mar
 
 ## Summary
 
-PMS generates revenue through **4 complementary streams**:
+Enderase generates revenue through **4 complementary streams**:
 1. **Subscriptions** (predictable, recurring)
 2. **Payment fees** (scales with rent volume)
 3. **Marketplace fees** (scales with listings)

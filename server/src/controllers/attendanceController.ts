@@ -1,10 +1,9 @@
-import { Response } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { IAttendanceService } from '../domain/interfaces/IServices.js';
 
-export const checkIn = async (req: AuthRequest, res: Response): Promise<void> => {
+export const checkIn = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IAttendanceService>(TYPES.AttendanceService);
     const { propertyId } = req.params;
@@ -20,7 +19,7 @@ export const checkIn = async (req: AuthRequest, res: Response): Promise<void> =>
   }
 };
 
-export const checkOut = async (req: AuthRequest, res: Response): Promise<void> => {
+export const checkOut = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IAttendanceService>(TYPES.AttendanceService);
     const { propertyId } = req.params;
@@ -32,7 +31,7 @@ export const checkOut = async (req: AuthRequest, res: Response): Promise<void> =
   }
 };
 
-export const getDailyAttendance = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getDailyAttendance = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IAttendanceService>(TYPES.AttendanceService);
     const { propertyId } = req.params;
@@ -45,7 +44,7 @@ export const getDailyAttendance = async (req: AuthRequest, res: Response): Promi
   }
 };
 
-export const getMonthlyReport = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getMonthlyReport = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IAttendanceService>(TYPES.AttendanceService);
     const { propertyId } = req.params;
@@ -58,7 +57,7 @@ export const getMonthlyReport = async (req: AuthRequest, res: Response): Promise
   }
 };
 
-export const getEmployeeAttendance = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getEmployeeAttendance = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IAttendanceService>(TYPES.AttendanceService);
     const { id } = req.params;

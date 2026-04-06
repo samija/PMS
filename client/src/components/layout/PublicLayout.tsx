@@ -16,7 +16,7 @@ export default function PublicLayout() {
             <div className="flex items-center">
               <Link to="/" className="flex items-center space-x-2">
                 <Building2 className="h-8 w-8 text-primary-600" />
-                <span className="text-xl font-bold text-gray-900">PMS</span>
+                <span className="text-xl font-bold text-gray-900">Enderase</span>
               </Link>
             </div>
 
@@ -121,7 +121,7 @@ export default function PublicLayout() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <Building2 className="h-8 w-8 text-primary-400" />
-                <span className="text-xl font-bold">PMS</span>
+                <span className="text-xl font-bold">Enderase</span>
               </div>
               <p className="text-gray-400">
                 Modern property management system for landlords and tenants.
@@ -146,14 +146,14 @@ export default function PublicLayout() {
             <div>
               <h4 className="font-semibold mb-4">Contact</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>support@pms.com</li>
+                <li>support@enderase.com</li>
                 <li>+251 911 123 456</li>
                 <li>Addis Ababa, Ethiopia</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} PMS. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Enderase. All rights reserved.</p>
           </div>
         </div>
       </footer>

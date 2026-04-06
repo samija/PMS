@@ -1,10 +1,9 @@
-import { Response } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { IIncidentService } from '../domain/interfaces/IServices.js';
 
-export const reportIncident = async (req: AuthRequest, res: Response): Promise<void> => {
+export const reportIncident = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IIncidentService>(TYPES.IncidentService);
     const { propertyId } = req.params;
@@ -20,7 +19,7 @@ export const reportIncident = async (req: AuthRequest, res: Response): Promise<v
   }
 };
 
-export const getIncidents = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getIncidents = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IIncidentService>(TYPES.IncidentService);
     const { propertyId } = req.params;
@@ -39,7 +38,7 @@ export const getIncidents = async (req: AuthRequest, res: Response): Promise<voi
   }
 };
 
-export const getIncident = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getIncident = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IIncidentService>(TYPES.IncidentService);
     const { propertyId, id } = req.params;
@@ -51,7 +50,7 @@ export const getIncident = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const updateIncident = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateIncident = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IIncidentService>(TYPES.IncidentService);
     const { propertyId, id } = req.params;
@@ -63,7 +62,7 @@ export const updateIncident = async (req: AuthRequest, res: Response): Promise<v
   }
 };
 
-export const updateIncidentStatus = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateIncidentStatus = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IIncidentService>(TYPES.IncidentService);
     const { propertyId, id } = req.params;

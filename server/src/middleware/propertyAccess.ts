@@ -1,7 +1,7 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import Property from '../models/Property.js';
 import PropertyStaff from '../models/PropertyStaff.js';
-import { AuthRequest } from '../types/index.js';
+import logger from '../config/logger.js';
 
 /**
  * Check if user has access to a property
@@ -11,7 +11,7 @@ import { AuthRequest } from '../types/index.js';
  * - Staff: access to assigned properties
  */
 export const checkPropertyAccess = async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -56,7 +56,7 @@ export const checkPropertyAccess = async (
       message: 'You do not have access to this property',
     });
   } catch (error) {
-    console.error('Property access check error:', error);
+    logger.error('Property access check error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to verify property access',
@@ -69,7 +69,7 @@ export const checkPropertyAccess = async (
  * Only admin, owner, and managers can manage staff
  */
 export const canManageStaff = async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -91,7 +91,7 @@ export const canManageStaff = async (
  * Check specific permissions for staff
  */
 export const checkPermission = (requiredPermission: string) => {
-  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     const userRole = req.user?.role;
     const accessLevel = req.accessLevel;
 

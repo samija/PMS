@@ -2,10 +2,14 @@ import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import { Strategy as GoogleStrategy, StrategyOptions as GoogleStrategyOptions } from 'passport-google-oauth20';
 import User from '../models/User.js';
+import logger from './logger.js';
+
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required');
 
 const jwtOptions: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET || 'your-secret-key',
+  secretOrKey: JWT_SECRET,
 };
 
 // JWT Strategy
@@ -81,7 +85,7 @@ if (googleClientId && googleClientSecret && googleClientId !== 'your-google-clie
     )
   );
 } else {
-  console.log('Google OAuth not configured - skipping Google authentication setup');
+  logger.info('Google OAuth not configured - skipping Google authentication setup');
 }
 
 export default passport;

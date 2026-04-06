@@ -1,7 +1,6 @@
 import React from 'react';
-import { Clock, AlertTriangle, User, Wrench } from 'lucide-react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
+import { Clock, User } from 'lucide-react';
+import Card from '../ui/Card';
 import type { MaintenanceRequest } from '../../types';
 
 interface MaintenanceCardProps {

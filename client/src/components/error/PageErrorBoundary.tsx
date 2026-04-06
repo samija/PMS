@@ -2,14 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 import { ErrorBoundary } from './ErrorBoundary';
-import { Button } from '../ui/Button';
+import Button from '../ui/Button';
 
 interface PageErrorFallbackProps {
   error: Error | null;
   onReset: () => void;
 }
 
-const PageErrorFallback: React.FC<PageErrorFallbackProps> = ({ error, onReset }) => {
+export const PageErrorFallback: React.FC<PageErrorFallbackProps> = ({ error, onReset }) => {
   const navigate = useNavigate();
 
   return (

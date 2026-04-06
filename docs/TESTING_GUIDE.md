@@ -351,7 +351,7 @@ If you prefer a GUI, you can use Postman:
 ### Postman Collection Structure
 
 ```
-PMS API Tests
+Enderase API Tests
 ├── Auth
 │   ├── Register (Valid)
 │   ├── Register (Invalid - Validation)

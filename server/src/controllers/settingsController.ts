@@ -1,5 +1,4 @@
-import { Response, NextFunction } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response, NextFunction } from 'express';
 import { OwnerSettingsService } from '../application/services/OwnerSettingsService.js';
 import OwnerPaymentSettings from '../models/OwnerPaymentSettings.js';
 import { ETHIOPIAN_BANKS } from '../models/OwnerPaymentSettings.js';
@@ -11,7 +10,7 @@ const ownerSettingsService = new OwnerSettingsService(OwnerPaymentSettings);
  * Get owner's payment settings
  */
 export const getPaymentSettings = async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -41,7 +40,7 @@ export const getPaymentSettings = async (
  * Update owner's payment settings
  */
 export const updatePaymentSettings = async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -69,7 +68,7 @@ export const updatePaymentSettings = async (
  * Get owner's payment info for tenants
  */
 export const getOwnerPaymentInfo = async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -105,7 +104,7 @@ export const getOwnerPaymentInfo = async (
  * Get list of supported Ethiopian banks
  */
 export const getSupportedBanks = async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {

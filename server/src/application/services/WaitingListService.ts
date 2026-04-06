@@ -290,6 +290,6 @@ export class WaitingListService implements IWaitingListService {
       .sort({ appliedAt: -1 })
       .lean();
 
-    return applications;
+    return applications as unknown as IWaitingList[];
   }
 }

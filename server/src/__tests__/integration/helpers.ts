@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import jwt from 'jsonwebtoken';
+import User from '../../models/User.js';
+import Property from '../../models/Property.js';
+import Unit from '../../models/Unit.js';
+import Tenant from '../../models/Tenant.js';
 
 let mongoServer: MongoMemoryServer;
 
@@ -34,7 +38,6 @@ export const generateTestToken = (userId: string, role = 'owner', email = 'test@
 };
 
 export const createTestUser = async (overrides: Record<string, any> = {}) => {
-  const User = (await import('../../models/User.js')).default;
   const userData = {
     email: `test${Date.now()}@example.com`,
     password: 'Password123!',
@@ -49,7 +52,6 @@ export const createTestUser = async (overrides: Record<string, any> = {}) => {
 };
 
 export const createTestProperty = async (ownerId: string, overrides: Record<string, any> = {}) => {
-  const Property = (await import('../../models/Property.js')).default;
   return Property.create({
     ownerId,
     name: 'Test Property',
@@ -71,7 +73,6 @@ export const createTestProperty = async (ownerId: string, overrides: Record<stri
 };
 
 export const createTestUnit = async (propertyId: string, overrides: Record<string, any> = {}) => {
-  const Unit = (await import('../../models/Unit.js')).default;
   return Unit.create({
     property: propertyId,
     unitNumber: `U-${Date.now()}`,
@@ -98,7 +99,6 @@ export const createTestTenant = async (
   ownerId: string,
   overrides: Record<string, any> = {}
 ) => {
-  const Tenant = (await import('../../models/Tenant.js')).default;
   return Tenant.create({
     userId,
     propertyId,

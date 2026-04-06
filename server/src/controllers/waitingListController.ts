@@ -1,14 +1,13 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import WaitingList from '../models/WaitingList.js';
 import Property from '../models/Property.js';
 import Unit from '../models/Unit.js';
-import { AuthRequest } from '../types/index.js';
 import { WaitingListService } from '../application/services/WaitingListService.js';
 
 // Create service instance
 const waitingListService = new WaitingListService(WaitingList, Property, Unit);
 
-export const applyToWaitingList = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const applyToWaitingList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const applicantId = req.user?._id.toString();
 
@@ -32,7 +31,7 @@ export const applyToWaitingList = async (req: AuthRequest, res: Response, next: 
   }
 };
 
-export const getWaitingList = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getWaitingList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
 
@@ -52,7 +51,7 @@ export const getWaitingList = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const offerUnit = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const offerUnit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const ownerId = req.user?._id.toString();
@@ -78,7 +77,7 @@ export const offerUnit = async (req: AuthRequest, res: Response, next: NextFunct
   }
 };
 
-export const respondToOffer = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const respondToOffer = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const applicantId = req.user?._id.toString();
@@ -104,7 +103,7 @@ export const respondToOffer = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const updateWaitingListStatus = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const updateWaitingListStatus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const ownerId = req.user?._id.toString();
@@ -130,7 +129,7 @@ export const updateWaitingListStatus = async (req: AuthRequest, res: Response, n
   }
 };
 
-export const getMyApplications = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getMyApplications = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const applicantId = req.user?._id.toString();
 

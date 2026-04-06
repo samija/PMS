@@ -1,10 +1,9 @@
-import { Response } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { IGuardService } from '../domain/interfaces/IServices.js';
 
-export const createShift = async (req: AuthRequest, res: Response): Promise<void> => {
+export const createShift = async (req: Request, res: Response): Promise<void> => {
   try {
     const guardService = container.get<IGuardService>(TYPES.GuardService);
     const { propertyId } = req.params;
@@ -30,7 +29,7 @@ export const createShift = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const getShifts = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getShifts = async (req: Request, res: Response): Promise<void> => {
   try {
     const guardService = container.get<IGuardService>(TYPES.GuardService);
     const { propertyId } = req.params;
@@ -55,7 +54,7 @@ export const getShifts = async (req: AuthRequest, res: Response): Promise<void> 
   }
 };
 
-export const updateShift = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateShift = async (req: Request, res: Response): Promise<void> => {
   try {
     const guardService = container.get<IGuardService>(TYPES.GuardService);
     const { propertyId, shiftId } = req.params;
@@ -77,7 +76,7 @@ export const updateShift = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const deleteShift = async (req: AuthRequest, res: Response): Promise<void> => {
+export const deleteShift = async (req: Request, res: Response): Promise<void> => {
   try {
     const guardService = container.get<IGuardService>(TYPES.GuardService);
     const { propertyId, shiftId } = req.params;
@@ -97,7 +96,7 @@ export const deleteShift = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const getWeeklySchedule = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getWeeklySchedule = async (req: Request, res: Response): Promise<void> => {
   try {
     const guardService = container.get<IGuardService>(TYPES.GuardService);
     const { propertyId } = req.params;
@@ -117,7 +116,7 @@ export const getWeeklySchedule = async (req: AuthRequest, res: Response): Promis
   }
 };
 
-export const getGuardPosts = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getGuardPosts = async (req: Request, res: Response): Promise<void> => {
   try {
     const guardService = container.get<IGuardService>(TYPES.GuardService);
     const { propertyId } = req.params;

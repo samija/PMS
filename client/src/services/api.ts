@@ -46,16 +46,16 @@ export const propertyAPI = {
   getAll: (params?: { page?: number; limit?: number; type?: string }) =>
     api.get('/properties', { params }),
   getOne: (id: string) => api.get(`/properties/${id}`),
-  create: (data: any) => api.post('/properties', data),
-  update: (id: string, data: any) => api.put(`/properties/${id}`, data),
+  create: (data: Record<string, unknown>) => api.post('/properties', data),
+  update: (id: string, data: Record<string, unknown>) => api.put(`/properties/${id}`, data),
   delete: (id: string) => api.delete(`/properties/${id}`),
   toggleListing: (id: string) => api.patch(`/properties/${id}/listing`),
   // Units
-  addUnit: (propertyId: string, data: any) =>
+  addUnit: (propertyId: string, data: Record<string, unknown>) =>
     api.post(`/properties/${propertyId}/units`, data),
-  getUnits: (propertyId: string, params?: any) =>
+  getUnits: (propertyId: string, params?: Record<string, unknown>) =>
     api.get(`/properties/${propertyId}/units`, { params }),
-  updateUnit: (propertyId: string, unitId: string, data: any) =>
+  updateUnit: (propertyId: string, unitId: string, data: Record<string, unknown>) =>
     api.put(`/properties/${propertyId}/units/${unitId}`, data),
   deleteUnit: (propertyId: string, unitId: string) =>
     api.delete(`/properties/${propertyId}/units/${unitId}`),
@@ -90,8 +90,8 @@ export const tenantAPI = {
   getAll: (params?: { page?: number; limit?: number; status?: string; propertyId?: string }) =>
     api.get('/tenants', { params }),
   getOne: (id: string) => api.get(`/tenants/${id}`),
-  create: (data: any) => api.post('/tenants', data),
-  update: (id: string, data: any) => api.put(`/tenants/${id}`, data),
+  create: (data: Record<string, unknown>) => api.post('/tenants', data),
+  update: (id: string, data: Record<string, unknown>) => api.put(`/tenants/${id}`, data),
   terminate: (id: string) => api.post(`/tenants/${id}/terminate`),
   getMyTenancy: () => api.get('/tenants/my/tenancy'),
   // Documents
@@ -111,14 +111,14 @@ export const tenantAPI = {
 
 // Payments
 export const paymentAPI = {
-  getAll: (params?: any) => api.get('/payments', { params }),
+  getAll: (params?: Record<string, unknown>) => api.get('/payments', { params }),
   getOne: (id: string) => api.get(`/payments/${id}`),
-  initialize: (data: any) => api.post('/payments/initialize', data),
+  initialize: (data: Record<string, unknown>) => api.post('/payments/initialize', data),
   verify: (txRef: string) => api.get(`/payments/verify/${txRef}`),
-  createManual: (data: any) => api.post('/payments/manual', data),
+  createManual: (data: Record<string, unknown>) => api.post('/payments/manual', data),
   getStats: (year?: number) => api.get('/payments/stats/summary', { params: { year } }),
   // Bank transfer
-  submitBankTransfer: (data: any, receiptFile: File) => {
+  submitBankTransfer: (data: { tenantId: string; amount: number; type: string; month: number; year: number; dueDate?: string }, receiptFile: File) => {
     const formData = new FormData();
     formData.append('tenantId', data.tenantId);
     formData.append('amount', data.amount.toString());
@@ -131,15 +131,15 @@ export const paymentAPI = {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
-  getPendingApproval: (params?: any) => api.get('/payments/pending-approval', { params }),
+  getPendingApproval: (params?: Record<string, unknown>) => api.get('/payments/pending-approval', { params }),
   approvePayment: (id: string, notes?: string) => api.patch(`/payments/${id}/approve`, { notes }),
   rejectPayment: (id: string, notes?: string) => api.patch(`/payments/${id}/reject`, { notes }),
 };
 
 // Waiting List
 export const waitingListAPI = {
-  getAll: (params?: any) => api.get('/waitlist', { params }),
-  apply: (data: any) => api.post('/waitlist/apply', data),
+  getAll: (params?: Record<string, unknown>) => api.get('/waitlist', { params }),
+  apply: (data: Record<string, unknown>) => api.post('/waitlist/apply', data),
   offerUnit: (id: string, data: { unitId: string; expiresInDays?: number }) =>
     api.post(`/waitlist/${id}/offer`, data),
   respond: (id: string, accept: boolean) =>
@@ -151,13 +151,13 @@ export const waitingListAPI = {
 
 // Maintenance
 export const maintenanceAPI = {
-  getAll: (params?: any) => api.get('/maintenance', { params }),
+  getAll: (params?: Record<string, unknown>) => api.get('/maintenance', { params }),
   getOne: (id: string) => api.get(`/maintenance/${id}`),
-  create: (data: any) => api.post('/maintenance', data),
+  create: (data: Record<string, unknown>) => api.post('/maintenance', data),
   updateStatus: (id: string, status: string, note?: string) =>
     api.patch(`/maintenance/${id}/status`, { status, note }),
-  assign: (id: string, data: any) => api.post(`/maintenance/${id}/assign`, data),
-  complete: (id: string, data: any) => api.post(`/maintenance/${id}/complete`, data),
+  assign: (id: string, data: Record<string, unknown>) => api.post(`/maintenance/${id}/assign`, data),
+  complete: (id: string, data: Record<string, unknown>) => api.post(`/maintenance/${id}/complete`, data),
   submitFeedback: (id: string, rating: number, feedback?: string) =>
     api.post(`/maintenance/${id}/feedback`, { rating, feedback }),
   getStats: () => api.get('/maintenance/stats/summary'),
@@ -165,7 +165,7 @@ export const maintenanceAPI = {
 
 // Listings (Public)
 export const listingAPI = {
-  getAll: (params?: any) => api.get('/listings', { params }),
+  getAll: (params?: Record<string, unknown>) => api.get('/listings', { params }),
   getOne: (id: string) => api.get(`/listings/${id}`),
   getFeatured: () => api.get('/listings/featured'),
   getUnits: (id: string) => api.get(`/listings/${id}/units`),

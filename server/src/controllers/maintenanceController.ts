@@ -1,15 +1,14 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import Maintenance from '../models/Maintenance.js';
 import Tenant from '../models/Tenant.js';
 import Property from '../models/Property.js';
 import PropertyStaff from '../models/PropertyStaff.js';
-import { AuthRequest } from '../types/index.js';
 import { MaintenanceService } from '../application/services/MaintenanceService.js';
 
 // Create service instance
 const maintenanceService = new MaintenanceService(Maintenance, Tenant, Property, PropertyStaff);
 
-export const createMaintenanceRequest = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const createMaintenanceRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
 
@@ -33,7 +32,7 @@ export const createMaintenanceRequest = async (req: AuthRequest, res: Response, 
   }
 };
 
-export const getMaintenanceRequests = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getMaintenanceRequests = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
     const userRole = req.user?.role;
@@ -54,7 +53,7 @@ export const getMaintenanceRequests = async (req: AuthRequest, res: Response, ne
   }
 };
 
-export const getMaintenanceRequest = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getMaintenanceRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const request = await maintenanceService.getMaintenanceRequest(id);
@@ -68,7 +67,7 @@ export const getMaintenanceRequest = async (req: AuthRequest, res: Response, nex
   }
 };
 
-export const updateMaintenanceStatus = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const updateMaintenanceStatus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const userId = req.user?._id.toString();
@@ -94,7 +93,7 @@ export const updateMaintenanceStatus = async (req: AuthRequest, res: Response, n
   }
 };
 
-export const assignTechnician = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const assignTechnician = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const ownerId = req.user?._id.toString();
@@ -120,7 +119,7 @@ export const assignTechnician = async (req: AuthRequest, res: Response, next: Ne
   }
 };
 
-export const completeMaintenanceRequest = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const completeMaintenanceRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const userId = req.user?._id.toString();
@@ -146,7 +145,7 @@ export const completeMaintenanceRequest = async (req: AuthRequest, res: Response
   }
 };
 
-export const submitFeedback = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const submitFeedback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const userId = req.user?._id.toString();
@@ -172,7 +171,7 @@ export const submitFeedback = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const getMaintenanceStats = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getMaintenanceStats = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
 

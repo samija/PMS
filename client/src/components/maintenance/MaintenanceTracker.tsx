@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Wrench, AlertTriangle, CheckCircle, Clock, Filter } from 'lucide-react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
 import { MaintenanceCard } from './MaintenanceCard';
 import { MaintenanceTimeline } from './MaintenanceTimeline';
-import { Modal } from '../ui/Modal';
+import Modal from '../ui/Modal';
 import { useMaintenanceTracking } from '../../hooks/useMaintenanceTracking';
 import type { MaintenanceRequest } from '../../types';
 

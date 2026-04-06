@@ -1,10 +1,9 @@
-import { Response } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { ILeaveService } from '../domain/interfaces/IServices.js';
 
-export const submitLeaveRequest = async (req: AuthRequest, res: Response): Promise<void> => {
+export const submitLeaveRequest = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<ILeaveService>(TYPES.LeaveService);
     const data = await service.submitRequest(req.body);
@@ -15,7 +14,7 @@ export const submitLeaveRequest = async (req: AuthRequest, res: Response): Promi
   }
 };
 
-export const getLeaveRequests = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getLeaveRequests = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<ILeaveService>(TYPES.LeaveService);
     const { employeeId, propertyId, status, page, limit } = req.query;
@@ -33,7 +32,7 @@ export const getLeaveRequests = async (req: AuthRequest, res: Response): Promise
   }
 };
 
-export const approveLeaveRequest = async (req: AuthRequest, res: Response): Promise<void> => {
+export const approveLeaveRequest = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<ILeaveService>(TYPES.LeaveService);
     const { id } = req.params;
@@ -45,7 +44,7 @@ export const approveLeaveRequest = async (req: AuthRequest, res: Response): Prom
   }
 };
 
-export const rejectLeaveRequest = async (req: AuthRequest, res: Response): Promise<void> => {
+export const rejectLeaveRequest = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<ILeaveService>(TYPES.LeaveService);
     const { id } = req.params;
@@ -58,7 +57,7 @@ export const rejectLeaveRequest = async (req: AuthRequest, res: Response): Promi
   }
 };
 
-export const cancelLeaveRequest = async (req: AuthRequest, res: Response): Promise<void> => {
+export const cancelLeaveRequest = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<ILeaveService>(TYPES.LeaveService);
     const { id } = req.params;
@@ -70,7 +69,7 @@ export const cancelLeaveRequest = async (req: AuthRequest, res: Response): Promi
   }
 };
 
-export const getLeaveBalance = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getLeaveBalance = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<ILeaveService>(TYPES.LeaveService);
     const { id } = req.params;

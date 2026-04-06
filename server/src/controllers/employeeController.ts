@@ -1,10 +1,9 @@
-import { Response } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { IEmployeeService } from '../domain/interfaces/IServices.js';
 
-export const createEmployee = async (req: AuthRequest, res: Response): Promise<void> => {
+export const createEmployee = async (req: Request, res: Response): Promise<void> => {
   try {
     const employeeService = container.get<IEmployeeService>(TYPES.EmployeeService);
     const data = req.body;
@@ -25,7 +24,7 @@ export const createEmployee = async (req: AuthRequest, res: Response): Promise<v
   }
 };
 
-export const getEmployees = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getEmployees = async (req: Request, res: Response): Promise<void> => {
   try {
     const employeeService = container.get<IEmployeeService>(TYPES.EmployeeService);
     const { page, limit, department, status, search } = req.query;
@@ -53,7 +52,7 @@ export const getEmployees = async (req: AuthRequest, res: Response): Promise<voi
   }
 };
 
-export const getEmployee = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getEmployee = async (req: Request, res: Response): Promise<void> => {
   try {
     const employeeService = container.get<IEmployeeService>(TYPES.EmployeeService);
     const { id } = req.params;
@@ -73,7 +72,7 @@ export const getEmployee = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const updateEmployee = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateEmployee = async (req: Request, res: Response): Promise<void> => {
   try {
     const employeeService = container.get<IEmployeeService>(TYPES.EmployeeService);
     const { id } = req.params;
@@ -95,7 +94,7 @@ export const updateEmployee = async (req: AuthRequest, res: Response): Promise<v
   }
 };
 
-export const updateEmployeeStatus = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateEmployeeStatus = async (req: Request, res: Response): Promise<void> => {
   try {
     const employeeService = container.get<IEmployeeService>(TYPES.EmployeeService);
     const { id } = req.params;
@@ -117,7 +116,7 @@ export const updateEmployeeStatus = async (req: AuthRequest, res: Response): Pro
   }
 };
 
-export const addEmployeeDocument = async (req: AuthRequest, res: Response): Promise<void> => {
+export const addEmployeeDocument = async (req: Request, res: Response): Promise<void> => {
   try {
     const employeeService = container.get<IEmployeeService>(TYPES.EmployeeService);
     const { id } = req.params;

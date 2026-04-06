@@ -2,13 +2,14 @@ import multer from 'multer';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import cloudinary from '../config/cloudinary.js';
 import { Request } from 'express';
+import logger from '../config/logger.js';
 
 // Storage for property images
 const propertyStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req: Request, file: Express.Multer.File) => {
     return {
-      folder: 'pms/properties',
+      folder: 'enderase/properties',
       allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
       transformation: [{ width: 1200, height: 800, crop: 'limit' }],
     };
@@ -20,7 +21,7 @@ const unitStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req: Request, file: Express.Multer.File) => {
     return {
-      folder: 'pms/units',
+      folder: 'enderase/units',
       allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
       transformation: [{ width: 1200, height: 800, crop: 'limit' }],
     };
@@ -32,7 +33,7 @@ const receiptStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req: Request, file: Express.Multer.File) => {
     return {
-      folder: 'pms/receipts',
+      folder: 'enderase/receipts',
       allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'pdf'],
       transformation: [{ width: 1500, height: 2000, crop: 'limit' }],
     };
@@ -45,7 +46,7 @@ const tenantDocumentStorage = new CloudinaryStorage({
   params: async (req: Request, file: Express.Multer.File) => {
     const isPdf = file.mimetype === 'application/pdf';
     return {
-      folder: 'pms/tenant-documents',
+      folder: 'enderase/tenant-documents',
       allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'pdf'],
       resource_type: isPdf ? 'raw' : 'image',
       transformation: isPdf ? [] : [{ width: 1500, height: 2000, crop: 'limit' }],
@@ -113,11 +114,11 @@ export const deleteCloudinaryImage = async (imageUrl: string): Promise<void> => 
     // Extract public_id from URL
     const urlParts = imageUrl.split('/');
     const fileName = urlParts[urlParts.length - 1];
-    const publicId = `pms/${urlParts[urlParts.length - 2]}/${fileName.split('.')[0]}`;
+    const publicId = `enderase/${urlParts[urlParts.length - 2]}/${fileName.split('.')[0]}`;
 
     await cloudinary.uploader.destroy(publicId);
   } catch (error) {
-    console.error('Error deleting image from Cloudinary:', error);
+    logger.error('Error deleting image from Cloudinary:', error);
     throw error;
   }
 };

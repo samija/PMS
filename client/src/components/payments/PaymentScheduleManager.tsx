@@ -162,7 +162,7 @@ export default function PaymentScheduleManager() {
                         <span className={`px-2 py-1 rounded text-xs font-medium ${typeColors[schedule.type]}`}>
                           {schedule.type.charAt(0).toUpperCase() + schedule.type.slice(1)}
                         </span>
-                        <Badge variant={schedule.isActive ? 'success' : 'secondary'}>
+                        <Badge variant={schedule.isActive ? 'success' : 'default'}>
                           {schedule.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                         {schedule.autoGenerate && (

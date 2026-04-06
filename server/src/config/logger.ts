@@ -1,12 +1,8 @@
 import winston from 'winston';
 import path from 'path';
 import fs from 'fs';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const logsDir = path.resolve(__dirname, '../../logs');
+const logsDir = path.resolve(process.cwd(), 'logs');
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
 }
@@ -37,7 +33,7 @@ const fileFormat = winston.format.combine(
 export const logger = winston.createLogger({
   level: isDevelopment ? 'debug' : 'info',
   levels,
-  defaultMeta: { service: 'pms-api' },
+  defaultMeta: { service: 'enderase-api' },
   transports: [
     new winston.transports.Console({ format: consoleFormat }),
     new winston.transports.File({

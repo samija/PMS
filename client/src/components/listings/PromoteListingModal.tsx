@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Star, Zap, Crown } from 'lucide-react';
-import { Modal } from '../ui/Modal';
-import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
+import Modal from '../ui/Modal';
+import Button from '../ui/Button';
+import Card from '../ui/Card';
 import { promotionAPI } from '../../services/api';
 
 interface PromoteListingModalProps {
@@ -121,7 +121,7 @@ export const PromoteListingModal: React.FC<PromoteListingModalProps> = ({
 
         {/* Actions */}
         <div className="flex gap-3 justify-end">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose}>
             Cancel
           </Button>
           <Button

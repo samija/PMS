@@ -1,6 +1,6 @@
 import { getRedisClient } from '../../config/redis.js';
 
-const KEY_PREFIX = 'pms:';
+const KEY_PREFIX = 'enderase:';
 const DEFAULT_TTL = 300; // 5 minutes
 
 export class CacheService {

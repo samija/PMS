@@ -1,7 +1,7 @@
-# PMS Command Center
+# Enderase Command Center
 
 ## Project Overview
-Property Management System (PMS) - Ethiopian Market Focus
+Enderase - Ethiopian Market Focus
 
 ## Architecture Status
 

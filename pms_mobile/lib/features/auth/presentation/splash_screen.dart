@@ -126,7 +126,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 child: Opacity(
                   opacity: _fadeIn.value,
                   child: const Text(
-                    'PMS',
+                    'Enderase',
                     style: TextStyle(
                       fontSize: 44,
                       fontWeight: FontWeight.w700,
@@ -145,7 +145,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 child: Opacity(
                   opacity: _fadeIn.value,
                   child: Text(
-                    'Property Management System',
+                    'Property Management',
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w400,

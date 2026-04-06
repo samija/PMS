@@ -1,4 +1,4 @@
-# PMS Mobile - Development Plan
+# Enderase Mobile - Development Plan
 
 ## Current State Summary (Updated: March 2026)
 
@@ -349,7 +349,7 @@
 **Status:** NOT STARTED
 
 - [ ] Configure app name, bundle ID, icons
-- [ ] Create app icons (1024x1024) from PMS logo
+- [ ] Create app icons (1024x1024) from Enderase logo
 - [ ] Create splash screen (native) with flutter_native_splash
 - [ ] Configure deep linking scheme
 - [ ] Set up environment configs (dev, staging, prod)

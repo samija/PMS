@@ -1,8 +1,7 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import Property from '../models/Property.js';
 import Unit from '../models/Unit.js';
 import PropertyStaff from '../models/PropertyStaff.js';
-import { AuthRequest } from '../types/index.js';
 import { PropertyService } from '../application/services/PropertyService.js';
 import { deleteCloudinaryImage } from '../middleware/upload.js';
 import { BadRequestError } from '../domain/exceptions/AppError.js';
@@ -10,7 +9,7 @@ import { BadRequestError } from '../domain/exceptions/AppError.js';
 // Create service instance
 const propertyService = new PropertyService(Property, Unit, PropertyStaff);
 
-export const createProperty = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const createProperty = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
     if (!ownerId) {
@@ -47,7 +46,7 @@ export const createProperty = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const getProperties = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getProperties = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
     const userRole = req.user?.role;
@@ -68,7 +67,7 @@ export const getProperties = async (req: AuthRequest, res: Response, next: NextF
   }
 };
 
-export const getProperty = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getProperty = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const userId = req.user?._id.toString();
@@ -89,7 +88,7 @@ export const getProperty = async (req: AuthRequest, res: Response, next: NextFun
   }
 };
 
-export const updateProperty = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const updateProperty = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const userId = req.user?._id.toString();
@@ -111,7 +110,7 @@ export const updateProperty = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const deleteProperty = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const deleteProperty = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const userId = req.user?._id.toString();
@@ -132,7 +131,7 @@ export const deleteProperty = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const toggleListing = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const toggleListing = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
     const userId = req.user?._id.toString();
@@ -155,7 +154,7 @@ export const toggleListing = async (req: AuthRequest, res: Response, next: NextF
 };
 
 // Unit Management
-export const addUnit = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const addUnit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId } = req.params;
     const files = req.files as Express.Multer.File[];
@@ -183,7 +182,7 @@ export const addUnit = async (req: AuthRequest, res: Response, next: NextFunctio
   }
 };
 
-export const getUnits = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getUnits = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId } = req.params;
     const userId = req.user?._id.toString();
@@ -204,7 +203,7 @@ export const getUnits = async (req: AuthRequest, res: Response, next: NextFuncti
   }
 };
 
-export const updateUnit = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const updateUnit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId, unitId } = req.params;
     const userId = req.user?._id.toString();
@@ -226,7 +225,7 @@ export const updateUnit = async (req: AuthRequest, res: Response, next: NextFunc
   }
 };
 
-export const deleteUnit = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const deleteUnit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId, unitId } = req.params;
     const userId = req.user?._id.toString();
@@ -248,7 +247,7 @@ export const deleteUnit = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // Image Upload
-export const uploadPropertyImages = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const uploadPropertyImages = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId } = req.params;
     const files = req.files as Express.Multer.File[];
@@ -273,7 +272,7 @@ export const uploadPropertyImages = async (req: AuthRequest, res: Response, next
   }
 };
 
-export const deletePropertyImage = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const deletePropertyImage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId } = req.params;
     const { imageUrl } = req.body;
@@ -293,7 +292,7 @@ export const deletePropertyImage = async (req: AuthRequest, res: Response, next:
   }
 };
 
-export const uploadUnitImages = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const uploadUnitImages = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId, unitId } = req.params;
     const files = req.files as Express.Multer.File[];
@@ -318,7 +317,7 @@ export const uploadUnitImages = async (req: AuthRequest, res: Response, next: Ne
   }
 };
 
-export const deleteUnitImage = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const deleteUnitImage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId, unitId } = req.params;
     const { imageUrl } = req.body;
@@ -337,7 +336,7 @@ export const deleteUnitImage = async (req: AuthRequest, res: Response, next: Nex
   }
 };
 
-export const setPrimaryImage = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const setPrimaryImage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId } = req.params;
     const { imageUrl } = req.body;
@@ -364,7 +363,7 @@ export const setPrimaryImage = async (req: AuthRequest, res: Response, next: Nex
   }
 };
 
-export const setUnitPrimaryImage = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const setUnitPrimaryImage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: propertyId, unitId } = req.params;
     const { imageUrl } = req.body;

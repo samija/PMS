@@ -231,7 +231,7 @@ export class PropertyService implements IPropertyService {
       .sort({ floor: 1, unitNumber: 1 })
       .lean();
 
-    return units;
+    return units as unknown as IUnit[];
   }
 
   async updateUnit(

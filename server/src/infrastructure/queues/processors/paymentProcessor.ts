@@ -1,5 +1,6 @@
 import Bull from 'bull';
 import { PaymentJobData } from '../index.js';
+import Payment from '../../../models/Payment.js';
 
 export const processPaymentJob = async (job: Bull.Job<PaymentJobData>): Promise<void> => {
   const { type, paymentId, transactionRef, gateway, webhookData } = job.data;
@@ -8,9 +9,6 @@ export const processPaymentJob = async (job: Bull.Job<PaymentJobData>): Promise<
     switch (type) {
       case 'verify_payment': {
         console.log(`[PaymentProcessor] Verifying payment ${transactionRef} via ${gateway}`);
-        // Payment verification is handled by the PaymentService
-        // This queue job is for async/delayed verification
-        const Payment = (await import('../../../models/Payment.js')).default;
         const payment = await Payment.findById(paymentId);
         if (payment && payment.status === 'pending') {
           console.log(`[PaymentProcessor] Payment ${paymentId} still pending, may need manual check`);

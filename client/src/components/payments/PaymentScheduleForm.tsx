@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { X, Loader2 } from 'lucide-react';
 import { PaymentSchedule, ScheduleType, RecurrenceType, Tenant } from '../../types';
-import { tenantAPI, scheduleAPI } from '../../services/api';
+import { tenantAPI } from '../../services/api';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
-import Select from '../ui/Select';
 
 interface PaymentScheduleFormProps {
   schedule?: PaymentSchedule;
@@ -284,7 +283,6 @@ export default function PaymentScheduleForm({
             onChange={handleChange}
             min="1"
             max="28"
-            helperText="Choose 1-28 to ensure consistency across all months"
           />
 
           {/* Dates */}

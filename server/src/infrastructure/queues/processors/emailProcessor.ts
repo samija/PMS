@@ -1,5 +1,6 @@
 import Bull from 'bull';
 import { EmailJobData } from '../index.js';
+import logger from '../../../config/logger.js';
 
 // Dynamic import to avoid circular deps
 const getEmailUtil = async () => {
@@ -20,13 +21,13 @@ export const processEmailJob = async (job: Bull.Job<EmailJobData>): Promise<void
         break;
       case 'payment_reminder':
         if (emailUtil.getPaymentReminderTemplate) {
-          html = emailUtil.getPaymentReminderTemplate(data);
+          html = emailUtil.getPaymentReminderTemplate(data as Parameters<typeof emailUtil.getPaymentReminderTemplate>[0]);
         } else {
           html = `<h2>Payment Reminder</h2><p>Your rent of ${data.amount} ETB is due on ${data.dueDate}.</p>`;
         }
         break;
       case 'welcome_email':
-        html = `<h2>Welcome to PMS!</h2><p>Hi ${data.name}, your account has been created.</p>`;
+        html = `<h2>Welcome to Enderase!</h2><p>Hi ${data.name}, your account has been created.</p>`;
         break;
       case 'maintenance_update':
         html = `<h2>Maintenance Update</h2><p>Your request "${data.title}" has been updated to: ${data.status}</p>`;
@@ -39,9 +40,9 @@ export const processEmailJob = async (job: Bull.Job<EmailJobData>): Promise<void
       await emailUtil.sendEmail({ to, subject, html });
     }
 
-    console.log(`[EmailProcessor] Sent ${type} email to ${to}`);
+    logger.info(`[EmailProcessor] Sent ${type} email to ${to}`);
   } catch (error) {
-    console.error(`[EmailProcessor] Failed to send ${type} email to ${to}:`, error);
+    logger.error(`[EmailProcessor] Failed to send ${type} email to ${to}:`, error);
     throw error; // Will trigger retry
   }
 };

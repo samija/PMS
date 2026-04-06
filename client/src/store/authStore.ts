@@ -35,7 +35,7 @@ export const useAuthStore = create<AuthState>()(
         })),
     }),
     {
-      name: 'pms-auth',
+      name: 'enderase-auth',
     }
   )
 );

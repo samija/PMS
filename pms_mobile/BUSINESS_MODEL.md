@@ -1,8 +1,8 @@
-# PMS - Business Model & Monetization Strategy
+# Enderase - Business Model & Monetization Strategy
 
 ## The Opportunity
 
-Ethiopia's urban rental market is largely informal - landlords manage properties with paper receipts, WhatsApp groups, and in-person cash collection. PMS digitizes the entire rental lifecycle: listing, booking, lease management, payments, and maintenance.
+Ethiopia's urban rental market is largely informal - landlords manage properties with paper receipts, WhatsApp groups, and in-person cash collection. Enderase digitizes the entire rental lifecycle: listing, booking, lease management, payments, and maintenance.
 
 **Target Market:** Addis Ababa first (5M+ population, 40%+ renters), then expand to regional cities.
 
@@ -41,7 +41,7 @@ Take a percentage cut on every rent payment processed through the platform.
 
 ### 3. Listing & Booking Fees (Marketplace Revenue)
 
-PMS replaces the traditional broker (ደላላ) who charges 1 month's rent as commission.
+Enderase replaces the traditional broker (ደላላ) who charges 1 month's rent as commission.
 
 | Fee Type | Amount | Who Pays |
 |----------|--------|----------|
@@ -51,7 +51,7 @@ PMS replaces the traditional broker (ደላላ) who charges 1 month's rent as co
 | Successful booking/match fee | ETB 1,000 one-time | Split or tenant |
 | Urgent listing (24hr priority) | ETB 300 | Owner |
 
-**Value proposition:** Traditional broker charges ETB 10,000-30,000 (1 month rent). PMS charges ETB 1,000. That's a **90%+ savings** for tenants.
+**Value proposition:** Traditional broker charges ETB 10,000-30,000 (1 month rent). Enderase charges ETB 1,000. That's a **90%+ savings** for tenants.
 
 **Projected:** 50 bookings/month x ETB 1,000 = **ETB 50,000/month**
 
@@ -67,7 +67,7 @@ PMS replaces the traditional broker (ደላላ) who charges 1 month's rent as co
 | **Rent Insurance** | Commission per policy | Partner with insurance companies for rent guarantee |
 | **SMS Payment Reminders** | ETB 2/SMS | Automated reminders 5 days before due date |
 | **Property Valuation** | ETB 500/report | Market-based rental price recommendation |
-| **Utility Payments** | 1% fee | Allow tenants to pay utilities through PMS |
+| **Utility Payments** | 1% fee | Allow tenants to pay utilities through Enderase |
 
 ---
 
@@ -181,7 +181,7 @@ PMS replaces the traditional broker (ደላላ) who charges 1 month's rent as co
 ### Launch Tactics
 
 1. **Beta Program:** 20 property owners, free Pro plan for 6 months, collect testimonials
-2. **Broker Displacement Campaign:** "Stop paying ደላላ - find your home on PMS" (social media, Telegram channels)
+2. **Broker Displacement Campaign:** "Stop paying ደላላ - find your home on Enderase" (social media, Telegram channels)
 3. **University Area Blitz:** Flyers near AAU, Addis Ababa Science & Technology, Unity University - high tenant turnover
 4. **Real Estate Telegram Groups:** Ethiopia has massive Telegram adoption - join and post listings
 5. **Referral Program:** Owners get 1 month free Pro for each referred owner who signs up
@@ -202,7 +202,7 @@ PMS replaces the traditional broker (ደላላ) who charges 1 month's rent as co
 
 ## Competitive Landscape
 
-| Competitor | What They Do | PMS Advantage |
+| Competitor | What They Do | Enderase Advantage |
 |-----------|-------------|---------------|
 | Jiji Ethiopia | Classifieds (listings only) | Full management suite, not just listings |
 | Afro Properties | Listings website | Mobile-first, payment integration, management tools |
@@ -210,13 +210,13 @@ PMS replaces the traditional broker (ደላላ) who charges 1 month's rent as co
 | WhatsApp Groups | Informal listings | Structured, searchable, payment tracking |
 | Excel/Paper | Manual management | Automated, real-time, mobile access |
 
-### PMS Competitive Moat
+### Enderase Competitive Moat
 
 1. **Network Effects:** More listings → more tenants → more owners → more listings
-2. **Payment Lock-in:** Once rent flows through PMS, switching cost is high
+2. **Payment Lock-in:** Once rent flows through Enderase, switching cost is high
 3. **Data Advantage:** Rental pricing data becomes valuable over time
 4. **Local-first:** Built for Ethiopian market (Telebirr, ETB, Amharic, local payment culture)
-5. **Full-stack:** Competitors do one thing; PMS does listing + booking + management + payments + maintenance
+5. **Full-stack:** Competitors do one thing; Enderase does listing + booking + management + payments + maintenance
 
 ---
 
@@ -261,7 +261,7 @@ PMS replaces the traditional broker (ደላላ) who charges 1 month's rent as co
 
 ## Summary
 
-PMS monetizes through **4 complementary revenue streams** that grow with the platform:
+Enderase monetizes through **4 complementary revenue streams** that grow with the platform:
 
 1. **Transaction fees** (2.5%) - scales with payment volume
 2. **Subscriptions** (ETB 999-2,499/mo) - predictable recurring revenue
@@ -272,4 +272,4 @@ PMS monetizes through **4 complementary revenue streams** that grow with the pla
 **Year 1 target:** ETB 4.7M revenue (~$78K USD)
 **Year 3 target:** ETB 85M revenue (~$1.4M USD)
 
-The key insight: **PMS doesn't just digitize - it replaces the entire informal rental ecosystem** (brokers, cash payments, paper receipts, WhatsApp coordination) with a single platform that's cheaper, faster, and more transparent for everyone.
+The key insight: **Enderase doesn't just digitize - it replaces the entire informal rental ecosystem** (brokers, cash payments, paper receipts, WhatsApp coordination) with a single platform that's cheaper, faster, and more transparent for everyone.

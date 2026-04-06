@@ -51,7 +51,7 @@ class HelpSupportSheet extends StatelessWidget {
               icon: Icons.mail_outline,
               iconColor: AppTheme.primaryBlue,
               title: 'Email Us',
-              subtitle: 'support@pms.et',
+              subtitle: 'support@enderase.com',
               onTap: () {
                 // Could launch mailto
               },

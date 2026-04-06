@@ -114,7 +114,7 @@ export default function DashboardLayout() {
         <div className="flex items-center justify-between h-16 px-4 border-b flex-shrink-0">
           <Link to={basePath} className="flex items-center space-x-2">
             <Building2 className="h-8 w-8 text-primary-600" />
-            <span className="text-xl font-bold text-gray-900">PMS</span>
+            <span className="text-xl font-bold text-gray-900">Enderase</span>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}

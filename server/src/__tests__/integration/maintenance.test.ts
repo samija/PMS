@@ -6,7 +6,8 @@ import {
   createTestProperty,
   createTestUnit,
   createTestTenant,
-} from './helpers';
+} from './helpers.js';
+import maintenanceRoutes from '../../routes/maintenanceRoutes.js';
 
 setupTestDB();
 
@@ -16,7 +17,6 @@ describe('Maintenance API', () => {
   beforeAll(async () => {
     app = express();
     app.use(express.json());
-    const maintenanceRoutes = (await import('../../routes/maintenanceRoutes.js')).default;
     app.use('/api/maintenance', maintenanceRoutes);
     app.use((err: any, _req: any, res: any, _next: any) => {
       res.status(err.statusCode || 500).json({ success: false, message: err.message });

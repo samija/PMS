@@ -1,4 +1,5 @@
 import Redis from 'ioredis';
+import logger from './logger.js';
 
 const redisConfig = {
   host: process.env.REDIS_HOST || 'localhost',
@@ -20,18 +21,18 @@ export const getRedisClient = (): Redis | null => {
       redis = new Redis(redisConfig);
 
       redis.on('connect', () => {
-        console.log('[Redis] Connected successfully');
+        logger.info('[Redis] Connected successfully');
       });
 
       redis.on('error', (err) => {
-        console.warn('[Redis] Connection error (non-fatal):', err.message);
+        logger.warn('[Redis] Connection error (non-fatal):', err.message);
       });
 
       redis.on('reconnecting', () => {
-        console.log('[Redis] Reconnecting...');
+        logger.info('[Redis] Reconnecting...');
       });
     } catch (err) {
-      console.warn('[Redis] Failed to create client (non-fatal):', err);
+      logger.warn('[Redis] Failed to create client (non-fatal):', err);
       redis = null;
     }
   }
@@ -44,7 +45,7 @@ export const connectRedis = async (): Promise<void> => {
     try {
       await client.connect();
     } catch (err) {
-      console.warn('[Redis] Could not connect (non-fatal). App will work without cache.');
+      logger.warn('[Redis] Could not connect (non-fatal). App will work without cache.');
       redis = null;
     }
   }

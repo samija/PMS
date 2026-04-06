@@ -1,10 +1,9 @@
-import { Response } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { IPerformanceService } from '../domain/interfaces/IServices.js';
 
-export const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
+export const createReview = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPerformanceService>(TYPES.PerformanceService);
     const { propertyId } = req.params;
@@ -20,7 +19,7 @@ export const createReview = async (req: AuthRequest, res: Response): Promise<voi
   }
 };
 
-export const getReviews = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getReviews = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPerformanceService>(TYPES.PerformanceService);
     const { propertyId } = req.params;
@@ -37,7 +36,7 @@ export const getReviews = async (req: AuthRequest, res: Response): Promise<void>
   }
 };
 
-export const getReview = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getReview = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPerformanceService>(TYPES.PerformanceService);
     const { propertyId, id } = req.params;
@@ -49,7 +48,7 @@ export const getReview = async (req: AuthRequest, res: Response): Promise<void> 
   }
 };
 
-export const updateReview = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateReview = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPerformanceService>(TYPES.PerformanceService);
     const { propertyId, id } = req.params;
@@ -61,7 +60,7 @@ export const updateReview = async (req: AuthRequest, res: Response): Promise<voi
   }
 };
 
-export const submitReview = async (req: AuthRequest, res: Response): Promise<void> => {
+export const submitReview = async (req: Request, res: Response): Promise<void> => {
   try {
     const service = container.get<IPerformanceService>(TYPES.PerformanceService);
     const { propertyId, id } = req.params;

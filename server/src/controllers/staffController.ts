@@ -1,9 +1,8 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import PropertyStaff from '../models/PropertyStaff.js';
 import User from '../models/User.js';
-import { AuthRequest } from '../types/index.js';
 
-export const addStaff = async (req: AuthRequest, res: Response): Promise<void> => {
+export const addStaff = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: propertyId } = req.params;
     const assignedBy = req.user?._id;
@@ -74,7 +73,7 @@ export const addStaff = async (req: AuthRequest, res: Response): Promise<void> =
   }
 };
 
-export const getPropertyStaff = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getPropertyStaff = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: propertyId } = req.params;
     const { role, isActive = true } = req.query;
@@ -101,7 +100,7 @@ export const getPropertyStaff = async (req: AuthRequest, res: Response): Promise
   }
 };
 
-export const updateStaff = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateStaff = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: propertyId, staffId } = req.params;
     const { role, permissions, isActive } = req.body;
@@ -141,7 +140,7 @@ export const updateStaff = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const removeStaff = async (req: AuthRequest, res: Response): Promise<void> => {
+export const removeStaff = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id: propertyId, staffId } = req.params;
 
@@ -171,7 +170,7 @@ export const removeStaff = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const getStaffProperties = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getStaffProperties = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.user?._id;
 
@@ -192,7 +191,7 @@ export const getStaffProperties = async (req: AuthRequest, res: Response): Promi
   }
 };
 
-export const getAllStaff = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getAllStaff = async (req: Request, res: Response): Promise<void> => {
   try {
     // Admin only
     if (req.user?.role !== 'admin') {

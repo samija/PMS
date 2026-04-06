@@ -8,11 +8,11 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Property Management System API',
+      title: 'Enderase API',
       version: '1.0.0',
       description: `
 ## Overview
-The Property Management System (PMS) API provides comprehensive endpoints for managing properties, tenants, payments, maintenance requests, and more.
+The Enderase API provides comprehensive endpoints for managing properties, tenants, payments, maintenance requests, and more.
 
 ## Authentication
 Most endpoints require authentication using JWT Bearer tokens. Include the token in the Authorization header:
@@ -39,8 +39,8 @@ All API responses follow a standard format:
 \`\`\`
       `,
       contact: {
-        name: 'PMS Support',
-        email: 'support@pms.com',
+        name: 'Enderase Support',
+        email: 'support@enderase.com',
       },
     },
     servers: [
@@ -49,7 +49,7 @@ All API responses follow a standard format:
         description: 'Development server',
       },
       {
-        url: 'https://api.pms.com/api',
+        url: 'https://api.enderase.com/api',
         description: 'Production server',
       },
     ],
@@ -676,7 +676,7 @@ export const setupSwagger = (app: Express): void => {
   // Swagger UI
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'PMS API Documentation',
+    customSiteTitle: 'Enderase API Documentation',
   }));
 
   // Serve swagger spec as JSON

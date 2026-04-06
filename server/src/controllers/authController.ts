@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/User.js';
-import { AuthRequest } from '../types/index.js';
 import { AuthService } from '../application/services/AuthService.js';
+import logger from '../config/logger.js';
 
 // Create service instance
 const authService = new AuthService(User);
@@ -34,7 +34,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
   }
 };
 
-export const getProfile = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
     if (!userId) {
@@ -56,7 +56,7 @@ export const getProfile = async (req: AuthRequest, res: Response, next: NextFunc
   }
 };
 
-export const updateProfile = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const updateProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
     if (!userId) {
@@ -79,7 +79,7 @@ export const updateProfile = async (req: AuthRequest, res: Response, next: NextF
   }
 };
 
-export const googleCallback = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const googleCallback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const user = req.user;
 
@@ -93,7 +93,7 @@ export const googleCallback = async (req: AuthRequest, res: Response, next: Next
     // Redirect to frontend with token
     res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${result.token}`);
   } catch (error) {
-    console.error('Google callback error:', error);
+    logger.error('Google callback error:', error);
     res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
   }
 };

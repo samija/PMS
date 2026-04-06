@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from './logger.js';
 
 const CHAPA_BASE_URL = 'https://api.chapa.co/v1';
 
@@ -69,7 +70,7 @@ class ChapaService {
       );
       return response.data;
     } catch (error: any) {
-      console.error('Chapa initialize error:', error.response?.data || error.message);
+      logger.error('Chapa initialize error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.message || 'Failed to initialize payment');
     }
   }
@@ -82,12 +83,12 @@ class ChapaService {
       );
       return response.data;
     } catch (error: any) {
-      console.error('Chapa verify error:', error.response?.data || error.message);
+      logger.error('Chapa verify error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.message || 'Failed to verify payment');
     }
   }
 
-  generateTxRef(prefix: string = 'PMS'): string {
+  generateTxRef(prefix: string = 'ENDER'): string {
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(2, 8).toUpperCase();
     return `${prefix}-${timestamp}-${random}`;

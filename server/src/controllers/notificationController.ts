@@ -1,5 +1,4 @@
-import { Response, NextFunction } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response, NextFunction } from 'express';
 import { NotificationService } from '../application/services/NotificationService.js';
 import Notification from '../models/Notification.js';
 import Tenant from '../models/Tenant.js';
@@ -8,7 +7,7 @@ import User from '../models/User.js';
 // Create service instance
 const notificationService = new NotificationService(Notification, Tenant, User);
 
-export const getNotifications = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getNotifications = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
 
@@ -28,7 +27,7 @@ export const getNotifications = async (req: AuthRequest, res: Response, next: Ne
   }
 };
 
-export const getUnreadCount = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getUnreadCount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
 
@@ -48,7 +47,7 @@ export const getUnreadCount = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const markAsRead = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const markAsRead = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
     const { id } = req.params;
@@ -70,7 +69,7 @@ export const markAsRead = async (req: AuthRequest, res: Response, next: NextFunc
   }
 };
 
-export const markAllAsRead = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const markAllAsRead = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
 
@@ -91,7 +90,7 @@ export const markAllAsRead = async (req: AuthRequest, res: Response, next: NextF
   }
 };
 
-export const deleteNotification = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const deleteNotification = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?._id.toString();
     const { id } = req.params;

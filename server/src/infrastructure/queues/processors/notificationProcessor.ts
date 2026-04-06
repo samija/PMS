@@ -1,11 +1,11 @@
 import Bull from 'bull';
 import { NotificationJobData } from '../index.js';
+import Notification from '../../../models/Notification.js';
 
 export const processNotificationJob = async (job: Bull.Job<NotificationJobData>): Promise<void> => {
   const { type, userId, userIds, title, message, notificationType, relatedId } = job.data;
 
   try {
-    const Notification = (await import('../../../models/Notification.js')).default;
 
     switch (type) {
       case 'create_notification': {

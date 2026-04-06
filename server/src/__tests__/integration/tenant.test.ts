@@ -6,7 +6,8 @@ import {
   createTestProperty,
   createTestUnit,
   createTestTenant,
-} from './helpers';
+} from './helpers.js';
+import tenantRoutes from '../../routes/tenantRoutes.js';
 
 setupTestDB();
 
@@ -16,7 +17,6 @@ describe('Tenant API', () => {
   beforeAll(async () => {
     app = express();
     app.use(express.json());
-    const tenantRoutes = (await import('../../routes/tenantRoutes.js')).default;
     app.use('/api/tenants', tenantRoutes);
     app.use((err: any, _req: any, res: any, _next: any) => {
       res.status(err.statusCode || 500).json({ success: false, message: err.message });

@@ -1,5 +1,7 @@
 import Bull from 'bull';
 import { ReportJobData } from '../index.js';
+import Payment from '../../../models/Payment.js';
+import Unit from '../../../models/Unit.js';
 
 export const processReportJob = async (job: Bull.Job<ReportJobData>): Promise<void> => {
   const { type, ownerId, propertyId, month, year } = job.data;
@@ -7,7 +9,6 @@ export const processReportJob = async (job: Bull.Job<ReportJobData>): Promise<vo
   try {
     switch (type) {
       case 'monthly_payment_report': {
-        const Payment = (await import('../../../models/Payment.js')).default;
         const now = new Date();
         const reportMonth = month || now.getMonth() + 1;
         const reportYear = year || now.getFullYear();
@@ -30,7 +31,6 @@ export const processReportJob = async (job: Bull.Job<ReportJobData>): Promise<vo
         break;
       }
       case 'occupancy_report': {
-        const Unit = (await import('../../../models/Unit.js')).default;
         const query: any = {};
         if (propertyId) query.property = propertyId;
 

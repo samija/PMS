@@ -1,6 +1,7 @@
 import request from 'supertest';
 import express from 'express';
-import { setupTestDB, createTestUser } from './helpers';
+import { setupTestDB, createTestUser } from './helpers.js';
+import authRoutes from '../../routes/authRoutes.js';
 
 // Minimal app setup for testing
 const createApp = () => {
@@ -17,7 +18,6 @@ describe('Auth API', () => {
 
   beforeAll(async () => {
     app = createApp();
-    const authRoutes = (await import('../../routes/authRoutes.js')).default;
     app.use('/api/auth', authRoutes);
   });
 

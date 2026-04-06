@@ -154,7 +154,7 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () {
               showAboutDialog(
                 context: context,
-                applicationName: 'PMS',
+                applicationName: 'Enderase',
                 applicationVersion: '1.0.0',
                 applicationIcon: const Icon(
                   Icons.apartment,
@@ -212,7 +212,7 @@ class SettingsScreen extends ConsumerWidget {
                 builder: (ctx) => AlertDialog(
                   title: const Text('Delete Account'),
                   content: const Text(
-                    'To delete your account, please contact support at support@pms.et. '
+                    'To delete your account, please contact support at support@enderase.com. '
                     'This action is irreversible.',
                   ),
                   actions: [
@@ -231,7 +231,7 @@ class SettingsScreen extends ConsumerWidget {
             padding: EdgeInsets.symmetric(vertical: 24),
             child: Center(
               child: Text(
-                'PMS v1.0.0',
+                'Enderase v1.0.0',
                 style: TextStyle(
                   fontSize: 12,
                   color: AppTheme.gray400,

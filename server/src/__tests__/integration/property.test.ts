@@ -1,6 +1,7 @@
 import request from 'supertest';
 import express from 'express';
-import { setupTestDB, createTestUser, createTestProperty } from './helpers';
+import { setupTestDB, createTestUser, createTestProperty } from './helpers.js';
+import propertyRoutes from '../../routes/propertyRoutes.js';
 
 setupTestDB();
 
@@ -10,7 +11,6 @@ describe('Property API', () => {
   beforeAll(async () => {
     app = express();
     app.use(express.json());
-    const propertyRoutes = (await import('../../routes/propertyRoutes.js')).default;
     app.use('/api/properties', propertyRoutes);
     // Error handler
     app.use((err: any, _req: any, res: any, _next: any) => {

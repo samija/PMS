@@ -1,8 +1,8 @@
-# Property Management System - Architecture Guide
+# Enderase - Architecture Guide
 
 ## Executive Summary
 
-This document provides a comprehensive guide to refactor the PMS application following SOLID principles, Object-Oriented Programming (OOP) best practices, and scalable architecture patterns.
+This document provides a comprehensive guide to refactor the Enderase application following SOLID principles, Object-Oriented Programming (OOP) best practices, and scalable architecture patterns.
 
 ---
 

@@ -1,5 +1,4 @@
-import { Response, NextFunction } from 'express';
-import { AuthRequest } from '../types/index.js';
+import { Request, Response, NextFunction } from 'express';
 import { PaymentScheduleService } from '../application/services/PaymentScheduleService.js';
 import PaymentSchedule from '../models/PaymentSchedule.js';
 import Payment from '../models/Payment.js';
@@ -8,7 +7,7 @@ import Tenant from '../models/Tenant.js';
 // Create service instance
 const scheduleService = new PaymentScheduleService(PaymentSchedule, Payment, Tenant);
 
-export const createSchedule = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const createSchedule = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
 
@@ -32,7 +31,7 @@ export const createSchedule = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const getSchedules = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getSchedules = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
 
@@ -52,7 +51,7 @@ export const getSchedules = async (req: AuthRequest, res: Response, next: NextFu
   }
 };
 
-export const getSchedule = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getSchedule = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
     const { id } = req.params;
@@ -73,7 +72,7 @@ export const getSchedule = async (req: AuthRequest, res: Response, next: NextFun
   }
 };
 
-export const updateSchedule = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const updateSchedule = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
     const { id } = req.params;
@@ -95,7 +94,7 @@ export const updateSchedule = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const deleteSchedule = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const deleteSchedule = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
     const { id } = req.params;
@@ -116,7 +115,7 @@ export const deleteSchedule = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
-export const getSchedulesForTenant = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const getSchedulesForTenant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { tenantId } = req.params;
 
@@ -131,7 +130,7 @@ export const getSchedulesForTenant = async (req: AuthRequest, res: Response, nex
   }
 };
 
-export const generatePayments = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const generatePayments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const ownerId = req.user?._id.toString();
     const { id } = req.params;
