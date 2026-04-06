@@ -1,0 +1,46 @@
+import { Router } from 'express';
+import authRoutes from './authRoutes.js';
+import propertyRoutes from './propertyRoutes.js';
+import tenantRoutes from './tenantRoutes.js';
+import paymentRoutes from './paymentRoutes.js';
+import waitingListRoutes from './waitingListRoutes.js';
+import maintenanceRoutes from './maintenanceRoutes.js';
+import listingRoutes from './listingRoutes.js';
+import staffRoutes from './staffRoutes.js';
+import settingsRoutes from './settingsRoutes.js';
+import paymentScheduleRoutes from './paymentScheduleRoutes.js';
+import notificationRoutes from './notificationRoutes.js';
+import queueRoutes from './queueRoutes.js';
+import listingPromotionRoutes from './listingPromotionRoutes.js';
+import employeeRoutes from './employeeRoutes.js';
+import guardRoutes from './guardRoutes.js';
+import attendanceRoutes from './attendanceRoutes.js';
+import incidentRoutes from './incidentRoutes.js';
+import leaveRoutes from './leaveRoutes.js';
+import payrollRoutes from './payrollRoutes.js';
+import performanceRoutes from './performanceRoutes.js';
+
+const router = Router();
+
+router.use('/auth', authRoutes);
+router.use('/properties', propertyRoutes);
+router.use('/tenants', tenantRoutes);
+router.use('/payments', paymentRoutes);
+router.use('/waitlist', waitingListRoutes);
+router.use('/maintenance', maintenanceRoutes);
+router.use('/listings', listingRoutes);
+router.use('/staff', staffRoutes);
+router.use('/settings', settingsRoutes);
+router.use('/schedules', paymentScheduleRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/admin', queueRoutes);
+router.use('/promotions', listingPromotionRoutes);
+router.use('/employees', employeeRoutes);
+router.use('/properties/:propertyId/guards', guardRoutes);
+router.use('/properties/:propertyId/attendance', attendanceRoutes);
+router.use('/properties/:propertyId/incidents', incidentRoutes);
+router.use('/leave', leaveRoutes);
+router.use('/properties/:propertyId/payroll', payrollRoutes);
+router.use('/properties/:propertyId/reviews', performanceRoutes);
+
+export default router;
