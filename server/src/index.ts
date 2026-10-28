@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
+import path from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -78,12 +79,17 @@ app.use('/api', limiter, routes);
 // Error handler
 app.use(errorHandler);
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found',
-  });
+// Serve client static files in production
+const clientDistPath = path.resolve(__dirname, '../../client/dist');
+app.use(express.static(clientDistPath));
+
+// SPA fallback — serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    res.status(404).json({ success: false, message: 'Route not found' });
+    return;
+  }
+  res.sendFile(path.join(clientDistPath, 'index.html'));
 });
 
 // Start server
