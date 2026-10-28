@@ -23,14 +23,12 @@ describe('Property API', () => {
       const { user, token } = await createTestUser();
       await createTestProperty(user._id.toString());
 
-      const res = await request(app)
-        .get('/api/properties')
-        .set('Authorization', `Bearer ${token}`);
+      const res = await request(app).get('/api/properties').set('Authorization', `Bearer ${token}`);
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(Array.isArray(res.body.data)).toBe(true);
-      expect(res.body.data.length).toBeGreaterThanOrEqual(1);
+      expect(Array.isArray(res.body.data.properties)).toBe(true);
+      expect(res.body.data.properties.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should reject unauthenticated requests', async () => {
@@ -67,13 +65,10 @@ describe('Property API', () => {
     it('should reject invalid property data', async () => {
       const { token } = await createTestUser();
 
-      const res = await request(app)
-        .post('/api/properties')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-          name: '', // Invalid: empty name
-          type: 'invalid_type',
-        });
+      const res = await request(app).post('/api/properties').set('Authorization', `Bearer ${token}`).send({
+        name: '', // Invalid: empty name
+        type: 'invalid_type',
+      });
 
       expect(res.status).toBeGreaterThanOrEqual(400);
     });
@@ -84,9 +79,7 @@ describe('Property API', () => {
       const { user, token } = await createTestUser();
       const property = await createTestProperty(user._id.toString());
 
-      const res = await request(app)
-        .get(`/api/properties/${property._id}`)
-        .set('Authorization', `Bearer ${token}`);
+      const res = await request(app).get(`/api/properties/${property._id}`).set('Authorization', `Bearer ${token}`);
 
       expect(res.status).toBe(200);
       expect(res.body.data).toHaveProperty('name', 'Test Property');
@@ -96,9 +89,7 @@ describe('Property API', () => {
       const { token } = await createTestUser();
       const fakeId = '507f1f77bcf86cd799439011';
 
-      const res = await request(app)
-        .get(`/api/properties/${fakeId}`)
-        .set('Authorization', `Bearer ${token}`);
+      const res = await request(app).get(`/api/properties/${fakeId}`).set('Authorization', `Bearer ${token}`);
 
       expect(res.status).toBeGreaterThanOrEqual(400);
     });

@@ -30,11 +30,7 @@ export const setupTestDB = () => {
 };
 
 export const generateTestToken = (userId: string, role = 'owner', email = 'test@example.com') => {
-  return jwt.sign(
-    { id: userId, email, role },
-    process.env.JWT_SECRET || 'test-jwt-secret-key',
-    { expiresIn: '1d' }
-  );
+  return jwt.sign({ id: userId, email, role }, process.env.JWT_SECRET || 'test-jwt-secret-key', { expiresIn: '1d' });
 };
 
 export const createTestUser = async (overrides: Record<string, any> = {}) => {
@@ -74,7 +70,7 @@ export const createTestProperty = async (ownerId: string, overrides: Record<stri
 
 export const createTestUnit = async (propertyId: string, overrides: Record<string, any> = {}) => {
   return Unit.create({
-    property: propertyId,
+    propertyId,
     unitNumber: `U-${Date.now()}`,
     floor: 1,
     type: '2bed',
