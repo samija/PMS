@@ -49,5 +49,8 @@ Thumbs.db
 **/android/gradlew.bat
 **/android/local.properties
 
+# Server logs
+server/logs/
+
 # Claude
 .claude/

@@ -92,6 +92,24 @@ import { IncidentService } from '../application/services/IncidentService.js';
 import { LeaveService } from '../application/services/LeaveService.js';
 import { PayrollService } from '../application/services/PayrollService.js';
 import { PerformanceService } from '../application/services/PerformanceService.js';
+import { TenantIdentityService } from '../application/services/TenantIdentityService.js';
+import { FieldEncryptionService } from '../infrastructure/crypto/FieldEncryptionService.js';
+import TenantDocumentModel, { ITenantDocumentV2 } from '../models/TenantDocument.js';
+import { TenantDocumentRepository } from '../infrastructure/repositories/TenantDocumentRepository.js';
+import { TenantDocumentService } from '../application/services/TenantDocumentService.js';
+import { CloudinaryObjectStorage } from '../infrastructure/storage/CloudinaryObjectStorage.js';
+import LeaseTemplateModel, { ILeaseTemplate } from '../models/LeaseTemplate.js';
+import { LeaseTemplateRepository } from '../infrastructure/repositories/LeaseTemplateRepository.js';
+import { LeaseTemplateService } from '../application/services/LeaseTemplateService.js';
+import { PdfLibLeaseRenderer } from '../infrastructure/pdf/PdfLibLeaseRenderer.js';
+import LeaseAgreementModel, { ILeaseAgreement as ILeaseAgreementDoc } from '../models/LeaseAgreement.js';
+import { LeaseAgreementRepository } from '../infrastructure/repositories/LeaseAgreementRepository.js';
+import { LeaseAgreementService } from '../application/services/LeaseAgreementService.js';
+import { ClickToAcceptSignatureProvider } from '../infrastructure/signature/ClickToAcceptSignatureProvider.js';
+import TenantAuditLogModel, { ITenantAuditLogEntry } from '../models/TenantAuditLog.js';
+import { TenantAuditLogRepository } from '../infrastructure/repositories/TenantAuditLogRepository.js';
+import { TenantAuditService } from '../application/services/TenantAuditService.js';
+import { ListingService } from '../application/services/ListingService.js';
 
 // Import Service Interfaces
 import {
@@ -177,6 +195,36 @@ container.bind<IIncidentService>(TYPES.IncidentService).to(IncidentService).inSi
 container.bind<ILeaveService>(TYPES.LeaveService).to(LeaveService).inSingletonScope();
 container.bind<IPayrollService>(TYPES.PayrollService).to(PayrollService).inSingletonScope();
 container.bind<IPerformanceService>(TYPES.PerformanceService).to(PerformanceService).inSingletonScope();
+
+// ==================== Identity & Encryption ====================
+container.bind<FieldEncryptionService>(TYPES.FieldEncryption).to(FieldEncryptionService).inSingletonScope();
+container.bind<TenantIdentityService>(TYPES.TenantIdentityService).to(TenantIdentityService).inSingletonScope();
+
+// ==================== Document Management v2 ====================
+container.bind<Model<ITenantDocumentV2>>(TYPES.TenantDocumentModel).toConstantValue(TenantDocumentModel);
+container.bind<TenantDocumentRepository>(TYPES.TenantDocumentRepository).to(TenantDocumentRepository).inSingletonScope();
+container.bind<CloudinaryObjectStorage>(TYPES.CloudinaryObjectStorage).to(CloudinaryObjectStorage).inSingletonScope();
+container.bind<TenantDocumentService>(TYPES.TenantDocumentService).to(TenantDocumentService).inSingletonScope();
+
+// ==================== Lease Templates & PDF ====================
+container.bind<Model<ILeaseTemplate>>(TYPES.LeaseTemplateModel).toConstantValue(LeaseTemplateModel);
+container.bind<LeaseTemplateRepository>(TYPES.LeaseTemplateRepository).to(LeaseTemplateRepository).inSingletonScope();
+container.bind<LeaseTemplateService>(TYPES.LeaseTemplateService).to(LeaseTemplateService).inSingletonScope();
+container.bind<PdfLibLeaseRenderer>(TYPES.PdfRenderer).to(PdfLibLeaseRenderer).inSingletonScope();
+
+// ==================== Lease Agreements & Signatures ====================
+container.bind<Model<ILeaseAgreementDoc>>(TYPES.LeaseAgreementModel).toConstantValue(LeaseAgreementModel);
+container.bind<LeaseAgreementRepository>(TYPES.LeaseAgreementRepository).to(LeaseAgreementRepository).inSingletonScope();
+container.bind<ClickToAcceptSignatureProvider>(TYPES.SignatureProvider).to(ClickToAcceptSignatureProvider).inSingletonScope();
+container.bind<LeaseAgreementService>(TYPES.LeaseAgreementService).to(LeaseAgreementService).inSingletonScope();
+
+// ==================== Audit Log ====================
+container.bind<Model<ITenantAuditLogEntry>>(TYPES.TenantAuditLogModel).toConstantValue(TenantAuditLogModel);
+container.bind<TenantAuditLogRepository>(TYPES.TenantAuditLogRepository).to(TenantAuditLogRepository).inSingletonScope();
+container.bind<TenantAuditService>(TYPES.TenantAuditService).to(TenantAuditService).inSingletonScope();
+
+// ==================== Listing ====================
+container.bind<ListingService>(TYPES.ListingService).to(ListingService).inSingletonScope();
 
 export { container };
 export default container;

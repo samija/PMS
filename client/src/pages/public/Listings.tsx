@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Search, MapPin, Building2, Filter } from 'lucide-react';
+import { Search, MapPin, Building2 } from 'lucide-react';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import Card from '../../components/ui/Card';
@@ -36,7 +36,7 @@ export default function Listings() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="text-3xl font-bold text-gray-900">Find Your Next Home</h1>
           <p className="mt-2 text-gray-600">
@@ -44,34 +44,39 @@ export default function Listings() {
           </p>
 
           {/* Search and Filters */}
-          <div className="mt-6 flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <search aria-label="Search and filter properties">
+            <div className="mt-6 flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" aria-hidden="true" />
+                <Input
+                  placeholder="Search by name, city, or location..."
+                  aria-label="Search properties by name, city, or location"
+                  className="pl-10"
+                  value={filters.search}
+                  onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
+                />
+              </div>
+              <Select
+                options={propertyTypes}
+                value={filters.type}
+                onChange={(e) => setFilters({ ...filters, type: e.target.value, page: 1 })}
+                aria-label="Filter by property type"
+                className="sm:w-48"
+              />
               <Input
-                placeholder="Search by name, city, or location..."
-                className="pl-10"
-                value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
+                placeholder="City"
+                aria-label="Filter by city"
+                value={filters.city}
+                onChange={(e) => setFilters({ ...filters, city: e.target.value, page: 1 })}
+                className="sm:w-48"
               />
             </div>
-            <Select
-              options={propertyTypes}
-              value={filters.type}
-              onChange={(e) => setFilters({ ...filters, type: e.target.value, page: 1 })}
-              className="sm:w-48"
-            />
-            <Input
-              placeholder="City"
-              value={filters.city}
-              onChange={(e) => setFilters({ ...filters, city: e.target.value, page: 1 })}
-              className="sm:w-48"
-            />
-          </div>
+          </search>
         </div>
-      </div>
+      </header>
 
       {/* Listings */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main aria-label="Property listings" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
@@ -99,9 +104,14 @@ export default function Listings() {
               Showing {listings.length} of {pagination?.total || 0} properties
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div role="list" className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {listings.map((property: any) => (
-                <Link key={property._id} to={`/listings/${property._id}`}>
+                <Link
+                  key={property._id}
+                  to={`/listings/${property._id}`}
+                  role="listitem"
+                  aria-label={`View details for ${property.name} in ${property.address?.city}`}
+                >
                   <Card padding="none" className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                     <div className="relative">
                       <img
@@ -150,29 +160,31 @@ export default function Listings() {
 
             {/* Pagination */}
             {pagination && pagination.pages > 1 && (
-              <div className="mt-8 flex justify-center gap-2">
+              <nav aria-label="Pagination" className="mt-8 flex justify-center gap-2">
                 <Button
                   variant="secondary"
                   disabled={filters.page === 1}
+                  aria-label="Go to previous page"
                   onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
                 >
                   Previous
                 </Button>
-                <span className="flex items-center px-4 text-gray-600">
+                <span aria-live="polite" className="flex items-center px-4 text-gray-600">
                   Page {pagination.page} of {pagination.pages}
                 </span>
                 <Button
                   variant="secondary"
                   disabled={filters.page === pagination.pages}
+                  aria-label="Go to next page"
                   onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
                 >
                   Next
                 </Button>
-              </div>
+              </nav>
             )}
           </>
         )}
-      </div>
+      </main>
     </div>
   );
 }

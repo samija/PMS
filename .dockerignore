@@ -1,0 +1,10 @@
+node_modules
+**/node_modules
+.git
+logs
+**/logs
+.env
+*.env
+aidlc-docs
+dist
+**/dist

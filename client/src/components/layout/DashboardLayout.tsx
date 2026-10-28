@@ -22,6 +22,9 @@ import {
   DollarSign,
   Star,
   Eye,
+  FileText,
+  Fingerprint,
+  FolderOpen,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { usePropertyStore } from '../../store/propertyStore';
@@ -47,6 +50,7 @@ export default function DashboardLayout() {
     { name: 'Leave', path: '/owner/leave', icon: Calendar },
     { name: 'Payments', path: '/owner/payments', icon: CreditCard },
     { name: 'Schedules', path: '/owner/schedules', icon: Calendar },
+    { name: 'Leases', path: '/owner/leases', icon: FileText },
     { name: 'Waiting List', path: '/owner/waitlist', icon: ClipboardList },
     { name: 'Maintenance', path: '/owner/maintenance', icon: Wrench },
     { name: 'Settings', path: '/owner/settings', icon: Settings },
@@ -65,6 +69,9 @@ export default function DashboardLayout() {
 
   const tenantNavItems = [
     { name: 'Dashboard', path: '/tenant', icon: LayoutDashboard },
+    { name: 'My Identity', path: '/tenant/identity', icon: Fingerprint },
+    { name: 'My Documents', path: '/tenant/documents', icon: FolderOpen },
+    { name: 'My Lease', path: '/tenant/lease', icon: FileText },
     { name: 'Payments', path: '/tenant/payments', icon: CreditCard },
     { name: 'Maintenance', path: '/tenant/maintenance', icon: Wrench },
   ];
@@ -83,13 +90,15 @@ export default function DashboardLayout() {
         key={item.path}
         to={item.path}
         onClick={() => setSidebarOpen(false)}
+        aria-label={item.name}
+        aria-current={isActive ? 'page' : undefined}
         className={`flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-colors min-h-[44px] ${
           isActive
             ? 'bg-primary-50 text-primary-600'
             : 'text-gray-600 hover:bg-gray-50'
         }`}
       >
-        <item.icon className="h-5 w-5" />
+        <item.icon className="h-5 w-5" aria-hidden="true" />
         <span className="font-medium text-sm">{item.name}</span>
       </Link>
     );
@@ -102,11 +111,14 @@ export default function DashboardLayout() {
         <div
           className="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
         />
       )}
 
       {/* Sidebar */}
       <aside
+        aria-label="Main navigation"
+        aria-hidden={!sidebarOpen && undefined}
         className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 lg:translate-x-0 flex flex-col ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
@@ -129,7 +141,7 @@ export default function DashboardLayout() {
         {isOwner && <PropertySwitcher onSelect={() => setSidebarOpen(false)} />}
 
         {/* Scrollable nav area */}
-        <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+        <nav role="navigation" aria-label="Sidebar navigation" className="flex-1 overflow-y-auto p-4 space-y-1">
           {isOwner ? (
             <>
               {/* Global Section */}
@@ -157,9 +169,10 @@ export default function DashboardLayout() {
         <div className="flex-shrink-0 p-4 border-t">
           <button
             onClick={handleLogout}
+            aria-label="Logout"
             className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors min-h-[48px]"
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut className="h-5 w-5" aria-hidden="true" />
             <span className="font-medium">Logout</span>
           </button>
         </div>
@@ -187,6 +200,9 @@ export default function DashboardLayout() {
             <div className="relative">
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
+                aria-label={`User menu for ${user?.name}`}
+                aria-expanded={userMenuOpen}
+                aria-haspopup="menu"
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50"
               >
                 <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
@@ -197,20 +213,25 @@ export default function DashboardLayout() {
                       className="h-8 w-8 rounded-full object-cover"
                     />
                   ) : (
-                    <User className="h-5 w-5 text-primary-600" />
+                    <User className="h-5 w-5 text-primary-600" aria-hidden="true" />
                   )}
                 </div>
                 <div className="hidden sm:block text-left">
                   <p className="text-sm font-medium text-gray-900">{user?.name}</p>
                   <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
                 </div>
-                <ChevronDown className="h-4 w-4 text-gray-400" />
+                <ChevronDown className="h-4 w-4 text-gray-400" aria-hidden="true" />
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-1">
+                <div
+                  role="menu"
+                  aria-label="User account menu"
+                  className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-1"
+                >
                   <Link
                     to={`${basePath}/profile`}
+                    role="menuitem"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     onClick={() => setUserMenuOpen(false)}
                   >
@@ -218,6 +239,7 @@ export default function DashboardLayout() {
                   </Link>
                   <button
                     onClick={handleLogout}
+                    role="menuitem"
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
                   >
                     Logout

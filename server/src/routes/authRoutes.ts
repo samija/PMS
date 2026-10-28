@@ -184,4 +184,44 @@ router.put(
   authController.updateProfile
 );
 
+/**
+ * @swagger
+ * /auth/exchange-code:
+ *   post:
+ *     summary: Exchange one-time authorization code for JWT
+ *     description: Exchange the short-lived one-time code received from OAuth callback for a JWT token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - code
+ *             properties:
+ *               code:
+ *                 type: string
+ *                 description: One-time authorization code from OAuth callback
+ *     responses:
+ *       200:
+ *         description: Token exchange successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     token:
+ *                       type: string
+ *       400:
+ *         description: Invalid or expired authorization code
+ */
+router.post('/exchange-code', authController.exchangeCode);
+
 export default router;

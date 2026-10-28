@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Building, MapPin, MoreVertical, Eye, Pencil, Trash2, Globe } from 'lucide-react';
+import { Plus, Building, MapPin, Eye, Trash2, Globe } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -113,7 +113,7 @@ export default function Properties() {
   ];
 
   return (
-    <div className="space-y-6">
+    <main aria-label="Properties management" className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Properties</h1>
@@ -169,7 +169,7 @@ export default function Properties() {
                     <h3 className="font-semibold text-gray-900">{property.name}</h3>
                     <div className="flex items-center text-sm text-gray-500 mt-1">
                       <MapPin className="h-4 w-4 mr-1" />
-                      {property.address.city}, {property.address.state}
+                      {property.address?.city}, {property.address?.state}
                     </div>
                   </div>
                   <Badge variant="info">{property.type}</Badge>
@@ -187,9 +187,12 @@ export default function Properties() {
                 </div>
 
                 <div className="mt-4 pt-4 border-t flex justify-between">
-                  <Link to={`/owner/properties/${property._id}`}>
+                  <Link
+                    to={`/owner/properties/${property._id}`}
+                    aria-label={`View details for ${property.name}`}
+                  >
                     <Button variant="secondary" size="sm">
-                      <Eye className="h-4 w-4 mr-1" />
+                      <Eye className="h-4 w-4 mr-1" aria-hidden="true" />
                       View
                     </Button>
                   </Link>
@@ -197,20 +200,22 @@ export default function Properties() {
                     <Button
                       variant="ghost"
                       size="sm"
+                      aria-label={property.isListed ? `Unlist ${property.name}` : `List ${property.name} publicly`}
                       onClick={() => toggleListingMutation.mutate(property._id)}
                     >
-                      <Globe className="h-4 w-4" />
+                      <Globe className="h-4 w-4" aria-hidden="true" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
+                      aria-label={`Delete ${property.name}`}
                       onClick={() => {
                         if (confirm('Are you sure you want to delete this property?')) {
                           deleteMutation.mutate(property._id);
                         }
                       }}
                     >
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <Trash2 className="h-4 w-4 text-red-500" aria-hidden="true" />
                     </Button>
                   </div>
                 </div>
@@ -305,8 +310,9 @@ export default function Properties() {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label htmlFor="property-description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea
+              id="property-description"
               className="input min-h-[100px]"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -323,6 +329,6 @@ export default function Properties() {
           </div>
         </form>
       </Modal>
-    </div>
+    </main>
   );
 }

@@ -4,6 +4,7 @@ import { ErrorFallback } from './ErrorFallback';
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
+  fallbackRender?: (props: { error: Error | null; onReset: () => void }) => ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
@@ -33,6 +34,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   render() {
     if (this.state.hasError) {
+      if (this.props.fallbackRender) {
+        return this.props.fallbackRender({ error: this.state.error, onReset: this.handleReset });
+      }
       if (this.props.fallback) {
         return this.props.fallback;
       }

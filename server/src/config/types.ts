@@ -41,6 +41,7 @@ export const TYPES = {
   PayrollService: Symbol.for('PayrollService'),
   PerformanceService: Symbol.for('PerformanceService'),
   StaffService: Symbol.for('StaffService'),
+  ListingService: Symbol.for('ListingService'),
 
   // ==================== Controllers ====================
   AuthController: Symbol.for('AuthController'),
@@ -79,6 +80,25 @@ export const TYPES = {
   LeaveRequestModel: Symbol.for('LeaveRequestModel'),
   PerformanceReviewModel: Symbol.for('PerformanceReviewModel'),
   PayrollModel: Symbol.for('PayrollModel'),
+
+  // ==================== Identity & Document Management ====================
+  TenantIdentityService: Symbol.for('TenantIdentityService'),
+  FieldEncryption: Symbol.for('FieldEncryption'),
+  TenantDocumentModel: Symbol.for('TenantDocumentModel'),
+  TenantDocumentRepository: Symbol.for('TenantDocumentRepository'),
+  TenantDocumentService: Symbol.for('TenantDocumentService'),
+  CloudinaryObjectStorage: Symbol.for('CloudinaryObjectStorage'),
+  LeaseTemplateModel: Symbol.for('LeaseTemplateModel'),
+  LeaseTemplateRepository: Symbol.for('LeaseTemplateRepository'),
+  LeaseTemplateService: Symbol.for('LeaseTemplateService'),
+  PdfRenderer: Symbol.for('PdfRenderer'),
+  LeaseAgreementModel: Symbol.for('LeaseAgreementModel'),
+  LeaseAgreementRepository: Symbol.for('LeaseAgreementRepository'),
+  LeaseAgreementService: Symbol.for('LeaseAgreementService'),
+  SignatureProvider: Symbol.for('SignatureProvider'),
+  TenantAuditLogModel: Symbol.for('TenantAuditLogModel'),
+  TenantAuditLogRepository: Symbol.for('TenantAuditLogRepository'),
+  TenantAuditService: Symbol.for('TenantAuditService'),
 
   // ==================== Infrastructure ====================
   PaymentGatewayFactory: Symbol.for('PaymentGatewayFactory'),

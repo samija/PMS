@@ -1,10 +1,27 @@
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/User.js';
+import { randomBytes } from 'crypto';
 import { AuthService } from '../application/services/AuthService.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 import logger from '../config/logger.js';
 
-// Create service instance
-const authService = new AuthService(User);
+// In-memory store for one-time authorization codes (code -> { token, expiresAt })
+const authCodeStore = new Map<string, { token: string; expiresAt: number }>();
+const AUTH_CODE_TTL_MS = 60_000; // 60 seconds
+
+function generateAuthCode(token: string): string {
+  const code = randomBytes(32).toString('hex');
+  authCodeStore.set(code, { token, expiresAt: Date.now() + AUTH_CODE_TTL_MS });
+  // Clean up expired codes lazily
+  for (const [k, v] of authCodeStore) {
+    if (v.expiresAt < Date.now()) {
+      authCodeStore.delete(k);
+    }
+  }
+  return code;
+}
+
+const authService = container.get<AuthService>(TYPES.AuthService);
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -90,12 +107,40 @@ export const googleCallback = async (req: Request, res: Response, next: NextFunc
 
     const result = await authService.generateAuthResponse(user);
 
-    // Redirect to frontend with token
-    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${result.token}`);
+    // Generate a short-lived one-time code to avoid exposing the JWT in the URL
+    const code = generateAuthCode(result.token);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?code=${code}`);
   } catch (error) {
     logger.error('Google callback error:', error);
     res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
   }
+};
+
+export const exchangeCode = async (req: Request, res: Response): Promise<void> => {
+  const { code } = req.body;
+
+  if (!code || typeof code !== 'string') {
+    res.status(400).json({ success: false, message: 'Authorization code is required' });
+    return;
+  }
+
+  const entry = authCodeStore.get(code);
+
+  if (!entry) {
+    res.status(400).json({ success: false, message: 'Invalid or expired authorization code' });
+    return;
+  }
+
+  if (entry.expiresAt < Date.now()) {
+    authCodeStore.delete(code);
+    res.status(400).json({ success: false, message: 'Authorization code has expired' });
+    return;
+  }
+
+  // Consume the code (one-time use)
+  authCodeStore.delete(code);
+
+  res.json({ success: true, data: { token: entry.token } });
 };
 
 export default {
@@ -104,4 +149,5 @@ export default {
   getProfile,
   updateProfile,
   googleCallback,
+  exchangeCode,
 };

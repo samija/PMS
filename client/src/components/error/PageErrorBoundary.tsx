@@ -27,7 +27,7 @@ export const PageErrorFallback: React.FC<PageErrorFallbackProps> = ({ error, onR
           </Button>
           <Button
             onClick={() => navigate('/')}
-            variant="outline"
+            variant="ghost"
             className="inline-flex items-center gap-2"
           >
             <Home className="h-4 w-4" />
@@ -42,7 +42,9 @@ export const PageErrorFallback: React.FC<PageErrorFallbackProps> = ({ error, onR
 export const PageErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <ErrorBoundary
-      fallback={undefined}
+      fallbackRender={({ error, onReset }) => (
+        <PageErrorFallback error={error} onReset={onReset} />
+      )}
     >
       {children}
     </ErrorBoundary>

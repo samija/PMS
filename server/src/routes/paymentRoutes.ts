@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, json } from 'express';
 import * as paymentController from '../controllers/paymentController.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { ValidationMiddleware } from '../presentation/validators/ValidationMiddleware.js';
@@ -6,8 +6,20 @@ import { InitializePaymentDto } from '../application/dto/payment/InitializePayme
 import { CreateManualPaymentDto } from '../application/dto/payment/CreateManualPaymentDto.js';
 import { ApprovePaymentDto } from '../application/dto/payment/ApprovePaymentDto.js';
 import { uploadPaymentReceipt } from '../middleware/upload.js';
+import { verifyChapaWebhookSignature } from '../middleware/webhookSignature.js';
 
 const router = Router();
+
+/**
+ * JSON body parser that captures the raw body buffer for webhook signature
+ * verification. Applied only to webhook routes so it does not affect other
+ * routes that rely on the global body parser.
+ */
+const jsonWithRawBody = json({
+  verify: (req, _res, buf) => {
+    (req as any).rawBody = buf;
+  },
+});
 
 /**
  * @swagger
@@ -94,7 +106,7 @@ router.post(
  *       404:
  *         description: Payment not found
  */
-router.get('/verify/:txRef', paymentController.verifyPayment);
+router.get('/verify/:txRef', authenticate, paymentController.verifyPayment);
 
 /**
  * @swagger
@@ -152,7 +164,7 @@ router.get('/gateways', paymentController.getAvailableGateways);
  *       200:
  *         description: Webhook processed successfully
  */
-router.post('/webhook', paymentController.handleWebhook);
+router.post('/webhook', jsonWithRawBody, verifyChapaWebhookSignature, paymentController.handleWebhook);
 
 /**
  * @swagger
@@ -171,7 +183,7 @@ router.post('/webhook', paymentController.handleWebhook);
  *       200:
  *         description: Webhook processed successfully
  */
-router.post('/webhook/chapa', paymentController.handleChapaWebhook);
+router.post('/webhook/chapa', jsonWithRawBody, verifyChapaWebhookSignature, paymentController.handleChapaWebhook);
 
 /**
  * @swagger
