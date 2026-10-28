@@ -1,49 +1,110 @@
-import { Outlet, Link } from 'react-router-dom';
-import { Building2, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Menu, X, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 
 export default function PublicLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { isAuthenticated, user } = useAuthStore();
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-stone-950">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap');
+      `}</style>
+
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? 'bg-stone-950/90 backdrop-blur-xl border-b border-white/5 shadow-lg shadow-black/20'
+            : isHome
+              ? 'bg-transparent'
+              : 'bg-stone-950/90 backdrop-blur-xl border-b border-white/5'
+        }`}
+      >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+          <div className="flex justify-between h-20">
             <div className="flex items-center">
-              <Link to="/" className="flex items-center space-x-2">
-                <Building2 className="h-8 w-8 text-primary-600" />
-                <span className="text-xl font-bold text-gray-900">Enderase</span>
+              <Link to="/" className="flex items-center gap-3 group">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-600/20 group-hover:shadow-amber-600/40 transition-shadow">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-5 h-5 text-stone-950"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+                <span style={{ fontFamily: 'DM Serif Display, serif' }} className="text-xl text-white">
+                  Enderase
+                </span>
               </Link>
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-gray-600 hover:text-gray-900">
+            <div className="hidden md:flex items-center gap-1" style={{ fontFamily: 'Outfit, sans-serif' }}>
+              <Link
+                to="/"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  location.pathname === '/' ? 'text-amber-400' : 'text-stone-400 hover:text-white'
+                }`}
+              >
                 Home
               </Link>
-              <Link to="/listings" className="text-gray-600 hover:text-gray-900">
+              <Link
+                to="/listings"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  location.pathname.startsWith('/listings') ? 'text-amber-400' : 'text-stone-400 hover:text-white'
+                }`}
+              >
                 Listings
               </Link>
+
+              <div className="w-px h-6 bg-stone-700 mx-3" />
+
               {isAuthenticated ? (
                 <Link
                   to={user?.role === 'owner' ? '/owner' : '/tenant'}
-                  className="btn btn-primary"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-stone-950 rounded-xl font-semibold text-sm hover:from-amber-400 hover:to-orange-500 transition-all shadow-lg shadow-amber-600/20"
                 >
                   Dashboard
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               ) : (
-                <div className="flex items-center space-x-4">
-                  <Link to="/login" className="text-gray-600 hover:text-gray-900">
-                    Login
+                <>
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-stone-400 hover:text-white transition-colors"
+                  >
+                    Log in
                   </Link>
-                  <Link to="/register" className="btn btn-primary">
+                  <Link
+                    to="/register"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-stone-950 rounded-xl font-semibold text-sm hover:from-amber-400 hover:to-orange-500 transition-all shadow-lg shadow-amber-600/20"
+                  >
                     Get Started
+                    <ArrowRight className="w-4 h-4" />
                   </Link>
-                </div>
+                </>
               )}
             </div>
 
@@ -51,7 +112,7 @@ export default function PublicLayout() {
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-gray-600 hover:text-gray-900 p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                className="text-stone-400 hover:text-white p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               >
                 {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -61,27 +122,25 @@ export default function PublicLayout() {
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t">
-              <div className="flex flex-col space-y-2">
+            <div className="md:hidden pb-6 border-t border-white/5" style={{ fontFamily: 'Outfit, sans-serif' }}>
+              <div className="flex flex-col gap-1 pt-4">
                 <Link
                   to="/"
-                  className="text-gray-600 hover:text-gray-900 py-3 px-2 min-h-[44px] flex items-center"
-                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-stone-300 hover:text-white py-3 px-3 rounded-lg hover:bg-white/5 transition-colors font-medium"
                 >
                   Home
                 </Link>
                 <Link
                   to="/listings"
-                  className="text-gray-600 hover:text-gray-900 py-3 px-2 min-h-[44px] flex items-center"
-                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-stone-300 hover:text-white py-3 px-3 rounded-lg hover:bg-white/5 transition-colors font-medium"
                 >
                   Listings
                 </Link>
+                <div className="h-px bg-white/5 my-2" />
                 {isAuthenticated ? (
                   <Link
                     to={user?.role === 'owner' ? '/owner' : '/tenant'}
-                    className="btn btn-primary text-center min-h-[44px] flex items-center justify-center"
-                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-center py-3 px-3 bg-gradient-to-r from-amber-500 to-orange-600 text-stone-950 rounded-xl font-semibold"
                   >
                     Dashboard
                   </Link>
@@ -89,15 +148,13 @@ export default function PublicLayout() {
                   <>
                     <Link
                       to="/login"
-                      className="text-gray-600 hover:text-gray-900 py-3 px-2 min-h-[44px] flex items-center"
-                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-stone-300 hover:text-white py-3 px-3 rounded-lg hover:bg-white/5 transition-colors font-medium"
                     >
-                      Login
+                      Log in
                     </Link>
                     <Link
                       to="/register"
-                      className="btn btn-primary text-center min-h-[44px] flex items-center justify-center"
-                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-center py-3 px-3 bg-gradient-to-r from-amber-500 to-orange-600 text-stone-950 rounded-xl font-semibold mt-1"
                     >
                       Get Started
                     </Link>
@@ -115,45 +172,84 @@ export default function PublicLayout() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Building2 className="h-8 w-8 text-primary-400" />
-                <span className="text-xl font-bold">Enderase</span>
+      <footer className="relative border-t border-white/5 bg-stone-950" style={{ fontFamily: 'Outfit, sans-serif' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+            {/* Brand */}
+            <div className="md:col-span-4">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-5 h-5 text-stone-950"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+                <span style={{ fontFamily: 'DM Serif Display, serif' }} className="text-xl text-white">
+                  Enderase
+                </span>
               </div>
-              <p className="text-gray-400">
-                Modern property management system for landlords and tenants.
+              <p className="text-stone-500 text-sm leading-relaxed max-w-xs">
+                Ethiopia's modern property management platform. Simplifying the relationship between landlords and
+                tenants.
               </p>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/" className="hover:text-white">Home</Link></li>
-                <li><Link to="/listings" className="hover:text-white">Listings</Link></li>
-                <li><Link to="/login" className="hover:text-white">Login</Link></li>
+
+            {/* Links */}
+            <div className="md:col-span-2">
+              <h4 className="font-semibold text-stone-300 text-sm uppercase tracking-wider mb-4">Platform</h4>
+              <ul className="space-y-3 text-stone-500 text-sm">
+                <li>
+                  <Link to="/" className="hover:text-amber-400 transition-colors">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/listings" className="hover:text-amber-400 transition-colors">
+                    Listings
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="hover:text-amber-400 transition-colors">
+                    Get Started
+                  </Link>
+                </li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4">For Owners</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/register" className="hover:text-white">Register</Link></li>
-                <li><a href="#" className="hover:text-white">Pricing</a></li>
-                <li><a href="#" className="hover:text-white">Features</a></li>
+            <div className="md:col-span-2">
+              <h4 className="font-semibold text-stone-300 text-sm uppercase tracking-wider mb-4">Features</h4>
+              <ul className="space-y-3 text-stone-500 text-sm">
+                <li>
+                  <span className="hover:text-amber-400 transition-colors cursor-default">Payments</span>
+                </li>
+                <li>
+                  <span className="hover:text-amber-400 transition-colors cursor-default">Maintenance</span>
+                </li>
+                <li>
+                  <span className="hover:text-amber-400 transition-colors cursor-default">Analytics</span>
+                </li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <ul className="space-y-2 text-gray-400">
+            <div className="md:col-span-4">
+              <h4 className="font-semibold text-stone-300 text-sm uppercase tracking-wider mb-4">Contact</h4>
+              <ul className="space-y-3 text-stone-500 text-sm">
                 <li>support@enderase.com</li>
                 <li>+251 911 123 456</li>
                 <li>Addis Ababa, Ethiopia</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} Enderase. All rights reserved.</p>
+
+          <div className="border-t border-white/5 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-stone-600 text-sm">&copy; {new Date().getFullYear()} Enderase. All rights reserved.</p>
+            <p className="text-stone-700 text-xs">Built in Ethiopia</p>
           </div>
         </div>
       </footer>
