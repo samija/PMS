@@ -36,11 +36,7 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post(
-  '/register',
-  ValidationMiddleware.validate(RegisterDto),
-  authController.register
-);
+router.post('/register', ValidationMiddleware.validate(RegisterDto), authController.register);
 
 /**
  * @swagger
@@ -69,11 +65,7 @@ router.post(
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post(
-  '/login',
-  ValidationMiddleware.validate(LoginDto),
-  authController.login
-);
+router.post('/login', ValidationMiddleware.validate(LoginDto), authController.login);
 
 /**
  * @swagger
@@ -86,10 +78,7 @@ router.post(
  *       302:
  *         description: Redirect to Google OAuth
  */
-router.get(
-  '/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 /**
  * @swagger
@@ -177,12 +166,7 @@ router.get('/profile', authenticate, authController.getProfile);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.put(
-  '/profile',
-  authenticate,
-  ValidationMiddleware.validate(UpdateProfileDto),
-  authController.updateProfile
-);
+router.put('/profile', authenticate, ValidationMiddleware.validate(UpdateProfileDto), authController.updateProfile);
 
 /**
  * @swagger
@@ -223,5 +207,18 @@ router.put(
  *         description: Invalid or expired authorization code
  */
 router.post('/exchange-code', authController.exchangeCode);
+
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     description: Clear the authentication cookie
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logged out successfully
+ */
+router.post('/logout', authController.logout);
 
 export default router;

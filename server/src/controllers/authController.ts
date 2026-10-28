@@ -5,6 +5,14 @@ import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import logger from '../config/logger.js';
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  path: '/',
+};
+
 // In-memory store for one-time authorization codes (code -> { token, expiresAt })
 const authCodeStore = new Map<string, { token: string; expiresAt: number }>();
 const AUTH_CODE_TTL_MS = 60_000; // 60 seconds
@@ -27,6 +35,7 @@ export const register = async (req: Request, res: Response, next: NextFunction):
   try {
     const result = await authService.register(req.body);
 
+    res.cookie('token', result.token, COOKIE_OPTIONS);
     res.status(201).json({
       success: true,
       message: 'Registration successful',
@@ -41,6 +50,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
   try {
     const result = await authService.login(req.body);
 
+    res.cookie('token', result.token, COOKIE_OPTIONS);
     res.json({
       success: true,
       message: 'Login successful',
@@ -107,6 +117,9 @@ export const googleCallback = async (req: Request, res: Response, next: NextFunc
 
     const result = await authService.generateAuthResponse(user);
 
+    // Set the httpOnly cookie so the frontend is authenticated after redirect
+    res.cookie('token', result.token, COOKIE_OPTIONS);
+
     // Generate a short-lived one-time code to avoid exposing the JWT in the URL
     const code = generateAuthCode(result.token);
     res.redirect(`${process.env.FRONTEND_URL}/auth/callback?code=${code}`);
@@ -140,7 +153,18 @@ export const exchangeCode = async (req: Request, res: Response): Promise<void> =
   // Consume the code (one-time use)
   authCodeStore.delete(code);
 
+  res.cookie('token', entry.token, COOKIE_OPTIONS);
   res.json({ success: true, data: { token: entry.token } });
+};
+
+export const logout = async (_req: Request, res: Response): Promise<void> => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' as const,
+    path: '/',
+  });
+  res.json({ success: true, message: 'Logged out successfully' });
 };
 
 export default {
@@ -150,4 +174,5 @@ export default {
   updateProfile,
   googleCallback,
   exchangeCode,
+  logout,
 };

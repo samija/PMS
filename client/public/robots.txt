@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /listings
+Disallow: /dashboard
+Disallow: /api
+Sitemap: https://enderase.com/sitemap.xml

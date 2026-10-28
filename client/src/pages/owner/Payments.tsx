@@ -74,8 +74,7 @@ export default function Payments() {
   const pendingCount = pendingData?.data?.data?.pagination?.total || 0;
 
   const approveMutation = useMutation({
-    mutationFn: ({ id, notes }: { id: string; notes?: string }) =>
-      paymentAPI.approvePayment(id, notes),
+    mutationFn: ({ id, notes }: { id: string; notes?: string }) => paymentAPI.approvePayment(id, notes),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['pending-approvals'] });
@@ -91,8 +90,7 @@ export default function Payments() {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: ({ id, notes }: { id: string; notes?: string }) =>
-      paymentAPI.rejectPayment(id, notes),
+    mutationFn: ({ id, notes }: { id: string; notes?: string }) => paymentAPI.rejectPayment(id, notes),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['pending-approvals'] });
@@ -108,7 +106,8 @@ export default function Payments() {
   });
 
   const createManualMutation = useMutation({
-    mutationFn: (data: CreateManualPaymentData) => paymentAPI.createManual(data as unknown as Record<string, unknown>),
+    mutationFn: (data: CreateManualPaymentData) =>
+      paymentAPI.createManual(data as Parameters<typeof paymentAPI.createManual>[0]),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['payment-stats'] });
@@ -197,9 +196,7 @@ export default function Payments() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500">Total Collected ({filters.year})</p>
-              <p className="text-2xl font-bold text-green-600">
-                {completedTotal.toLocaleString()} ETB
-              </p>
+              <p className="text-2xl font-bold text-green-600">{completedTotal.toLocaleString()} ETB</p>
             </div>
             <div className="p-3 bg-green-100 rounded-lg">
               <CreditCard className="h-6 w-6 text-green-600" />
@@ -210,9 +207,7 @@ export default function Payments() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500">Pending Payments</p>
-              <p className="text-2xl font-bold text-yellow-600">
-                {pendingTotal.toLocaleString()} ETB
-              </p>
+              <p className="text-2xl font-bold text-yellow-600">{pendingTotal.toLocaleString()} ETB</p>
             </div>
             <div className="p-3 bg-yellow-100 rounded-lg">
               <Calendar className="h-6 w-6 text-yellow-600" />
@@ -350,24 +345,18 @@ export default function Payments() {
                         <tr key={payment._id} className="border-t hover:bg-gray-50">
                           <td className="py-3 px-4">
                             <p className="font-medium">{payment.tenantId?.userId?.name || 'N/A'}</p>
-                            <p className="text-sm text-gray-500">
-                              Unit {payment.unitId?.unitNumber}
-                            </p>
+                            <p className="text-sm text-gray-500">Unit {payment.unitId?.unitNumber}</p>
                           </td>
                           <td className="py-3 px-4 capitalize">{payment.type}</td>
                           <td className="py-3 px-4">
                             {payment.month}/{payment.year}
                           </td>
-                          <td className="py-3 px-4 font-medium">
-                            {payment.amount.toLocaleString()} ETB
-                          </td>
+                          <td className="py-3 px-4 font-medium">{payment.amount.toLocaleString()} ETB</td>
                           <td className="py-3 px-4">
                             <Badge variant={getStatusBadge(payment.status)}>{payment.status}</Badge>
                           </td>
                           <td className="py-3 px-4 text-sm text-gray-500">
-                            {payment.paidAt
-                              ? new Date(payment.paidAt).toLocaleDateString()
-                              : 'Pending'}
+                            {payment.paidAt ? new Date(payment.paidAt).toLocaleDateString() : 'Pending'}
                           </td>
                           <td className="py-3 px-4">
                             {payment.receipt?.number && (
@@ -398,7 +387,9 @@ export default function Payments() {
                         </div>
                         <div>
                           <span className="text-gray-500">Period:</span>
-                          <span className="ml-1">{payment.month}/{payment.year}</span>
+                          <span className="ml-1">
+                            {payment.month}/{payment.year}
+                          </span>
                         </div>
                         <div>
                           <span className="text-gray-500">Amount:</span>
@@ -406,7 +397,9 @@ export default function Payments() {
                         </div>
                         <div>
                           <span className="text-gray-500">Date:</span>
-                          <span className="ml-1">{payment.paidAt ? new Date(payment.paidAt).toLocaleDateString() : 'Pending'}</span>
+                          <span className="ml-1">
+                            {payment.paidAt ? new Date(payment.paidAt).toLocaleDateString() : 'Pending'}
+                          </span>
                         </div>
                       </div>
                       {payment.receipt?.number && (
@@ -471,9 +464,7 @@ export default function Payments() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
-                        <p className="font-medium text-gray-900">
-                          {payment.tenantId?.userId?.name || 'N/A'}
-                        </p>
+                        <p className="font-medium text-gray-900">{payment.tenantId?.userId?.name || 'N/A'}</p>
                         <Badge variant="warning">Pending Approval</Badge>
                       </div>
                       <p className="text-sm text-gray-500 mt-1">
@@ -486,9 +477,7 @@ export default function Payments() {
                           {payment.month}/{payment.year}
                         </span>
                         <span className="text-sm text-gray-400">•</span>
-                        <span className="font-medium text-gray-900">
-                          {payment.amount.toLocaleString()} ETB
-                        </span>
+                        <span className="font-medium text-gray-900">{payment.amount.toLocaleString()} ETB</span>
                       </div>
                       <p className="text-xs text-gray-400 mt-1">
                         Submitted: {new Date(payment.createdAt).toLocaleDateString()}
@@ -529,11 +518,7 @@ export default function Payments() {
       )}
 
       {/* Add Manual Payment Modal */}
-      <Modal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        title="Record Manual Payment"
-      >
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Record Manual Payment">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Select
             label="Tenant"
@@ -590,7 +575,12 @@ export default function Payments() {
           </div>
 
           <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-            <Button type="button" variant="secondary" onClick={() => setShowAddModal(false)} className="w-full sm:w-auto">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setShowAddModal(false)}
+              className="w-full sm:w-auto"
+            >
               Cancel
             </Button>
             <Button type="submit" loading={createManualMutation.isPending} className="w-full sm:w-auto">
@@ -612,11 +602,7 @@ export default function Payments() {
         {selectedPayment?.bankTransferReceipt && (
           <div className="space-y-4">
             <div className="border rounded-lg overflow-hidden">
-              <img
-                src={selectedPayment.bankTransferReceipt}
-                alt="Bank transfer receipt"
-                className="w-full h-auto"
-              />
+              <img src={selectedPayment.bankTransferReceipt} alt="Bank transfer receipt" className="w-full h-auto" />
             </div>
             <div className="flex justify-between items-center pt-2">
               <a
@@ -627,10 +613,7 @@ export default function Payments() {
               >
                 Open in new tab
               </a>
-              <Button
-                variant="secondary"
-                onClick={() => setShowReceiptModal(false)}
-              >
+              <Button variant="secondary" onClick={() => setShowReceiptModal(false)}>
                 Close
               </Button>
             </div>
@@ -666,7 +649,9 @@ export default function Payments() {
                 </div>
                 <div className="flex justify-between sm:block">
                   <p className="text-gray-500">Period</p>
-                  <p className="font-medium">{selectedPayment.month}/{selectedPayment.year}</p>
+                  <p className="font-medium">
+                    {selectedPayment.month}/{selectedPayment.year}
+                  </p>
                 </div>
                 <div className="flex justify-between sm:block">
                   <p className="text-gray-500">Type</p>
@@ -698,9 +683,7 @@ export default function Payments() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Notes (optional)
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optional)</label>
               <textarea
                 value={approvalNotes}
                 onChange={(e) => setApprovalNotes(e.target.value)}

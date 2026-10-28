@@ -1,9 +1,11 @@
 import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
+import mongoose from 'mongoose';
 import connectDB from './config/database.js';
 import { validateEnv } from './config/validateEnv.js';
 import './config/passport.js';
@@ -42,16 +44,19 @@ const authLimiter = rateLimit({
 });
 
 // Middleware
-app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    'http://localhost:5000',
-    ...(process.env.NODE_ENV !== 'production' ? [/^http:\/\/localhost:\d+$/] : []),
-  ],
-  credentials: true,
-}));
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(
+  cors({
+    origin: [
+      process.env.FRONTEND_URL || 'http://localhost:5173',
+      'http://localhost:5000',
+      ...(process.env.NODE_ENV !== 'production' ? [/^http:\/\/localhost:\d+$/] : []),
+    ],
+    credentials: true,
+  })
+);
+app.use(cookieParser());
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
 // NoSQL injection protection
 app.use(mongoSanitize());
@@ -61,8 +66,10 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Setup Swagger documentation
-setupSwagger(app);
+// Setup Swagger documentation (dev/staging only)
+if (process.env.NODE_ENV !== 'production') {
+  setupSwagger(app);
+}
 
 // API routes
 app.use('/api/auth', authLimiter);
@@ -104,7 +111,8 @@ const startServer = async () => {
       const { processNotificationJob } = await import('./infrastructure/queues/processors/notificationProcessor.js');
       const { processReportJob } = await import('./infrastructure/queues/processors/reportProcessor.js');
 
-      const { emailQueue, paymentQueue, notificationQueue, reportQueue } = await import('./infrastructure/queues/index.js');
+      const { emailQueue, paymentQueue, notificationQueue, reportQueue } =
+        await import('./infrastructure/queues/index.js');
       emailQueue.process(processEmailJob);
       paymentQueue.process(processPaymentJob);
       notificationQueue.process(processNotificationJob);
@@ -140,6 +148,12 @@ const gracefulShutdown = async (signal: string) => {
     await disconnectRedis();
   } catch (err) {
     logger.warn('Error disconnecting Redis', { error: err });
+  }
+  try {
+    await mongoose.connection.close();
+    logger.info('MongoDB connection closed');
+  } catch (err) {
+    logger.warn('Error closing MongoDB connection', { error: err });
   }
   process.exit(0);
 };

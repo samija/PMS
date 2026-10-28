@@ -61,7 +61,7 @@ export default function Tenants() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: CreateTenantData) => tenantAPI.create(data as unknown as Record<string, unknown>),
+    mutationFn: (data: CreateTenantData) => tenantAPI.create(data as unknown as Parameters<typeof tenantAPI.create>[0]),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tenants'] });
       toast.success('Tenant added successfully');
@@ -77,9 +77,10 @@ export default function Tenants() {
   const properties = propertiesData?.data?.data?.properties || [];
   const units = unitsData?.data?.data || [];
 
-  const filteredTenants = tenants.filter((tenant: Tenant) =>
-    tenant.userId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    tenant.userId?.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTenants = tenants.filter(
+    (tenant: Tenant) =>
+      tenant.userId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tenant.userId?.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const resetForm = () => {
@@ -218,7 +219,9 @@ export default function Tenants() {
                     <div className="text-sm text-gray-500">
                       <span className="flex items-center gap-1">
                         <Building className="h-4 w-4 flex-shrink-0" />
-                        <span className="truncate">Unit {tenant.unitId?.unitNumber} | {tenant.propertyId?.name}</span>
+                        <span className="truncate">
+                          Unit {tenant.unitId?.unitNumber} | {tenant.propertyId?.name}
+                        </span>
                       </span>
                     </div>
                   </div>
@@ -245,12 +248,7 @@ export default function Tenants() {
       )}
 
       {/* Add Tenant Modal */}
-      <Modal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        title="Add New Tenant"
-        size="lg"
-      >
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Tenant" size="lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Tenant Name"
@@ -346,7 +344,12 @@ export default function Tenants() {
           </div>
 
           <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-            <Button type="button" variant="secondary" onClick={() => setShowAddModal(false)} className="w-full sm:w-auto">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setShowAddModal(false)}
+              className="w-full sm:w-auto"
+            >
               Cancel
             </Button>
             <Button type="submit" loading={createMutation.isPending} className="w-full sm:w-auto">

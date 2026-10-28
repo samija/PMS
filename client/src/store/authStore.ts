@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import axios from 'axios';
 import { User } from '../types';
+
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 interface AuthState {
   user: User | null;
@@ -17,18 +20,21 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
-      setAuth: (user, token) =>
+      setAuth: (user, _token) =>
         set({
           user,
-          token,
+          token: null, // No longer store token in client state
           isAuthenticated: true,
         }),
-      logout: () =>
+      logout: () => {
+        // Fire-and-forget the cookie-clearing request
+        axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true }).catch(() => {});
         set({
           user: null,
           token: null,
           isAuthenticated: false,
-        }),
+        });
+      },
       updateUser: (userData) =>
         set((state) => ({
           user: state.user ? { ...state.user, ...userData } : null,
@@ -36,6 +42,10 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'enderase-auth',
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
     }
   )
 );

@@ -21,15 +21,13 @@ export default function AuthCallback() {
     }
 
     if (token) {
-      // Set the token temporarily to make the API call
-      useAuthStore.setState({ token });
-
-      // Fetch user profile
+      // Cookie is already set by the server on the OAuth redirect.
+      // Fetch user profile using the cookie.
       authAPI
         .getProfile()
         .then((response) => {
           const user = response.data.data;
-          setAuth(user, token);
+          setAuth(user, '');
           toast.success('Login successful!');
           navigate(user.role === 'owner' ? '/owner' : '/tenant');
         })

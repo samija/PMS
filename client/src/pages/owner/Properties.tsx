@@ -46,7 +46,7 @@ export default function Properties() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: CreatePropertyData) => propertyAPI.create(data as unknown as Record<string, unknown>),
+    mutationFn: (data: CreatePropertyData) => propertyAPI.create(data as Parameters<typeof propertyAPI.create>[0]),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['properties'] });
       toast.success('Property created successfully');
@@ -107,7 +107,10 @@ export default function Properties() {
       totalUnits: Number(formData.totalUnits),
       description: formData.description,
       waitingListType: formData.waitingListType,
-      amenities: formData.amenities.split(',').map((a) => a.trim()).filter(Boolean),
+      amenities: formData.amenities
+        .split(',')
+        .map((a) => a.trim())
+        .filter(Boolean),
     });
   };
 
@@ -163,11 +166,7 @@ export default function Properties() {
             <Card key={property._id} padding="none" className="overflow-hidden">
               <div className="h-32 bg-gradient-to-br from-primary-500 to-primary-700 relative">
                 {property.images?.[0] && (
-                  <img
-                    src={property.images[0]}
-                    alt={property.name}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={property.images[0]} alt={property.name} className="w-full h-full object-cover" />
                 )}
                 <div className="absolute top-3 right-3 flex gap-2">
                   <Badge variant={property.isListed ? 'success' : 'default'}>
@@ -199,10 +198,7 @@ export default function Properties() {
                 </div>
 
                 <div className="mt-4 pt-4 border-t flex justify-between">
-                  <Link
-                    to={`/owner/properties/${property._id}`}
-                    aria-label={`View details for ${property.name}`}
-                  >
+                  <Link to={`/owner/properties/${property._id}`} aria-label={`View details for ${property.name}`}>
                     <Button variant="secondary" size="sm">
                       <Eye className="h-4 w-4 mr-1" aria-hidden="true" />
                       View
@@ -238,12 +234,7 @@ export default function Properties() {
       )}
 
       {/* Create Property Modal */}
-      <Modal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        title="Add New Property"
-        size="lg"
-      >
+      <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} title="Add New Property" size="lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Property Name"
@@ -322,7 +313,9 @@ export default function Properties() {
           />
 
           <div>
-            <label htmlFor="property-description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label htmlFor="property-description" className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
             <textarea
               id="property-description"
               className="input min-h-[100px]"
@@ -332,7 +325,12 @@ export default function Properties() {
           </div>
 
           <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-            <Button type="button" variant="secondary" onClick={() => setShowCreateModal(false)} className="w-full sm:w-auto">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setShowCreateModal(false)}
+              className="w-full sm:w-auto"
+            >
               Cancel
             </Button>
             <Button type="submit" loading={createMutation.isPending} className="w-full sm:w-auto">
