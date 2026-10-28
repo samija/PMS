@@ -1,16 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/User.js';
-import Tenant from '../models/Tenant.js';
-import Unit from '../models/Unit.js';
-import Property from '../models/Property.js';
-import Payment from '../models/Payment.js';
-import PaymentSchedule from '../models/PaymentSchedule.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 import { TenantService } from '../application/services/TenantService.js';
 import { PaymentScheduleService } from '../application/services/PaymentScheduleService.js';
+import { logger } from '../config/logger.js';
 
-// Create service instances
-const tenantService = new TenantService(User, Tenant, Unit, Property);
-const scheduleService = new PaymentScheduleService(PaymentSchedule, Payment, Tenant);
+const tenantService = container.get<TenantService>(TYPES.TenantService);
+const scheduleService = container.get<PaymentScheduleService>(TYPES.PaymentScheduleService);
 
 export const createTenant = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -37,7 +33,7 @@ export const createTenant = async (req: Request, res: Response, next: NextFuncti
       );
     } catch (scheduleError) {
       // Log error but don't fail tenant creation
-      console.error('Failed to create default payment schedule:', scheduleError);
+      logger.error('Failed to create default payment schedule:', scheduleError);
     }
 
     res.status(201).json({

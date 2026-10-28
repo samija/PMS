@@ -3,6 +3,7 @@ import { NotificationService } from '../application/services/NotificationService
 import Notification from '../models/Notification.js';
 import Tenant from '../models/Tenant.js';
 import User from '../models/User.js';
+import { logger } from '../config/logger.js';
 
 // Create service instance
 const notificationService = new NotificationService(Notification, Tenant, User);
@@ -18,30 +19,30 @@ export const initNotificationCleanupJob = (): void => {
 
   const isValidSchedule = cron.validate(schedule);
   if (!isValidSchedule) {
-    console.error('Invalid cron schedule for notification cleanup:', schedule);
+    logger.error('Invalid cron schedule for notification cleanup:', schedule);
     return;
   }
 
   cron.schedule(schedule, async () => {
-    console.log(`[${new Date().toISOString()}] Running notification cleanup job...`);
+    logger.info(`[${new Date().toISOString()}] Running notification cleanup job...`);
 
     try {
       const daysOld = parseInt(process.env.NOTIFICATION_RETENTION_DAYS || '30', 10);
       const deletedCount = await notificationService.deleteOldReadNotifications(daysOld);
-      console.log(`[${new Date().toISOString()}] Notification cleanup job completed: ${deletedCount} notifications deleted`);
+      logger.info(`[${new Date().toISOString()}] Notification cleanup job completed: ${deletedCount} notifications deleted`);
     } catch (error) {
-      console.error(`[${new Date().toISOString()}] Notification cleanup job failed:`, error);
+      logger.error(`[${new Date().toISOString()}] Notification cleanup job failed:`, error);
     }
   });
 
-  console.log(`Notification cleanup cron job initialized with schedule: ${schedule}`);
+  logger.info(`Notification cleanup cron job initialized with schedule: ${schedule}`);
 };
 
 /**
  * Run notification cleanup manually (for testing or manual triggers)
  */
 export const runNotificationCleanupManually = async (daysOld: number = 30): Promise<number> => {
-  console.log(`Running notification cleanup manually (deleting notifications older than ${daysOld} days)...`);
+  logger.info(`Running notification cleanup manually (deleting notifications older than ${daysOld} days)...`);
   return notificationService.deleteOldReadNotifications(daysOld);
 };
 

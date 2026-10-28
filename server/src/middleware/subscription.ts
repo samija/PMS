@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { SubscriptionService } from '../application/services/SubscriptionService.js';
 import { ForbiddenError } from '../domain/exceptions/AppError.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 
-const subscriptionService = new SubscriptionService();
+const subscriptionService = container.get<SubscriptionService>(TYPES.SubscriptionService);
 
 export const checkPropertyLimit = async (req: Request, res: Response, next: NextFunction) => {
   try {

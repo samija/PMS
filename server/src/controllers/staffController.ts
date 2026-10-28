@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import PropertyStaff from '../models/PropertyStaff.js';
 import User from '../models/User.js';
+import { logger } from '../config/logger.js';
 
 export const addStaff = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -58,7 +59,7 @@ export const addStaff = async (req: Request, res: Response): Promise<void> => {
       data: populatedStaff,
     });
   } catch (error: any) {
-    console.error('Add staff error:', error);
+    logger.error('Add staff error:', error);
     if (error.code === 11000) {
       res.status(400).json({
         success: false,
@@ -92,7 +93,7 @@ export const getPropertyStaff = async (req: Request, res: Response): Promise<voi
       data: staff,
     });
   } catch (error) {
-    console.error('Get property staff error:', error);
+    logger.error('Get property staff error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to get property staff',
@@ -132,7 +133,7 @@ export const updateStaff = async (req: Request, res: Response): Promise<void> =>
       data: staff,
     });
   } catch (error) {
-    console.error('Update staff error:', error);
+    logger.error('Update staff error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update staff',
@@ -162,7 +163,7 @@ export const removeStaff = async (req: Request, res: Response): Promise<void> =>
       message: 'Staff removed successfully',
     });
   } catch (error) {
-    console.error('Remove staff error:', error);
+    logger.error('Remove staff error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to remove staff',
@@ -183,7 +184,7 @@ export const getStaffProperties = async (req: Request, res: Response): Promise<v
       data: assignments,
     });
   } catch (error) {
-    console.error('Get staff properties error:', error);
+    logger.error('Get staff properties error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to get properties',
@@ -232,7 +233,7 @@ export const getAllStaff = async (req: Request, res: Response): Promise<void> =>
       },
     });
   } catch (error) {
-    console.error('Get all staff error:', error);
+    logger.error('Get all staff error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to get staff',

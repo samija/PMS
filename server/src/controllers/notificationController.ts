@@ -1,11 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { NotificationService } from '../application/services/NotificationService.js';
-import Notification from '../models/Notification.js';
-import Tenant from '../models/Tenant.js';
-import User from '../models/User.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 
-// Create service instance
-const notificationService = new NotificationService(Notification, Tenant, User);
+const notificationService = container.get<NotificationService>(TYPES.NotificationService);
 
 export const getNotifications = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

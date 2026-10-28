@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import Payment from '../models/Payment.js';
-import Tenant from '../models/Tenant.js';
-import User from '../models/User.js';
 import { PaymentService } from '../application/services/PaymentService.js';
 import { PaymentGatewayFactory } from '../infrastructure/factories/PaymentGatewayFactory.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 
-// Create service instance
-const paymentService = new PaymentService(Payment, Tenant, User);
+const paymentService = container.get<PaymentService>(TYPES.PaymentService);
 
 export const initializePayment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -118,6 +116,21 @@ export const getPayment = async (req: Request, res: Response, next: NextFunction
   try {
     const { id } = req.params;
     const payment = await paymentService.getPayment(id);
+
+    const userRole = req.user?.role;
+    if (userRole !== 'admin') {
+      const userId = req.user?._id?.toString();
+      if (!userId) {
+        res.status(401).json({ success: false, message: 'Not authenticated' });
+        return;
+      }
+      const tenantId = payment.tenantId?.toString();
+      const ownerId = payment.ownerId?.toString();
+      if (userId !== tenantId && userId !== ownerId) {
+        res.status(403).json({ success: false, message: 'Forbidden: you do not have access to this payment' });
+        return;
+      }
+    }
 
     res.json({
       success: true,

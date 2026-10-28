@@ -3,6 +3,7 @@ import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { ListingService } from '../application/services/ListingService.js';
 import { NotFoundError } from '../domain/exceptions/AppError.js';
+import { logger } from '../config/logger.js';
 
 const listingService = container.get<ListingService>(TYPES.ListingService);
 
@@ -23,7 +24,7 @@ export const getListings = async (req: Request, res: Response): Promise<void> =>
 
     res.json({ success: true, data: result });
   } catch (error) {
-    console.error('Get listings error:', error);
+    logger.error('Get listings error:', error);
     res.status(500).json({ success: false, message: 'Failed to get listings' });
   }
 };
@@ -38,7 +39,7 @@ export const getListingDetail = async (req: Request, res: Response): Promise<voi
       res.status(404).json({ success: false, message: 'Listing not found' });
       return;
     }
-    console.error('Get listing detail error:', error);
+    logger.error('Get listing detail error:', error);
     res.status(500).json({ success: false, message: 'Failed to get listing detail' });
   }
 };
@@ -60,7 +61,7 @@ export const getListingUnits = async (req: Request, res: Response): Promise<void
       res.status(404).json({ success: false, message: 'Listing not found' });
       return;
     }
-    console.error('Get listing units error:', error);
+    logger.error('Get listing units error:', error);
     res.status(500).json({ success: false, message: 'Failed to get units' });
   }
 };
@@ -71,7 +72,7 @@ export const getFeaturedListings = async (req: Request, res: Response): Promise<
     const data = await listingService.getFeaturedListings(Number(limit));
     res.json({ success: true, data });
   } catch (error) {
-    console.error('Get featured listings error:', error);
+    logger.error('Get featured listings error:', error);
     res.status(500).json({ success: false, message: 'Failed to get featured listings' });
   }
 };

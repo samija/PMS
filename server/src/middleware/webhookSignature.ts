@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
+import { logger } from '../config/logger.js';
 
 /**
  * Middleware to verify Chapa webhook HMAC-SHA256 signatures.
@@ -33,7 +34,7 @@ export function verifyChapaWebhookSignature(req: Request, res: Response, next: N
   const secret = process.env.CHAPA_SECRET_KEY;
 
   if (!secret) {
-    console.error('CHAPA_SECRET_KEY is not configured. Rejecting webhook request.');
+    logger.error('CHAPA_SECRET_KEY is not configured. Rejecting webhook request.');
     res.status(500).json({ success: false, message: 'Webhook verification not configured' });
     return;
   }

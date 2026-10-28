@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { BasePaymentGateway } from '../../domain/gateways/BasePaymentGateway.js';
+import { logger } from '../../config/logger.js';
 import {
   PaymentInitializationPayload,
   PaymentInitializationResponse,
@@ -112,7 +113,7 @@ export class ChapaGateway extends BasePaymentGateway {
         },
       };
     } catch (error: any) {
-      console.error('Chapa initialize error:', error.response?.data || error.message);
+      logger.error('Chapa initialize error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.message || 'Failed to initialize Chapa payment');
     }
   }
@@ -144,7 +145,7 @@ export class ChapaGateway extends BasePaymentGateway {
         },
       };
     } catch (error: any) {
-      console.error('Chapa verify error:', error.response?.data || error.message);
+      logger.error('Chapa verify error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.message || 'Failed to verify Chapa payment');
     }
   }

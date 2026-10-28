@@ -1,6 +1,7 @@
 import axios from 'axios';
 import crypto from 'crypto';
 import { BasePaymentGateway } from '../../domain/gateways/BasePaymentGateway.js';
+import { logger } from '../../config/logger.js';
 import {
   PaymentInitializationPayload,
   PaymentInitializationResponse,
@@ -102,7 +103,7 @@ export class SantimPayGateway extends BasePaymentGateway {
         },
       };
     } catch (error: any) {
-      console.error('SantimPay initialize error:', error.response?.data || error.message);
+      logger.error('SantimPay initialize error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.message || 'Failed to initialize SantimPay payment');
     }
   }
@@ -137,7 +138,7 @@ export class SantimPayGateway extends BasePaymentGateway {
         },
       };
     } catch (error: any) {
-      console.error('SantimPay verify error:', error.response?.data || error.message);
+      logger.error('SantimPay verify error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.message || 'Failed to verify SantimPay payment');
     }
   }
@@ -159,7 +160,7 @@ export class SantimPayGateway extends BasePaymentGateway {
 
       return expectedSignature === signature;
     } catch (error) {
-      console.error('SantimPay webhook signature verification error:', error);
+      logger.error('SantimPay webhook signature verification error:', error);
       return false;
     }
   }

@@ -1,11 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import WaitingList from '../models/WaitingList.js';
-import Property from '../models/Property.js';
-import Unit from '../models/Unit.js';
 import { WaitingListService } from '../application/services/WaitingListService.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 
-// Create service instance
-const waitingListService = new WaitingListService(WaitingList, Property, Unit);
+const waitingListService = container.get<WaitingListService>(TYPES.WaitingListService);
 
 export const applyToWaitingList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

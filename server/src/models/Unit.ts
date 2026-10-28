@@ -71,6 +71,12 @@ const unitSchema = new Schema<IUnit>(
 // Compound index for unique unit number per property
 unitSchema.index({ propertyId: 1, unitNumber: 1 }, { unique: true });
 
+// Index on status for frequent status-based queries
+unitSchema.index({ status: 1 });
+
+// Compound index for property + status queries (common filter pattern)
+unitSchema.index({ propertyId: 1, status: 1 });
+
 // Static method to calculate price with floor multiplier
 unitSchema.statics.calculateTotalPrice = function (
   basePrice: number,

@@ -64,6 +64,20 @@ const ownerPaymentSettingsSchema = new Schema<IOwnerPaymentSettings>(
       type: Boolean,
       default: true,
     },
+    requireVerifiedIdentityToActivateTenant: {
+      type: Boolean,
+      default: true,
+    },
+    mandatoryKycDocuments: {
+      type: [String],
+      default: ['national_id', 'proof_of_address', 'proof_of_income'],
+    },
+    retentionYears: {
+      type: Number,
+      default: 7,
+      min: 1,
+      max: 99,
+    },
   },
   {
     timestamps: true,

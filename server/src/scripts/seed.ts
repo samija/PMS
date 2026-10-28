@@ -11,6 +11,8 @@ import GuardShift from '../models/GuardShift';
 import Attendance from '../models/Attendance';
 import Incident from '../models/Incident';
 import PropertyStaff from '../models/PropertyStaff';
+import Payment from '../models/Payment';
+import { logger } from '../config/logger.js';
 
 dotenv.config();
 
@@ -20,14 +22,14 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/endera
 const seedData = async () => {
   try {
     await mongoose.connect(MONGODB_URI);
-    console.log('Connected to MongoDB for seeding...');
+    logger.info('Connected to MongoDB for seeding...');
 
     // Clear existing data - drop collections to reset indexes
-    const collections = ['users', 'properties', 'units', 'tenants', 'waitinglists', 'maintenances', 'employees', 'guardshifts', 'attendances', 'incidents', 'propertystaffs'];
+    const collections = ['users', 'properties', 'units', 'tenants', 'waitinglists', 'maintenances', 'employees', 'guardshifts', 'attendances', 'incidents', 'propertystaffs', 'payments'];
     for (const col of collections) {
       try { await mongoose.connection.db!.dropCollection(col); } catch (_) { /* collection may not exist */ }
     }
-    console.log('Cleared existing data');
+    logger.info('Cleared existing data');
 
     // Create sample owners
     const owners = await User.create([
@@ -56,7 +58,7 @@ const seedData = async () => {
         isVerified: true,
       },
     ]);
-    console.log('Created sample owners');
+    logger.info('Created sample owners');
 
     // Create sample tenants (users)
     const tenantUsers = await User.create([
@@ -85,7 +87,7 @@ const seedData = async () => {
         isVerified: true,
       },
     ]);
-    console.log('Created sample tenant users');
+    logger.info('Created sample tenant users');
 
     // Properties based on real Addis Ababa locations and prices
     const properties = await Property.create([
@@ -258,7 +260,7 @@ const seedData = async () => {
         waitingListType: 'application',
       },
     ]);
-    console.log('Created sample properties');
+    logger.info('Created sample properties');
 
     // Create units with realistic Ethiopian prices
     const units: any[] = [];
@@ -469,7 +471,7 @@ const seedData = async () => {
     }
 
     const createdUnits = await Unit.create(units);
-    console.log(`Created ${createdUnits.length} sample units`);
+    logger.info(`Created ${createdUnits.length} sample units`);
 
     // Create some tenant records for occupied units
     const occupiedUnits = createdUnits.filter(u => u.status === 'occupied').slice(0, 3);
@@ -533,7 +535,7 @@ const seedData = async () => {
         status: 'active',
       },
     ]);
-    console.log('Created sample tenants');
+    logger.info('Created sample tenants');
 
     // Update units with tenant IDs
     for (let i = 0; i < 3; i++) {
@@ -543,6 +545,51 @@ const seedData = async () => {
         leaseEnd: tenants[i].leaseAgreement.endDate,
       });
     }
+
+    // Create payment records for the last 6 months
+    const paymentRecords: any[] = [];
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+
+    for (let monthsAgo = 5; monthsAgo >= 0; monthsAgo--) {
+      let month = currentMonth - monthsAgo;
+      let year = currentYear;
+      if (month <= 0) { month += 12; year -= 1; }
+
+      for (let i = 0; i < 3; i++) {
+        const tenant = tenants[i];
+        const unit = occupiedUnits[i];
+        const property = properties[i <= 1 ? i : 2];
+        const owner = i <= 1 ? owners[0] : owners[1];
+        const isPaid = monthsAgo > 0; // current month still pending
+        const dueDate = new Date(year, month - 1, 1);
+
+        paymentRecords.push({
+          tenantId: tenant._id,
+          unitId: unit._id,
+          propertyId: property._id,
+          ownerId: owner._id,
+          amount: unit.pricing.totalPrice,
+          type: 'rent',
+          status: isPaid ? 'completed' : 'pending',
+          paymentMethod: isPaid ? 'chapa' : 'chapa',
+          gatewayReference: isPaid ? `chapa-ref-${month}-${year}-${i}` : undefined,
+          gatewayTransactionRef: isPaid ? `ENDER-tx-${month}-${year}-${i}` : undefined,
+          dueDate,
+          paidAt: isPaid ? new Date(year, month - 1, Math.floor(Math.random() * 5) + 1) : undefined,
+          month,
+          year,
+          receipt: isPaid ? {
+            number: `RCT-${year}${String(month).padStart(2, '0')}-${String(i + 1).padStart(3, '0')}`,
+            generatedAt: new Date(year, month - 1, 5),
+          } : undefined,
+        });
+      }
+    }
+
+    await Payment.create(paymentRecords);
+    logger.info(`Created ${paymentRecords.length} payment records`);
 
     // Create some waiting list entries
     const waitingListApplicants = await User.create([
@@ -587,7 +634,7 @@ const seedData = async () => {
         appliedAt: new Date(),
       },
     ]);
-    console.log('Created waiting list entries');
+    logger.info('Created waiting list entries');
 
     // Create some maintenance requests
     await Maintenance.create([
@@ -644,7 +691,7 @@ const seedData = async () => {
         tenantFeedback: 'Quick response and professional service!',
       },
     ]);
-    console.log('Created maintenance requests');
+    logger.info('Created maintenance requests');
 
     // ==================== STAFF / EMPLOYEE / GUARD SEED DATA ====================
 
@@ -715,7 +762,7 @@ const seedData = async () => {
         isVerified: true,
       },
     ]);
-    console.log('Created staff users');
+    logger.info('Created staff users');
 
     // Assign staff to properties via PropertyStaff
     const staffAssignments = await PropertyStaff.create([
@@ -731,7 +778,7 @@ const seedData = async () => {
       { propertyId: properties[2]._id, userId: staffUsers[3]._id, role: 'guard', assignedBy: owners[1]._id, isActive: true },
       { propertyId: properties[2]._id, userId: staffUsers[5]._id, role: 'cleaner', assignedBy: owners[1]._id, isActive: true },
     ]);
-    console.log('Created property staff assignments');
+    logger.info('Created property staff assignments');
 
     // Create Employee records
     const employees = await Employee.create([
@@ -936,7 +983,7 @@ const seedData = async () => {
         },
       },
     ]);
-    console.log(`Created ${employees.length} employee records`);
+    logger.info(`Created ${employees.length} employee records`);
 
     // Create Guard Shifts
     const guardShifts = await GuardShift.create([
@@ -1053,7 +1100,7 @@ const seedData = async () => {
         notes: 'Sunday night coverage',
       },
     ]);
-    console.log(`Created ${guardShifts.length} guard shifts`);
+    logger.info(`Created ${guardShifts.length} guard shifts`);
 
     // Create Attendance records (last 7 days for all guards)
     const today = new Date();
@@ -1157,7 +1204,7 @@ const seedData = async () => {
     }
 
     await Attendance.create(attendanceRecords);
-    console.log(`Created ${attendanceRecords.length} attendance records`);
+    logger.info(`Created ${attendanceRecords.length} attendance records`);
 
     // Create Incidents
     const incidents = await Incident.create([
@@ -1260,36 +1307,36 @@ const seedData = async () => {
         resolvedAt: new Date(Date.now() - 3 * 86400000),
       },
     ]);
-    console.log(`Created ${incidents.length} incident records`);
+    logger.info(`Created ${incidents.length} incident records`);
 
-    console.log('\n========================================');
-    console.log('Database seeded successfully!');
-    console.log('========================================');
-    console.log('\nSample Login Credentials:');
-    console.log('----------------------------------------');
-    console.log('Owners:');
-    console.log('  - owner@example.com / password123 (Abebe Kebede)');
-    console.log('  - owner2@example.com / password123 (Tigist Haile)');
-    console.log('  - owner3@example.com / password123 (Dawit Mengistu)');
-    console.log('\nTenants:');
-    console.log('  - tenant1@example.com / password123 (Hana Tesfaye)');
-    console.log('  - tenant2@example.com / password123 (Yonas Girma)');
-    console.log('  - tenant3@example.com / password123 (Sara Alemayehu)');
-    console.log('\nStaff:');
-    console.log('  - guard1@example.com / password123 (Tadesse Worku - Guard)');
-    console.log('  - guard2@example.com / password123 (Bekele Hailu - Guard)');
-    console.log('  - guard3@example.com / password123 (Alemu Desta - Guard)');
-    console.log('  - guard4@example.com / password123 (Fikru Teshome - Guard)');
-    console.log('  - cleaner1@example.com / password123 (Almaz Berhane - Cleaner)');
-    console.log('  - cleaner2@example.com / password123 (Fatuma Ahmed - Cleaner)');
-    console.log('  - manager1@example.com / password123 (Girma Tadesse - Manager)');
-    console.log('  - tech1@example.com / password123 (Kebede Assefa - Technician)');
-    console.log('========================================\n');
+    logger.info('\n========================================');
+    logger.info('Database seeded successfully!');
+    logger.info('========================================');
+    logger.info('\nSample Login Credentials:');
+    logger.info('----------------------------------------');
+    logger.info('Owners:');
+    logger.info('  - owner@example.com / password123 (Abebe Kebede)');
+    logger.info('  - owner2@example.com / password123 (Tigist Haile)');
+    logger.info('  - owner3@example.com / password123 (Dawit Mengistu)');
+    logger.info('\nTenants:');
+    logger.info('  - tenant1@example.com / password123 (Hana Tesfaye)');
+    logger.info('  - tenant2@example.com / password123 (Yonas Girma)');
+    logger.info('  - tenant3@example.com / password123 (Sara Alemayehu)');
+    logger.info('\nStaff:');
+    logger.info('  - guard1@example.com / password123 (Tadesse Worku - Guard)');
+    logger.info('  - guard2@example.com / password123 (Bekele Hailu - Guard)');
+    logger.info('  - guard3@example.com / password123 (Alemu Desta - Guard)');
+    logger.info('  - guard4@example.com / password123 (Fikru Teshome - Guard)');
+    logger.info('  - cleaner1@example.com / password123 (Almaz Berhane - Cleaner)');
+    logger.info('  - cleaner2@example.com / password123 (Fatuma Ahmed - Cleaner)');
+    logger.info('  - manager1@example.com / password123 (Girma Tadesse - Manager)');
+    logger.info('  - tech1@example.com / password123 (Kebede Assefa - Technician)');
+    logger.info('========================================\n');
 
     await mongoose.disconnect();
     process.exit(0);
   } catch (error) {
-    console.error('Seeding error:', error);
+    logger.error('Seeding error:', error);
     await mongoose.disconnect();
     process.exit(1);
   }

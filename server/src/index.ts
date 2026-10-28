@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
 import connectDB from './config/database.js';
+import { validateEnv } from './config/validateEnv.js';
 import './config/passport.js';
 import routes from './routes/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -45,7 +46,7 @@ app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:5173',
     'http://localhost:5000',
-    /^http:\/\/localhost:\d+$/,
+    ...(process.env.NODE_ENV !== 'production' ? [/^http:\/\/localhost:\d+$/] : []),
   ],
   credentials: true,
 }));
@@ -81,6 +82,7 @@ app.use((req, res) => {
 // Start server
 const startServer = async () => {
   try {
+    validateEnv();
     await connectDB();
 
     // Connect Redis (non-blocking)

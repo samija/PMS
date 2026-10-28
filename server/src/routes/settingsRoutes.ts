@@ -181,4 +181,18 @@ router.get(
   settingsController.getOwnerPaymentInfo
 );
 
+router.get(
+  '/kyc',
+  authenticate,
+  authorize('owner', 'admin'),
+  settingsController.getKycSettings,
+);
+
+router.put(
+  '/kyc',
+  authenticate,
+  authorize('owner', 'admin'),
+  settingsController.updateKycSettings,
+);
+
 export default router;

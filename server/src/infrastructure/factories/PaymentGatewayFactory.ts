@@ -2,6 +2,7 @@ import { IPaymentGateway, PaymentGatewayType } from '../../domain/interfaces/IPa
 import { ChapaGateway } from '../gateways/ChapaGateway.js';
 import { TelebirrGateway } from '../gateways/TelebirrGateway.js';
 import { SantimPayGateway } from '../gateways/SantimPayGateway.js';
+import { logger } from '../../config/logger.js';
 
 /**
  * Payment Gateway Factory
@@ -52,7 +53,7 @@ export class PaymentGatewayFactory {
 
     // Validate that the default gateway type is supported
     if (!['chapa', 'telebirr', 'santimpay'].includes(defaultGatewayType)) {
-      console.warn(`Invalid default gateway type: ${defaultGatewayType}, falling back to 'chapa'`);
+      logger.warn(`Invalid default gateway type: ${defaultGatewayType}, falling back to 'chapa'`);
       return this.getGateway('chapa');
     }
 

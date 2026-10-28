@@ -87,8 +87,21 @@ export class PropertyService implements IPropertyService {
       this.propertyModel.countDocuments(query),
     ]);
 
+    // Enrich properties with occupied unit counts
+    const propertyIds = properties.map(p => p._id);
+    const occupiedCounts = await this.unitModel.aggregate([
+      { $match: { propertyId: { $in: propertyIds }, status: 'occupied' } },
+      { $group: { _id: '$propertyId', count: { $sum: 1 } } },
+    ]);
+    const occupiedMap = new Map(occupiedCounts.map((c: any) => [c._id.toString(), c.count]));
+
+    const enrichedProperties = properties.map(p => ({
+      ...p,
+      occupiedUnits: occupiedMap.get(p._id.toString()) || 0,
+    }));
+
     return {
-      properties,
+      properties: enrichedProperties,
       pagination: {
         total,
         page: Number(page),

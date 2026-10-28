@@ -10,6 +10,21 @@ import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import { tenantAPI, propertyAPI } from '../../services/api';
+import type { Tenant, Property, Unit } from '../../types';
+
+interface CreateTenantData {
+  email: string;
+  name: string;
+  phone: string;
+  propertyId: string;
+  unitId: string;
+  leaseAgreement: {
+    startDate: string;
+    endDate: string;
+    monthlyRent: number;
+    deposit: number;
+  };
+}
 
 export default function Tenants() {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -46,14 +61,14 @@ export default function Tenants() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => tenantAPI.create(data),
+    mutationFn: (data: CreateTenantData) => tenantAPI.create(data as unknown as Record<string, unknown>),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tenants'] });
       toast.success('Tenant added successfully');
       setShowAddModal(false);
       resetForm();
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || 'Failed to add tenant');
     },
   });
@@ -62,7 +77,7 @@ export default function Tenants() {
   const properties = propertiesData?.data?.data?.properties || [];
   const units = unitsData?.data?.data || [];
 
-  const filteredTenants = tenants.filter((tenant: any) =>
+  const filteredTenants = tenants.filter((tenant: Tenant) =>
     tenant.userId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     tenant.userId?.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -171,7 +186,7 @@ export default function Tenants() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {filteredTenants.map((tenant: any) => (
+          {filteredTenants.map((tenant: Tenant) => (
             <Link key={tenant._id} to={`/owner/tenants/${tenant._id}`}>
               <Card className="hover:shadow-md transition-shadow">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -265,7 +280,7 @@ export default function Tenants() {
               label="Property"
               options={[
                 { value: '', label: 'Select Property' },
-                ...properties.map((p: any) => ({ value: p._id, label: p.name })),
+                ...properties.map((p: Property) => ({ value: p._id, label: p.name })),
               ]}
               value={formData.propertyId}
               onChange={(e) => setFormData({ ...formData, propertyId: e.target.value, unitId: '' })}
@@ -275,14 +290,14 @@ export default function Tenants() {
               label="Unit"
               options={[
                 { value: '', label: formData.propertyId ? 'Select Unit' : 'Select property first' },
-                ...units.map((u: any) => ({
+                ...units.map((u: Unit) => ({
                   value: u._id,
-                  label: `${u.unitNumber} - Floor ${u.floor} (${u.pricing.totalPrice.toLocaleString()} ETB)`,
+                  label: `${u.unitNumber} - Floor ${u.floor} (${u.pricing?.totalPrice?.toLocaleString() || 0} ETB)`,
                 })),
               ]}
               value={formData.unitId}
               onChange={(e) => {
-                const unit = units.find((u: any) => u._id === e.target.value);
+                const unit = units.find((u: Unit) => u._id === e.target.value);
                 setFormData({
                   ...formData,
                   unitId: e.target.value,

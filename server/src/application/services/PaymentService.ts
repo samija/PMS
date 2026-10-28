@@ -14,6 +14,7 @@ import {
   SubmitBankTransferData,
 } from '../../domain/interfaces/IServices.js';
 import TYPES from '../../config/types.js';
+import { logger } from '../../config/logger.js';
 
 // Re-export interfaces for backward compatibility
 export type { InitializePaymentData, InitializePaymentResult, CreateManualPaymentData, PaymentQueryOptions, SubmitBankTransferData };
@@ -192,7 +193,7 @@ export class PaymentService implements IPaymentService {
     // Verify webhook signature
     const isValid = await paymentGateway.verifyWebhookSignature(data, signature);
     if (!isValid) {
-      console.error('Invalid webhook signature from', gatewayType);
+      logger.error('Invalid webhook signature from', gatewayType);
       throw new BadRequestError('Invalid webhook signature');
     }
 
@@ -208,7 +209,7 @@ export class PaymentService implements IPaymentService {
     });
 
     if (!payment) {
-      console.error('Payment not found for webhook:', webhookData.transactionRef);
+      logger.error('Payment not found for webhook:', webhookData.transactionRef);
       return;
     }
 

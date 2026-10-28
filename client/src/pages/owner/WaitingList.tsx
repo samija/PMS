@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ClipboardList, Check, X, Send } from 'lucide-react';
+import { ClipboardList, X, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -8,6 +8,7 @@ import Badge from '../../components/ui/Badge';
 import Modal from '../../components/ui/Modal';
 import Select from '../../components/ui/Select';
 import { waitingListAPI, propertyAPI } from '../../services/api';
+import type { WaitingListEntry, Property, Unit } from '../../types';
 
 export default function WaitingList() {
   const [filters, setFilters] = useState({
@@ -15,7 +16,7 @@ export default function WaitingList() {
     status: '',
   });
   const [showOfferModal, setShowOfferModal] = useState(false);
-  const [selectedEntry, setSelectedEntry] = useState<any>(null);
+  const [selectedEntry, setSelectedEntry] = useState<WaitingListEntry | null>(null);
   const [selectedUnitId, setSelectedUnitId] = useState('');
 
   const queryClient = useQueryClient();
@@ -32,7 +33,7 @@ export default function WaitingList() {
 
   const { data: unitsData } = useQuery({
     queryKey: ['vacant-units', selectedEntry?.propertyId?._id],
-    queryFn: () => propertyAPI.getUnits(selectedEntry?.propertyId?._id, { status: 'vacant' }),
+    queryFn: () => propertyAPI.getUnits(selectedEntry?.propertyId?._id ?? '', { status: 'vacant' }),
     enabled: !!selectedEntry?.propertyId?._id,
   });
 
@@ -46,7 +47,7 @@ export default function WaitingList() {
       setSelectedEntry(null);
       setSelectedUnitId('');
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || 'Failed to send offer');
     },
   });
@@ -57,6 +58,9 @@ export default function WaitingList() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['waiting-list'] });
       toast.success('Status updated');
+    },
+    onError: (error: { response?: { data?: { message?: string } } }) => {
+      toast.error(error.response?.data?.message || 'Failed to update status');
     },
   });
 
@@ -93,7 +97,7 @@ export default function WaitingList() {
           <Select
             options={[
               { value: '', label: 'All Properties' },
-              ...properties.map((p: any) => ({ value: p._id, label: p.name })),
+              ...properties.map((p: Property) => ({ value: p._id, label: p.name })),
             ]}
             value={filters.propertyId}
             onChange={(e) => setFilters({ ...filters, propertyId: e.target.value })}
@@ -134,7 +138,7 @@ export default function WaitingList() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {entries.map((entry: any) => (
+          {entries.map((entry: WaitingListEntry) => (
             <Card key={entry._id}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -190,7 +194,7 @@ export default function WaitingList() {
 
                   {entry.status === 'offered' && (
                     <div className="text-sm text-gray-500">
-                      Expires: {new Date(entry.expiresAt).toLocaleDateString()}
+                      Expires: {entry.expiresAt ? new Date(entry.expiresAt).toLocaleDateString() : 'N/A'}
                     </div>
                   )}
                 </div>
@@ -210,10 +214,10 @@ export default function WaitingList() {
                       <p className="font-medium">{entry.application.income.toLocaleString()} ETB</p>
                     </div>
                   )}
-                  {entry.application.references?.length > 0 && (
+                  {(entry.application.references?.length ?? 0) > 0 && (
                     <div>
                       <p className="text-gray-500">References</p>
-                      <p className="font-medium">{entry.application.references.length} provided</p>
+                      <p className="font-medium">{entry.application.references?.length} provided</p>
                     </div>
                   )}
                 </div>
@@ -243,7 +247,7 @@ export default function WaitingList() {
             label="Select Unit to Offer"
             options={[
               { value: '', label: 'Select a vacant unit' },
-              ...units.map((u: any) => ({
+              ...units.map((u: Unit) => ({
                 value: u._id,
                 label: `Unit ${u.unitNumber} - Floor ${u.floor} (${u.pricing.totalPrice.toLocaleString()} ETB/month)`,
               })),

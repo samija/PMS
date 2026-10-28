@@ -4,6 +4,7 @@ import { IPayment, ITenant, IUser } from '../../types/index.js';
 import { sendEmail, getPaymentReminderTemplate, getOverdueWarningTemplate } from '../../utils/email.js';
 import { IEmailReminderService } from '../../domain/interfaces/IServices.js';
 import TYPES from '../../config/types.js';
+import { logger } from '../../config/logger.js';
 
 interface PaymentWithRelations {
   _id: Types.ObjectId;
@@ -52,7 +53,7 @@ export class EmailReminderService implements IEmailReminderService {
       const user = tenant?.userId;
 
       if (!user?.email) {
-        console.log('No email found for tenant:', payment.tenantId);
+        logger.info('No email found for tenant:', payment.tenantId);
         return false;
       }
 
@@ -79,7 +80,7 @@ export class EmailReminderService implements IEmailReminderService {
         html: template,
       });
     } catch (error) {
-      console.error('Error sending payment reminder:', error);
+      logger.error('Error sending payment reminder:', error);
       return false;
     }
   }
@@ -93,7 +94,7 @@ export class EmailReminderService implements IEmailReminderService {
       const user = tenant?.userId;
 
       if (!user?.email) {
-        console.log('No email found for tenant:', payment.tenantId);
+        logger.info('No email found for tenant:', payment.tenantId);
         return false;
       }
 
@@ -113,7 +114,7 @@ export class EmailReminderService implements IEmailReminderService {
         html: template,
       });
     } catch (error) {
-      console.error('Error sending overdue warning:', error);
+      logger.error('Error sending overdue warning:', error);
       return false;
     }
   }
@@ -224,14 +225,14 @@ export class EmailReminderService implements IEmailReminderService {
    * Main method to run all reminder processing
    */
   async processAllReminders(): Promise<void> {
-    console.log('Starting payment reminder processing...');
+    logger.info('Starting payment reminder processing...');
 
     const upcomingResult = await this.processUpcomingReminders();
-    console.log(`Upcoming reminders: ${upcomingResult.sent} sent, ${upcomingResult.failed} failed`);
+    logger.info(`Upcoming reminders: ${upcomingResult.sent} sent, ${upcomingResult.failed} failed`);
 
     const overdueResult = await this.processOverdueReminders();
-    console.log(`Overdue warnings: ${overdueResult.sent} sent, ${overdueResult.failed} failed`);
+    logger.info(`Overdue warnings: ${overdueResult.sent} sent, ${overdueResult.failed} failed`);
 
-    console.log('Payment reminder processing completed');
+    logger.info('Payment reminder processing completed');
   }
 }

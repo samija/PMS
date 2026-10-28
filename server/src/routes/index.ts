@@ -19,6 +19,11 @@ import incidentRoutes from './incidentRoutes.js';
 import leaveRoutes from './leaveRoutes.js';
 import payrollRoutes from './payrollRoutes.js';
 import performanceRoutes from './performanceRoutes.js';
+import tenantIdentityRoutes from './tenantIdentityRoutes.js';
+import tenantDocumentRoutesV2 from './tenantDocumentRoutesV2.js';
+import leaseTemplateRoutes from './leaseTemplateRoutes.js';
+import leaseRoutes from './leaseRoutes.js';
+import auditRoutes from './auditRoutes.js';
 
 const router = Router();
 
@@ -42,5 +47,10 @@ router.use('/properties/:propertyId/incidents', incidentRoutes);
 router.use('/leave', leaveRoutes);
 router.use('/properties/:propertyId/payroll', payrollRoutes);
 router.use('/properties/:propertyId/reviews', performanceRoutes);
+router.use('/tenants', tenantIdentityRoutes);
+router.use('/v2', tenantDocumentRoutesV2);
+router.use('/lease-templates', leaseTemplateRoutes);
+router.use('/leases', leaseRoutes);
+router.use('/audit', auditRoutes);
 
 export default router;

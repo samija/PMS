@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { IEmployeeService } from '../domain/interfaces/IServices.js';
+import { logger } from '../config/logger.js';
 
 export const createEmployee = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -16,7 +17,7 @@ export const createEmployee = async (req: Request, res: Response): Promise<void>
       data: employee,
     });
   } catch (error: any) {
-    console.error('Create employee error:', error);
+    logger.error('Create employee error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to create employee',
@@ -44,7 +45,7 @@ export const getEmployees = async (req: Request, res: Response): Promise<void> =
       data: result,
     });
   } catch (error: any) {
-    console.error('Get employees error:', error);
+    logger.error('Get employees error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to get employees',
@@ -64,7 +65,7 @@ export const getEmployee = async (req: Request, res: Response): Promise<void> =>
       data: employee,
     });
   } catch (error: any) {
-    console.error('Get employee error:', error);
+    logger.error('Get employee error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to get employee',
@@ -86,7 +87,7 @@ export const updateEmployee = async (req: Request, res: Response): Promise<void>
       data: employee,
     });
   } catch (error: any) {
-    console.error('Update employee error:', error);
+    logger.error('Update employee error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to update employee',
@@ -108,7 +109,7 @@ export const updateEmployeeStatus = async (req: Request, res: Response): Promise
       data: employee,
     });
   } catch (error: any) {
-    console.error('Update employee status error:', error);
+    logger.error('Update employee status error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to update employee status',
@@ -130,7 +131,7 @@ export const addEmployeeDocument = async (req: Request, res: Response): Promise<
       data: employee,
     });
   } catch (error: any) {
-    console.error('Add employee document error:', error);
+    logger.error('Add employee document error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to add document',

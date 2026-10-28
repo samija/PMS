@@ -1,13 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import Property from '../models/Property.js';
-import Unit from '../models/Unit.js';
-import PropertyStaff from '../models/PropertyStaff.js';
 import { PropertyService } from '../application/services/PropertyService.js';
 import { deleteCloudinaryImage } from '../middleware/upload.js';
 import { BadRequestError } from '../domain/exceptions/AppError.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 
-// Create service instance
-const propertyService = new PropertyService(Property, Unit, PropertyStaff);
+const propertyService = container.get<PropertyService>(TYPES.PropertyService);
 
 export const createProperty = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

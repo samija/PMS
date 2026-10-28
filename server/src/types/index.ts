@@ -111,6 +111,66 @@ export interface ITenantDocument {
   uploadedAt: Date;
 }
 
+// Identity Profile types
+export type VerificationStatus = 'not_started' | 'pending' | 'in_review' | 'verified' | 'rejected' | 'expired' | 'requires_resubmission';
+
+export type RejectionReasonCode = 'blurry_document' | 'expired_document' | 'mismatch' | 'incomplete' | 'fraudulent' | 'wrong_document_type' | 'other';
+
+export interface IEncryptedField {
+  ciphertext: string;
+  iv: string;
+  tag: string;
+  keyVersion: number;
+}
+
+export interface IPermanentAddress {
+  street: string;
+  city: string;
+  region: string;
+  country: string;
+  postalCode?: string;
+}
+
+export interface IPriorReference {
+  landlordName: string;
+  landlordPhone: string;
+  propertyName?: string;
+  tenancyStart?: Date;
+  tenancyEnd?: Date;
+}
+
+export interface INextOfKin {
+  name: string;
+  relationship: string;
+  phone: string;
+  address?: string;
+}
+
+export interface IIdentityProfile {
+  dateOfBirth?: Date;
+  nationalIdNumber?: IEncryptedField;
+  passportNumber?: IEncryptedField;
+  passportCountry?: string;
+  nationality?: string;
+  permanentAddress?: IPermanentAddress;
+  occupation?: string;
+  employer?: string;
+  employerPhone?: string;
+  incomeAmount?: IEncryptedField;
+  incomeCurrency?: string;
+  incomeSource?: string;
+  references?: IPriorReference[];
+  nextOfKin?: INextOfKin;
+}
+
+export interface IIdentityVerification {
+  status: VerificationStatus;
+  updatedAt?: Date;
+  updatedBy?: Types.ObjectId;
+  reasonCode?: RejectionReasonCode;
+  reasonText?: string;
+}
+
 export interface ITenant extends Document {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
@@ -120,6 +180,8 @@ export interface ITenant extends Document {
   leaseAgreement: ILeaseAgreement;
   emergencyContact?: IEmergencyContact;
   documents: ITenantDocument[];
+  identityProfile?: IIdentityProfile;
+  identityVerification: IIdentityVerification;
   status: TenantStatus;
   createdAt: Date;
   updatedAt: Date;
@@ -343,6 +405,9 @@ export interface IOwnerPaymentSettings extends Document {
   bankDetails?: IBankDetails;
   paymentInstructions?: string;
   isActive: boolean;
+  requireVerifiedIdentityToActivateTenant: boolean;
+  mandatoryKycDocuments: string[];
+  retentionYears: number;
   createdAt: Date;
   updatedAt: Date;
 }

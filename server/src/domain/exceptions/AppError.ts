@@ -46,3 +46,9 @@ export class BadRequestError extends AppError {
     super(400, message, 'BAD_REQUEST');
   }
 }
+
+export class InvalidStateTransitionError extends AppError {
+  constructor(entity: string, from: string, to: string) {
+    super(400, `Cannot transition ${entity} from '${from}' to '${to}'`, 'INVALID_STATE_TRANSITION');
+  }
+}

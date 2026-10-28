@@ -1,3 +1,4 @@
+import { logger } from '../../config/logger.js';
 import {
   emailQueue,
   paymentQueue,
@@ -14,7 +15,7 @@ export class QueueService {
     try {
       await emailQueue.add({ type, to, subject, data }, { priority: type === 'payment_receipt' ? 1 : 2 });
     } catch (err) {
-      console.warn('[QueueService] Failed to enqueue email (falling back to direct send):', err);
+      logger.warn('[QueueService] Failed to enqueue email (falling back to direct send):', err);
     }
   }
 
@@ -22,7 +23,7 @@ export class QueueService {
     try {
       await paymentQueue.add({ type, ...data }, { priority: 1 });
     } catch (err) {
-      console.warn('[QueueService] Failed to enqueue payment job:', err);
+      logger.warn('[QueueService] Failed to enqueue payment job:', err);
     }
   }
 
@@ -30,7 +31,7 @@ export class QueueService {
     try {
       await notificationQueue.add({ type, ...data });
     } catch (err) {
-      console.warn('[QueueService] Failed to enqueue notification:', err);
+      logger.warn('[QueueService] Failed to enqueue notification:', err);
     }
   }
 
@@ -38,7 +39,7 @@ export class QueueService {
     try {
       await reportQueue.add({ type, ...data }, { delay: 1000 });
     } catch (err) {
-      console.warn('[QueueService] Failed to enqueue report:', err);
+      logger.warn('[QueueService] Failed to enqueue report:', err);
     }
   }
 }

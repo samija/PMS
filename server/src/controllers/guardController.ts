@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { IGuardService } from '../domain/interfaces/IServices.js';
+import { logger } from '../config/logger.js';
 
 export const createShift = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -21,7 +22,7 @@ export const createShift = async (req: Request, res: Response): Promise<void> =>
       data: shift,
     });
   } catch (error: any) {
-    console.error('Create shift error:', error);
+    logger.error('Create shift error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to create shift',
@@ -46,7 +47,7 @@ export const getShifts = async (req: Request, res: Response): Promise<void> => {
       data: shifts,
     });
   } catch (error: any) {
-    console.error('Get shifts error:', error);
+    logger.error('Get shifts error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to get shifts',
@@ -68,7 +69,7 @@ export const updateShift = async (req: Request, res: Response): Promise<void> =>
       data: shift,
     });
   } catch (error: any) {
-    console.error('Update shift error:', error);
+    logger.error('Update shift error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to update shift',
@@ -88,7 +89,7 @@ export const deleteShift = async (req: Request, res: Response): Promise<void> =>
       message: 'Shift deleted successfully',
     });
   } catch (error: any) {
-    console.error('Delete shift error:', error);
+    logger.error('Delete shift error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to delete shift',
@@ -108,7 +109,7 @@ export const getWeeklySchedule = async (req: Request, res: Response): Promise<vo
       data: schedule,
     });
   } catch (error: any) {
-    console.error('Get weekly schedule error:', error);
+    logger.error('Get weekly schedule error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to get weekly schedule',
@@ -128,7 +129,7 @@ export const getGuardPosts = async (req: Request, res: Response): Promise<void> 
       data: posts,
     });
   } catch (error: any) {
-    console.error('Get guard posts error:', error);
+    logger.error('Get guard posts error:', error);
     res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to get guard posts',

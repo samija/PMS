@@ -1,11 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { PaymentScheduleService } from '../application/services/PaymentScheduleService.js';
-import PaymentSchedule from '../models/PaymentSchedule.js';
-import Payment from '../models/Payment.js';
-import Tenant from '../models/Tenant.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 
-// Create service instance
-const scheduleService = new PaymentScheduleService(PaymentSchedule, Payment, Tenant);
+const scheduleService = container.get<PaymentScheduleService>(TYPES.PaymentScheduleService);
 
 export const createSchedule = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

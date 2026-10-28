@@ -1,6 +1,7 @@
 import axios from 'axios';
 import crypto from 'crypto';
 import { BasePaymentGateway } from '../../domain/gateways/BasePaymentGateway.js';
+import { logger } from '../../config/logger.js';
 import {
   PaymentInitializationPayload,
   PaymentInitializationResponse,
@@ -149,7 +150,7 @@ export class TelebirrGateway extends BasePaymentGateway {
         },
       };
     } catch (error: any) {
-      console.error('Telebirr initialize error:', error.response?.data || error.message);
+      logger.error('Telebirr initialize error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.msg || 'Failed to initialize Telebirr payment');
     }
   }
@@ -208,7 +209,7 @@ export class TelebirrGateway extends BasePaymentGateway {
         },
       };
     } catch (error: any) {
-      console.error('Telebirr verify error:', error.response?.data || error.message);
+      logger.error('Telebirr verify error:', error.response?.data || error.message);
       throw new Error(error.response?.data?.msg || 'Failed to verify Telebirr payment');
     }
   }
@@ -231,7 +232,7 @@ export class TelebirrGateway extends BasePaymentGateway {
       // Compare signatures
       return expectedSignature === signature || expectedSignature === sign;
     } catch (error) {
-      console.error('Telebirr webhook signature verification error:', error);
+      logger.error('Telebirr webhook signature verification error:', error);
       return false;
     }
   }

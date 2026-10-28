@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { CreditCard, Plus, Download, Search, Calendar, Clock, CheckCircle, XCircle, Eye, Image } from 'lucide-react';
+import { CreditCard, Plus, Download, Calendar, Clock, CheckCircle, XCircle, Eye, Image } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -9,13 +9,28 @@ import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import { paymentAPI, tenantAPI } from '../../services/api';
+import type { Payment, Tenant } from '../../types';
+
+interface PaymentStat {
+  _id: string;
+  total: number;
+  count: number;
+}
+
+interface CreateManualPaymentData {
+  tenantId: string;
+  amount: number;
+  type: string;
+  month: number;
+  year: number;
+}
 
 export default function Payments() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'all' | 'pending_approval'>('all');
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<any>(null);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [approvalNotes, setApprovalNotes] = useState('');
   const [filters, setFilters] = useState({
     status: '',
@@ -70,7 +85,7 @@ export default function Payments() {
       setSelectedPayment(null);
       setApprovalNotes('');
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || 'Failed to approve payment');
     },
   });
@@ -87,13 +102,13 @@ export default function Payments() {
       setSelectedPayment(null);
       setApprovalNotes('');
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || 'Failed to reject payment');
     },
   });
 
   const createManualMutation = useMutation({
-    mutationFn: (data: any) => paymentAPI.createManual(data),
+    mutationFn: (data: CreateManualPaymentData) => paymentAPI.createManual(data as unknown as Record<string, unknown>),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['payment-stats'] });
@@ -101,7 +116,7 @@ export default function Payments() {
       setShowAddModal(false);
       resetForm();
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || 'Failed to record payment');
     },
   });
@@ -111,8 +126,8 @@ export default function Payments() {
   const tenants = tenantsData?.data?.data?.tenants || [];
   const stats = statsData?.data?.data?.summary || [];
 
-  const completedTotal = stats.find((s: any) => s._id === 'completed')?.total || 0;
-  const pendingTotal = stats.find((s: any) => s._id === 'pending')?.total || 0;
+  const completedTotal = stats.find((s: PaymentStat) => s._id === 'completed')?.total || 0;
+  const pendingTotal = stats.find((s: PaymentStat) => s._id === 'pending')?.total || 0;
 
   const resetForm = () => {
     setFormData({
@@ -331,7 +346,7 @@ export default function Payments() {
                       </tr>
                     </thead>
                     <tbody>
-                      {payments.map((payment: any) => (
+                      {payments.map((payment: Payment) => (
                         <tr key={payment._id} className="border-t hover:bg-gray-50">
                           <td className="py-3 px-4">
                             <p className="font-medium">{payment.tenantId?.userId?.name || 'N/A'}</p>
@@ -367,7 +382,7 @@ export default function Payments() {
 
                 {/* Mobile Card View */}
                 <div className="md:hidden divide-y">
-                  {payments.map((payment: any) => (
+                  {payments.map((payment: Payment) => (
                     <div key={payment._id} className="p-4 space-y-3">
                       <div className="flex justify-between items-start">
                         <div>
@@ -451,7 +466,7 @@ export default function Payments() {
             </div>
           ) : (
             <div className="divide-y">
-              {pendingPayments.map((payment: any) => (
+              {pendingPayments.map((payment: Payment) => (
                 <div key={payment._id} className="p-4 hover:bg-gray-50">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -524,14 +539,14 @@ export default function Payments() {
             label="Tenant"
             options={[
               { value: '', label: 'Select Tenant' },
-              ...tenants.map((t: any) => ({
+              ...tenants.map((t: Tenant) => ({
                 value: t._id,
                 label: `${t.userId?.name} - Unit ${t.unitId?.unitNumber}`,
               })),
             ]}
             value={formData.tenantId}
             onChange={(e) => {
-              const tenant = tenants.find((t: any) => t._id === e.target.value);
+              const tenant = tenants.find((t: Tenant) => t._id === e.target.value);
               setFormData({
                 ...formData,
                 tenantId: e.target.value,

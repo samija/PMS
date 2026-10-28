@@ -1,12 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import Maintenance from '../models/Maintenance.js';
-import Tenant from '../models/Tenant.js';
-import Property from '../models/Property.js';
-import PropertyStaff from '../models/PropertyStaff.js';
 import { MaintenanceService } from '../application/services/MaintenanceService.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 
-// Create service instance
-const maintenanceService = new MaintenanceService(Maintenance, Tenant, Property, PropertyStaff);
+const maintenanceService = container.get<MaintenanceService>(TYPES.MaintenanceService);
 
 export const createMaintenanceRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

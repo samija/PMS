@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import container from '../config/container.js';
 import TYPES from '../config/types.js';
 import { ILeaveService } from '../domain/interfaces/IServices.js';
+import { logger } from '../config/logger.js';
 
 export const submitLeaveRequest = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -9,7 +10,7 @@ export const submitLeaveRequest = async (req: Request, res: Response): Promise<v
     const data = await service.submitRequest(req.body);
     res.status(201).json({ success: true, message: 'Leave request submitted', data });
   } catch (error: any) {
-    console.error('Submit leave request error:', error);
+    logger.error('Submit leave request error:', error);
     res.status(error.statusCode || 500).json({ success: false, message: error.message || 'Failed to submit request' });
   }
 };
@@ -27,7 +28,7 @@ export const getLeaveRequests = async (req: Request, res: Response): Promise<voi
     });
     res.json({ success: true, data });
   } catch (error: any) {
-    console.error('Get leave requests error:', error);
+    logger.error('Get leave requests error:', error);
     res.status(500).json({ success: false, message: 'Failed to get requests' });
   }
 };
@@ -39,7 +40,7 @@ export const approveLeaveRequest = async (req: Request, res: Response): Promise<
     const data = await service.approveRequest(id, req.user!._id.toString());
     res.json({ success: true, message: 'Leave request approved', data });
   } catch (error: any) {
-    console.error('Approve leave error:', error);
+    logger.error('Approve leave error:', error);
     res.status(error.statusCode || 500).json({ success: false, message: error.message || 'Failed to approve' });
   }
 };
@@ -52,7 +53,7 @@ export const rejectLeaveRequest = async (req: Request, res: Response): Promise<v
     const data = await service.rejectRequest(id, req.user!._id.toString(), reason);
     res.json({ success: true, message: 'Leave request rejected', data });
   } catch (error: any) {
-    console.error('Reject leave error:', error);
+    logger.error('Reject leave error:', error);
     res.status(error.statusCode || 500).json({ success: false, message: error.message || 'Failed to reject' });
   }
 };
@@ -64,7 +65,7 @@ export const cancelLeaveRequest = async (req: Request, res: Response): Promise<v
     const data = await service.cancelRequest(id, req.user!._id.toString());
     res.json({ success: true, message: 'Leave request cancelled', data });
   } catch (error: any) {
-    console.error('Cancel leave error:', error);
+    logger.error('Cancel leave error:', error);
     res.status(error.statusCode || 500).json({ success: false, message: error.message || 'Failed to cancel' });
   }
 };
@@ -76,7 +77,7 @@ export const getLeaveBalance = async (req: Request, res: Response): Promise<void
     const data = await service.getLeaveBalance(id);
     res.json({ success: true, data });
   } catch (error: any) {
-    console.error('Get leave balance error:', error);
+    logger.error('Get leave balance error:', error);
     res.status(500).json({ success: false, message: 'Failed to get balance' });
   }
 };

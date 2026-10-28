@@ -10,6 +10,18 @@ import Modal from '../../components/ui/Modal';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import { propertyAPI } from '../../services/api';
+import type { Property } from '../../types';
+
+interface CreatePropertyData {
+  name: string;
+  type: string;
+  address: { street: string; city: string; state: string; country: string };
+  totalFloors: number;
+  totalUnits: number;
+  description: string;
+  waitingListType: string;
+  amenities: string[];
+}
 
 export default function Properties() {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -34,14 +46,14 @@ export default function Properties() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => propertyAPI.create(data),
+    mutationFn: (data: CreatePropertyData) => propertyAPI.create(data as unknown as Record<string, unknown>),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['properties'] });
       toast.success('Property created successfully');
       setShowCreateModal(false);
       resetForm();
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || 'Failed to create property');
     },
   });
@@ -147,7 +159,7 @@ export default function Properties() {
         </Card>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property: any) => (
+          {properties.map((property: Property) => (
             <Card key={property._id} padding="none" className="overflow-hidden">
               <div className="h-32 bg-gradient-to-br from-primary-500 to-primary-700 relative">
                 {property.images?.[0] && (

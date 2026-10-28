@@ -2,6 +2,7 @@ import Bull from 'bull';
 import { ReportJobData } from '../index.js';
 import Payment from '../../../models/Payment.js';
 import Unit from '../../../models/Unit.js';
+import { logger } from '../../../config/logger.js';
 
 export const processReportJob = async (job: Bull.Job<ReportJobData>): Promise<void> => {
   const { type, ownerId, propertyId, month, year } = job.data;
@@ -27,7 +28,7 @@ export const processReportJob = async (job: Bull.Job<ReportJobData>): Promise<vo
           .filter((p: any) => p.status === 'pending')
           .reduce((sum: number, p: any) => sum + (p.amount || 0), 0);
 
-        console.log(`[ReportProcessor] Monthly payment report for ${reportMonth}/${reportYear}: collected=${totalCollected} ETB, pending=${totalPending} ETB`);
+        logger.info(`[ReportProcessor] Monthly payment report for ${reportMonth}/${reportYear}: collected=${totalCollected} ETB, pending=${totalPending} ETB`);
         break;
       }
       case 'occupancy_report': {
@@ -39,14 +40,14 @@ export const processReportJob = async (job: Bull.Job<ReportJobData>): Promise<vo
         const occupied = units.filter((u: any) => u.status === 'occupied').length;
         const rate = total > 0 ? ((occupied / total) * 100).toFixed(1) : '0';
 
-        console.log(`[ReportProcessor] Occupancy report: ${occupied}/${total} units occupied (${rate}%)`);
+        logger.info(`[ReportProcessor] Occupancy report: ${occupied}/${total} units occupied (${rate}%)`);
         break;
       }
       default:
-        console.warn(`[ReportProcessor] Unknown job type: ${type}`);
+        logger.warn(`[ReportProcessor] Unknown job type: ${type}`);
     }
   } catch (error) {
-    console.error(`[ReportProcessor] Failed to process ${type}:`, error);
+    logger.error(`[ReportProcessor] Failed to process ${type}:`, error);
     throw error;
   }
 };

@@ -106,6 +106,7 @@ export interface Payment {
     number: string;
     generatedAt: string;
   };
+  bankTransferReceipt?: string;
   createdAt: string;
 }
 

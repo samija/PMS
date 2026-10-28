@@ -42,6 +42,7 @@ export const TYPES = {
   PerformanceService: Symbol.for('PerformanceService'),
   StaffService: Symbol.for('StaffService'),
   ListingService: Symbol.for('ListingService'),
+  SubscriptionService: Symbol.for('SubscriptionService'),
 
   // ==================== Controllers ====================
   AuthController: Symbol.for('AuthController'),

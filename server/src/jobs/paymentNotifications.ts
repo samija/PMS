@@ -6,6 +6,7 @@ import Payment from '../models/Payment.js';
 import Tenant from '../models/Tenant.js';
 import User from '../models/User.js';
 import { IPayment } from '../types/index.js';
+import { logger } from '../config/logger.js';
 
 // Create service instance
 const notificationService = new NotificationService(Notification, Tenant, User);
@@ -20,22 +21,22 @@ export const initPaymentNotificationsJob = (): void => {
 
   const isValidSchedule = cron.validate(schedule);
   if (!isValidSchedule) {
-    console.error('Invalid cron schedule for payment notifications:', schedule);
+    logger.error('Invalid cron schedule for payment notifications:', schedule);
     return;
   }
 
   cron.schedule(schedule, async () => {
-    console.log(`[${new Date().toISOString()}] Running payment notifications job...`);
+    logger.info(`[${new Date().toISOString()}] Running payment notifications job...`);
 
     try {
       const result = await processPaymentNotifications();
-      console.log(`[${new Date().toISOString()}] Payment notifications job completed: ${result.due} due, ${result.overdue} overdue notifications sent`);
+      logger.info(`[${new Date().toISOString()}] Payment notifications job completed: ${result.due} due, ${result.overdue} overdue notifications sent`);
     } catch (error) {
-      console.error(`[${new Date().toISOString()}] Payment notifications job failed:`, error);
+      logger.error(`[${new Date().toISOString()}] Payment notifications job failed:`, error);
     }
   });
 
-  console.log(`Payment notifications cron job initialized with schedule: ${schedule}`);
+  logger.info(`Payment notifications cron job initialized with schedule: ${schedule}`);
 };
 
 /**
@@ -145,7 +146,7 @@ async function processPaymentNotifications(): Promise<{ due: number; overdue: nu
  * Run payment notifications manually (for testing)
  */
 export const runPaymentNotificationsManually = async (): Promise<{ due: number; overdue: number }> => {
-  console.log('Running payment notifications manually...');
+  logger.info('Running payment notifications manually...');
   return processPaymentNotifications();
 };
 

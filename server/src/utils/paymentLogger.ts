@@ -1,4 +1,5 @@
 import { PaymentGatewayType } from '../domain/interfaces/IPaymentGateway.js';
+import { logger } from '../config/logger.js';
 
 /**
  * Payment Logger Utility
@@ -42,19 +43,19 @@ function log(level: LogLevel, message: string, context?: LogContext): void {
 
   switch (level) {
     case LogLevel.ERROR:
-      console.error(`[PAYMENT ERROR] ${logString}`);
+      logger.error(`[PAYMENT ERROR] ${logString}`);
       break;
     case LogLevel.WARN:
-      console.warn(`[PAYMENT WARN] ${logString}`);
+      logger.warn(`[PAYMENT WARN] ${logString}`);
       break;
     case LogLevel.DEBUG:
       if (process.env.NODE_ENV === 'development') {
-        console.debug(`[PAYMENT DEBUG] ${logString}`);
+        logger.debug(`[PAYMENT DEBUG] ${logString}`);
       }
       break;
     case LogLevel.INFO:
     default:
-      console.log(`[PAYMENT INFO] ${logString}`);
+      logger.info(`[PAYMENT INFO] ${logString}`);
       break;
   }
 }

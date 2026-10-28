@@ -110,6 +110,7 @@ import TenantAuditLogModel, { ITenantAuditLogEntry } from '../models/TenantAudit
 import { TenantAuditLogRepository } from '../infrastructure/repositories/TenantAuditLogRepository.js';
 import { TenantAuditService } from '../application/services/TenantAuditService.js';
 import { ListingService } from '../application/services/ListingService.js';
+import { SubscriptionService } from '../application/services/SubscriptionService.js';
 
 // Import Service Interfaces
 import {
@@ -225,6 +226,9 @@ container.bind<TenantAuditService>(TYPES.TenantAuditService).to(TenantAuditServi
 
 // ==================== Listing ====================
 container.bind<ListingService>(TYPES.ListingService).to(ListingService).inSingletonScope();
+
+// ==================== Subscription ====================
+container.bind<SubscriptionService>(TYPES.SubscriptionService).to(SubscriptionService).inSingletonScope();
 
 export { container };
 export default container;

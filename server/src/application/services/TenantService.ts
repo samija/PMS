@@ -1,6 +1,6 @@
 import { Model, Types } from 'mongoose';
 import { injectable, inject } from 'inversify';
-import { IUser, ITenant, IUnit, IProperty, ILeaseAgreement, IEmergencyContact, ITenantDocument, DocumentType } from '../../types/index.js';
+import { IUser, ITenant, IUnit, IProperty, IOwnerPaymentSettings, ILeaseAgreement, IEmergencyContact, ITenantDocument, DocumentType } from '../../types/index.js';
 import { NotFoundError, BadRequestError } from '../../domain/exceptions/AppError.js';
 import { deleteCloudinaryImage } from '../../middleware/upload.js';
 import {
@@ -9,7 +9,9 @@ import {
   UpdateTenantData,
   TenantQueryOptions,
 } from '../../domain/interfaces/IServices.js';
+import { TenantIdentityService } from './TenantIdentityService.js';
 import TYPES from '../../config/types.js';
+import { logger } from '../../config/logger.js';
 
 // Re-export interfaces for backward compatibility
 export type { CreateTenantData, UpdateTenantData, TenantQueryOptions };
@@ -20,17 +22,23 @@ export class TenantService implements ITenantService {
   private tenantModel: Model<ITenant>;
   private unitModel: Model<IUnit>;
   private propertyModel: Model<IProperty>;
+  private ownerSettingsModel: Model<IOwnerPaymentSettings>;
+  private identityService: TenantIdentityService;
 
   constructor(
     @inject(TYPES.UserModel) userModel: Model<IUser>,
     @inject(TYPES.TenantModel) tenantModel: Model<ITenant>,
     @inject(TYPES.UnitModel) unitModel: Model<IUnit>,
-    @inject(TYPES.PropertyModel) propertyModel: Model<IProperty>
+    @inject(TYPES.PropertyModel) propertyModel: Model<IProperty>,
+    @inject(TYPES.OwnerPaymentSettingsModel) ownerSettingsModel: Model<IOwnerPaymentSettings>,
+    @inject(TYPES.TenantIdentityService) identityService: TenantIdentityService,
   ) {
     this.userModel = userModel;
     this.tenantModel = tenantModel;
     this.unitModel = unitModel;
     this.propertyModel = propertyModel;
+    this.ownerSettingsModel = ownerSettingsModel;
+    this.identityService = identityService;
   }
 
   async createTenant(data: CreateTenantData): Promise<ITenant> {
@@ -178,6 +186,11 @@ export class TenantService implements ITenantService {
     }
 
     if (data.status) {
+      if (data.status === 'active' && tenant.status === 'pending') {
+        const settings = await this.ownerSettingsModel.findOne({ ownerId: tenant.ownerId });
+        const requireVerification = settings?.requireVerifiedIdentityToActivateTenant ?? true;
+        this.identityService.assertCanActivateTenant(tenant, requireVerification);
+      }
       tenant.status = data.status as any;
     }
 
@@ -310,7 +323,7 @@ export class TenantService implements ITenantService {
     try {
       await deleteCloudinaryImage(docToDelete.url);
     } catch (error) {
-      console.error('Failed to delete document from Cloudinary:', error);
+      logger.error('Failed to delete document from Cloudinary:', error);
     }
 
     tenant.documents.splice(docIndex, 1);

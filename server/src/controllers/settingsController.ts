@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import { OwnerSettingsService } from '../application/services/OwnerSettingsService.js';
 import OwnerPaymentSettings from '../models/OwnerPaymentSettings.js';
 import { ETHIOPIAN_BANKS } from '../models/OwnerPaymentSettings.js';
+import container from '../config/container.js';
+import TYPES from '../config/types.js';
 
-// Create service instance
-const ownerSettingsService = new OwnerSettingsService(OwnerPaymentSettings);
+const ownerSettingsService = container.get<OwnerSettingsService>(TYPES.OwnerSettingsService);
 
 /**
  * Get owner's payment settings
@@ -116,4 +117,53 @@ export const getSupportedBanks = async (
   } catch (error) {
     next(error);
   }
+};
+
+export const getKycSettings = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const ownerId = req.user?._id.toString();
+    if (!ownerId) { res.status(401).json({ success: false, message: 'Not authenticated' }); return; }
+    let settings = await OwnerPaymentSettings.findOne({ ownerId });
+    if (!settings) {
+      settings = await OwnerPaymentSettings.create({ ownerId });
+    }
+    res.json({
+      success: true,
+      data: {
+        requireVerifiedIdentityToActivateTenant: settings.requireVerifiedIdentityToActivateTenant,
+        mandatoryKycDocuments: settings.mandatoryKycDocuments,
+        retentionYears: settings.retentionYears,
+      },
+    });
+  } catch (error) { next(error); }
+};
+
+export const updateKycSettings = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const ownerId = req.user?._id.toString();
+    if (!ownerId) { res.status(401).json({ success: false, message: 'Not authenticated' }); return; }
+    const { requireVerifiedIdentityToActivateTenant, mandatoryKycDocuments, retentionYears } = req.body;
+    const update: Record<string, any> = {};
+    if (requireVerifiedIdentityToActivateTenant !== undefined) update.requireVerifiedIdentityToActivateTenant = requireVerifiedIdentityToActivateTenant;
+    if (mandatoryKycDocuments !== undefined) update.mandatoryKycDocuments = mandatoryKycDocuments;
+    if (retentionYears !== undefined) {
+      if (retentionYears < 1 || retentionYears > 99) {
+        res.status(400).json({ success: false, message: 'retentionYears must be between 1 and 99' }); return;
+      }
+      update.retentionYears = retentionYears;
+    }
+    const settings = await OwnerPaymentSettings.findOneAndUpdate(
+      { ownerId },
+      { $set: update },
+      { new: true, upsert: true }
+    );
+    res.json({
+      success: true,
+      data: {
+        requireVerifiedIdentityToActivateTenant: settings.requireVerifiedIdentityToActivateTenant,
+        mandatoryKycDocuments: settings.mandatoryKycDocuments,
+        retentionYears: settings.retentionYears,
+      },
+    });
+  } catch (error) { next(error); }
 };

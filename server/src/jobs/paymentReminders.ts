@@ -2,6 +2,7 @@ import cron from 'node-cron';
 import { container } from '../config/container.js';
 import { IEmailReminderService } from '../domain/interfaces/IServices.js';
 import TYPES from '../config/types.js';
+import { logger } from '../config/logger.js';
 
 /**
  * Initialize payment reminder cron job
@@ -14,31 +15,31 @@ export const initPaymentReminderJob = (): void => {
 
   const isValidSchedule = cron.validate(schedule);
   if (!isValidSchedule) {
-    console.error('Invalid cron schedule for payment reminders:', schedule);
+    logger.error('Invalid cron schedule for payment reminders:', schedule);
     return;
   }
 
   cron.schedule(schedule, async () => {
-    console.log(`[${new Date().toISOString()}] Running payment reminder job...`);
+    logger.info(`[${new Date().toISOString()}] Running payment reminder job...`);
 
     try {
       // Resolve service from container at runtime
       const emailReminderService = container.get<IEmailReminderService>(TYPES.EmailReminderService);
       await emailReminderService.processAllReminders();
-      console.log(`[${new Date().toISOString()}] Payment reminder job completed successfully`);
+      logger.info(`[${new Date().toISOString()}] Payment reminder job completed successfully`);
     } catch (error) {
-      console.error(`[${new Date().toISOString()}] Payment reminder job failed:`, error);
+      logger.error(`[${new Date().toISOString()}] Payment reminder job failed:`, error);
     }
   });
 
-  console.log(`Payment reminder cron job initialized with schedule: ${schedule}`);
+  logger.info(`Payment reminder cron job initialized with schedule: ${schedule}`);
 };
 
 /**
  * Run payment reminders manually (for testing or manual triggers)
  */
 export const runPaymentRemindersManually = async (): Promise<void> => {
-  console.log('Running payment reminders manually...');
+  logger.info('Running payment reminders manually...');
   const emailReminderService = container.get<IEmailReminderService>(TYPES.EmailReminderService);
   await emailReminderService.processAllReminders();
 };
