@@ -137,7 +137,10 @@ export default function PropertyDetail() {
     e.preventDefault();
     addUnitMutation.mutate({
       ...unitForm,
-      features: unitForm.features.split(',').map((f) => f.trim()).filter(Boolean),
+      features: unitForm.features
+        .split(',')
+        .map((f) => f.trim())
+        .filter(Boolean),
     });
   };
 
@@ -257,9 +260,7 @@ export default function PropertyDetail() {
           <div className="space-y-4">
             <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
               <span className="text-green-700">Vacant</span>
-              <span className="font-bold text-green-700">
-                {units.filter((u: any) => u.status === 'vacant').length}
-              </span>
+              <span className="font-bold text-green-700">{units.filter((u: any) => u.status === 'vacant').length}</span>
             </div>
             <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
               <span className="text-blue-700">Occupied</span>
@@ -397,9 +398,10 @@ export default function PropertyDetail() {
                       <td className="py-3 px-4">{unit.size} sqm</td>
                       <td className="py-3 px-4">
                         <div>
-                          <p className="font-medium">{unit.pricing.totalPrice.toLocaleString()} ETB</p>
+                          <p className="font-medium">{unit.pricing?.totalPrice?.toLocaleString() || 0} ETB</p>
                           <p className="text-xs text-gray-500">
-                            Base: {unit.pricing.basePrice.toLocaleString()} | Multiplier: x{unit.pricing.floorMultiplier.toFixed(2)}
+                            Base: {unit.pricing?.basePrice?.toLocaleString() || 0} | Multiplier: x
+                            {unit.pricing?.floorMultiplier?.toFixed(2) || '1.00'}
                           </p>
                         </div>
                       </td>
@@ -436,7 +438,9 @@ export default function PropertyDetail() {
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="font-medium text-gray-900">Unit {unit.unitNumber}</p>
-                      <p className="text-sm text-gray-500 capitalize">{unit.type} - Floor {unit.floor}</p>
+                      <p className="text-sm text-gray-500 capitalize">
+                        {unit.type} - Floor {unit.floor}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant={getStatusBadge(unit.status)}>{unit.status}</Badge>
@@ -469,7 +473,8 @@ export default function PropertyDetail() {
                     </div>
                   </div>
                   <p className="text-xs text-gray-400">
-                    Base: {unit.pricing.basePrice.toLocaleString()} ETB | Multiplier: x{unit.pricing.floorMultiplier.toFixed(2)}
+                    Base: {unit.pricing.basePrice.toLocaleString()} ETB | Multiplier: x
+                    {unit.pricing.floorMultiplier.toFixed(2)}
                   </p>
                 </div>
               ))}
@@ -479,11 +484,7 @@ export default function PropertyDetail() {
       </Card>
 
       {/* Add Unit Modal */}
-      <Modal
-        isOpen={showAddUnitModal}
-        onClose={() => setShowAddUnitModal(false)}
-        title="Add New Unit"
-      >
+      <Modal isOpen={showAddUnitModal} onClose={() => setShowAddUnitModal(false)} title="Add New Unit">
         <form onSubmit={handleAddUnit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
@@ -543,13 +544,13 @@ export default function PropertyDetail() {
             <p className="text-blue-700">
               <strong>Estimated Total:</strong>{' '}
               {Math.round(
-                unitForm.basePrice * (1 + (unitForm.floor / property.totalFloors) * 0.1) +
-                  unitForm.amenityCharges
+                unitForm.basePrice * (1 + (unitForm.floor / property.totalFloors) * 0.1) + unitForm.amenityCharges
               ).toLocaleString()}{' '}
               ETB/month
             </p>
             <p className="text-blue-600 text-xs mt-1">
-              Floor multiplier: x{(1 + (unitForm.floor / property.totalFloors) * 0.1).toFixed(2)} (higher floors have higher prices)
+              Floor multiplier: x{(1 + (unitForm.floor / property.totalFloors) * 0.1).toFixed(2)} (higher floors have
+              higher prices)
             </p>
           </div>
 
@@ -561,7 +562,12 @@ export default function PropertyDetail() {
           />
 
           <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-            <Button type="button" variant="secondary" onClick={() => setShowAddUnitModal(false)} className="w-full sm:w-auto">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setShowAddUnitModal(false)}
+              className="w-full sm:w-auto"
+            >
               Cancel
             </Button>
             <Button type="submit" loading={addUnitMutation.isPending} className="w-full sm:w-auto">
@@ -577,11 +583,7 @@ export default function PropertyDetail() {
         onClose={() => setShowImageUploadModal(false)}
         title="Upload Property Images"
       >
-        <ImageUpload
-          onUpload={handleUploadImages}
-          maxFiles={10}
-          isUploading={isUploadingImages}
-        />
+        <ImageUpload onUpload={handleUploadImages} maxFiles={10} isUploading={isUploadingImages} />
       </Modal>
     </div>
   );

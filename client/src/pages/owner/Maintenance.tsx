@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Wrench, Clock, User, CheckCircle } from 'lucide-react';
+import { Wrench, Clock, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -17,7 +17,8 @@ export default function OwnerMaintenance() {
   });
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [statusNote, setStatusNote] = useState('');
+  const [completionCost, setCompletionCost] = useState('');
+  const [showCompleteConfirm, setShowCompleteConfirm] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -38,18 +39,22 @@ export default function OwnerMaintenance() {
       queryClient.invalidateQueries({ queryKey: ['maintenance'] });
       queryClient.invalidateQueries({ queryKey: ['maintenance-stats'] });
       toast.success('Status updated');
-      setStatusNote('');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to update status');
     },
   });
 
   const completeMutation = useMutation({
-    mutationFn: ({ id, actualCost }: { id: string; actualCost: number }) =>
-      maintenanceAPI.complete(id, { actualCost }),
+    mutationFn: ({ id, actualCost }: { id: string; actualCost: number }) => maintenanceAPI.complete(id, { actualCost }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['maintenance'] });
       queryClient.invalidateQueries({ queryKey: ['maintenance-stats'] });
       toast.success('Request completed');
       setShowDetailModal(false);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to complete request');
     },
   });
 
@@ -78,10 +83,11 @@ export default function OwnerMaintenance() {
     return variants[priority] || 'default';
   };
 
-  const statusCounts = stats.byStatus?.reduce((acc: any, item: any) => {
-    acc[item._id] = item.count;
-    return acc;
-  }, {}) || {};
+  const statusCounts =
+    stats.byStatus?.reduce((acc: any, item: any) => {
+      acc[item._id] = item.count;
+      return acc;
+    }, {}) || {};
 
   return (
     <div className="space-y-6">
@@ -194,20 +200,32 @@ export default function OwnerMaintenance() {
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div className="flex gap-4 min-w-0">
-                  <div className={`p-3 rounded-lg flex-shrink-0 ${
-                    request.priority === 'emergency' ? 'bg-red-100' :
-                    request.priority === 'high' ? 'bg-orange-100' : 'bg-gray-100'
-                  }`}>
-                    <Wrench className={`h-6 w-6 ${
-                      request.priority === 'emergency' ? 'text-red-600' :
-                      request.priority === 'high' ? 'text-orange-600' : 'text-gray-600'
-                    }`} />
+                  <div
+                    className={`p-3 rounded-lg flex-shrink-0 ${
+                      request.priority === 'emergency'
+                        ? 'bg-red-100'
+                        : request.priority === 'high'
+                          ? 'bg-orange-100'
+                          : 'bg-gray-100'
+                    }`}
+                  >
+                    <Wrench
+                      className={`h-6 w-6 ${
+                        request.priority === 'emergency'
+                          ? 'text-red-600'
+                          : request.priority === 'high'
+                            ? 'text-orange-600'
+                            : 'text-gray-600'
+                      }`}
+                    />
                   </div>
                   <div className="min-w-0">
                     <h3 className="font-semibold text-gray-900">{request.title}</h3>
                     <p className="text-sm text-gray-600 mt-1 line-clamp-2">{request.description}</p>
                     <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 text-sm text-gray-500">
-                      <span className="truncate">{request.propertyId?.name} - Unit {request.unitId?.unitNumber}</span>
+                      <span className="truncate">
+                        {request.propertyId?.name} - Unit {request.unitId?.unitNumber}
+                      </span>
                       <span className="capitalize">{request.category}</span>
                     </div>
                   </div>
@@ -218,9 +236,7 @@ export default function OwnerMaintenance() {
                     <Badge variant={getPriorityBadge(request.priority)}>{request.priority}</Badge>
                     <Badge variant={getStatusBadge(request.status)}>{request.status.replace('_', ' ')}</Badge>
                   </div>
-                  <p className="text-xs text-gray-500">
-                    {new Date(request.createdAt).toLocaleDateString()}
-                  </p>
+                  <p className="text-xs text-gray-500">{new Date(request.createdAt).toLocaleDateString()}</p>
                 </div>
               </div>
             </Card>
@@ -234,6 +250,8 @@ export default function OwnerMaintenance() {
         onClose={() => {
           setShowDetailModal(false);
           setSelectedRequest(null);
+          setShowCompleteConfirm(false);
+          setCompletionCost('');
         }}
         title="Maintenance Request Details"
         size="lg"
@@ -246,9 +264,7 @@ export default function OwnerMaintenance() {
                 <p className="text-gray-600">{selectedRequest.description}</p>
               </div>
               <div className="flex gap-2">
-                <Badge variant={getPriorityBadge(selectedRequest.priority)}>
-                  {selectedRequest.priority}
-                </Badge>
+                <Badge variant={getPriorityBadge(selectedRequest.priority)}>{selectedRequest.priority}</Badge>
                 <Badge variant={getStatusBadge(selectedRequest.status)}>
                   {selectedRequest.status.replace('_', ' ')}
                 </Badge>
@@ -270,9 +286,7 @@ export default function OwnerMaintenance() {
               </div>
               <div className="flex justify-between sm:block">
                 <p className="text-gray-500">Submitted</p>
-                <p className="font-medium">
-                  {new Date(selectedRequest.createdAt).toLocaleString()}
-                </p>
+                <p className="font-medium">{new Date(selectedRequest.createdAt).toLocaleString()}</p>
               </div>
             </div>
 
@@ -286,9 +300,7 @@ export default function OwnerMaintenance() {
                       <div className="h-2 w-2 mt-2 rounded-full bg-primary-500" />
                       <div>
                         <p className="font-medium capitalize">{entry.status.replace('_', ' ')}</p>
-                        <p className="text-sm text-gray-500">
-                          {new Date(entry.timestamp).toLocaleString()}
-                        </p>
+                        <p className="text-sm text-gray-500">{new Date(entry.timestamp).toLocaleString()}</p>
                         {entry.note && <p className="text-sm text-gray-600">{entry.note}</p>}
                       </div>
                     </div>
@@ -305,10 +317,12 @@ export default function OwnerMaintenance() {
                   {selectedRequest.status === 'submitted' && (
                     <Button
                       size="sm"
-                      onClick={() => updateStatusMutation.mutate({
-                        id: selectedRequest._id,
-                        status: 'acknowledged',
-                      })}
+                      onClick={() =>
+                        updateStatusMutation.mutate({
+                          id: selectedRequest._id,
+                          status: 'acknowledged',
+                        })
+                      }
                       loading={updateStatusMutation.isPending}
                     >
                       Acknowledge
@@ -317,40 +331,68 @@ export default function OwnerMaintenance() {
                   {(selectedRequest.status === 'acknowledged' || selectedRequest.status === 'submitted') && (
                     <Button
                       size="sm"
-                      onClick={() => updateStatusMutation.mutate({
-                        id: selectedRequest._id,
-                        status: 'in_progress',
-                      })}
+                      onClick={() =>
+                        updateStatusMutation.mutate({
+                          id: selectedRequest._id,
+                          status: 'in_progress',
+                        })
+                      }
                       loading={updateStatusMutation.isPending}
                     >
                       Start Work
                     </Button>
                   )}
-                  {selectedRequest.status === 'in_progress' && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => {
-                        const cost = prompt('Enter actual cost (ETB):');
-                        if (cost) {
-                          completeMutation.mutate({
-                            id: selectedRequest._id,
-                            actualCost: Number(cost),
-                          });
-                        }
-                      }}
-                      loading={completeMutation.isPending}
-                    >
+                  {selectedRequest.status === 'in_progress' && !showCompleteConfirm && (
+                    <Button size="sm" variant="secondary" onClick={() => setShowCompleteConfirm(true)}>
                       Mark Complete
                     </Button>
+                  )}
+                  {selectedRequest.status === 'in_progress' && showCompleteConfirm && (
+                    <div className="flex items-end gap-2 w-full">
+                      <div className="flex-1">
+                        <Input
+                          label="Actual Cost (ETB)"
+                          type="number"
+                          placeholder="e.g. 500"
+                          value={completionCost}
+                          onChange={(e) => setCompletionCost(e.target.value)}
+                        />
+                      </div>
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          completeMutation.mutate({
+                            id: selectedRequest._id,
+                            actualCost: Number(completionCost) || 0,
+                          });
+                          setShowCompleteConfirm(false);
+                          setCompletionCost('');
+                        }}
+                        loading={completeMutation.isPending}
+                      >
+                        Confirm
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setShowCompleteConfirm(false);
+                          setCompletionCost('');
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
                   )}
                   <Button
                     size="sm"
                     variant="danger"
-                    onClick={() => updateStatusMutation.mutate({
-                      id: selectedRequest._id,
-                      status: 'cancelled',
-                    })}
+                    onClick={() =>
+                      updateStatusMutation.mutate({
+                        id: selectedRequest._id,
+                        status: 'cancelled',
+                      })
+                    }
                   >
                     Cancel
                   </Button>

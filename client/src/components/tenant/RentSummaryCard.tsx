@@ -1,6 +1,6 @@
 import React from 'react';
 import { DollarSign, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
-import { Card } from '../ui/Card';
+import Card from '../ui/Card';
 import type { Payment } from '../../types';
 
 interface RentSummaryCardProps {
@@ -16,13 +16,9 @@ export const RentSummaryCard: React.FC<RentSummaryCardProps> = ({ payments, mont
     (p) => p.month === currentMonth && p.year === currentYear && p.type === 'rent'
   );
 
-  const totalPaid = payments
-    .filter((p) => p.status === 'completed')
-    .reduce((sum, p) => sum + p.amount, 0);
+  const totalPaid = payments.filter((p) => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0);
 
-  const pendingAmount = payments
-    .filter((p) => p.status === 'pending')
-    .reduce((sum, p) => sum + p.amount, 0);
+  const pendingAmount = payments.filter((p) => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
 
   const isPaid = thisMonthPayment?.status === 'completed';
 

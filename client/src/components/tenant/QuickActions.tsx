@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CreditCard, Wrench, FileText, Bell, Phone, MessageSquare } from 'lucide-react';
-import { Card } from '../ui/Card';
+import { CreditCard, Wrench, FileText, Bell } from 'lucide-react';
+import Card from '../ui/Card';
 
 interface QuickAction {
   label: string;
@@ -55,9 +55,7 @@ export const QuickActions: React.FC = () => {
             onClick={() => navigate(action.path)}
             className="flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-gray-50 transition-colors border border-gray-100"
           >
-            <div className={`p-3 rounded-full ${action.color}`}>
-              {action.icon}
-            </div>
+            <div className={`p-3 rounded-full ${action.color}`}>{action.icon}</div>
             <span className="text-sm font-medium text-gray-900">{action.label}</span>
             <span className="text-xs text-gray-500">{action.description}</span>
           </button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Calendar, FileText, Home } from 'lucide-react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
 import type { Tenant } from '../../types';
 
 interface LeaseInfoCardProps {
@@ -25,9 +25,7 @@ export const LeaseInfoCard: React.FC<LeaseInfoCardProps> = ({ tenant }) => {
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Lease Information</h3>
-        <Badge
-          variant={isExpired ? 'danger' : isExpiringSoon ? 'warning' : 'success'}
-        >
+        <Badge variant={isExpired ? 'danger' : isExpiringSoon ? 'warning' : 'success'}>
           {isExpired ? 'Expired' : isExpiringSoon ? 'Expiring Soon' : tenant.status}
         </Badge>
       </div>
@@ -38,8 +36,8 @@ export const LeaseInfoCard: React.FC<LeaseInfoCardProps> = ({ tenant }) => {
           <div>
             <p className="text-sm text-gray-500">Property / Unit</p>
             <p className="text-sm font-medium">
-              {typeof tenant.propertyId === 'object' ? tenant.propertyId.name : 'N/A'} -{' '}
-              Unit {typeof tenant.unitId === 'object' ? tenant.unitId.unitNumber : 'N/A'}
+              {typeof tenant.propertyId === 'object' ? tenant.propertyId.name : 'N/A'} - Unit{' '}
+              {typeof tenant.unitId === 'object' ? tenant.unitId.unitNumber : 'N/A'}
             </p>
           </div>
         </div>
@@ -57,9 +55,7 @@ export const LeaseInfoCard: React.FC<LeaseInfoCardProps> = ({ tenant }) => {
         <div className="flex items-center gap-3">
           <FileText className="h-4 w-4 text-gray-400" />
           <div>
-            <p className="text-sm text-gray-500">
-              {isExpired ? 'Expired' : `${daysRemaining} days remaining`}
-            </p>
+            <p className="text-sm text-gray-500">{isExpired ? 'Expired' : `${daysRemaining} days remaining`}</p>
           </div>
         </div>
 

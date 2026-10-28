@@ -144,14 +144,19 @@ export default function OccupancyChart({ className = '' }: OccupancyChartProps) 
                             style={{ width: `${propertyRate}%` }}
                           />
                         </div>
-                        <span className={`text-xs font-medium min-w-[3rem] text-right ${
-                          propertyRate >= 90 ? 'text-green-600' :
-                          propertyRate >= 70 ? 'text-yellow-600' : 'text-red-600'
-                        }`}>
+                        <span
+                          className={`text-xs font-medium min-w-[3rem] text-right ${
+                            propertyRate >= 90
+                              ? 'text-green-600'
+                              : propertyRate >= 70
+                                ? 'text-yellow-600'
+                                : 'text-red-600'
+                          }`}
+                        >
                           {propertyRate.toFixed(0)}%
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">{property.address.city}</p>
+                      <p className="text-xs text-gray-500 mt-1">{property.address?.city}</p>
                     </div>
                   );
                 })}

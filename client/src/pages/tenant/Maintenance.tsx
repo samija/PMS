@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Wrench, Plus, Star, MessageSquare } from 'lucide-react';
+import { Wrench, Plus, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
@@ -151,9 +151,7 @@ export default function TenantMaintenance() {
         <Card className="text-center py-12">
           <Wrench className="h-12 w-12 text-gray-400 mx-auto" />
           <h3 className="mt-4 text-lg font-medium text-gray-900">No maintenance requests</h3>
-          <p className="mt-2 text-gray-600">
-            Need something fixed? Submit a maintenance request.
-          </p>
+          <p className="mt-2 text-gray-600">Need something fixed? Submit a maintenance request.</p>
           <Button className="mt-4" onClick={() => setShowCreateModal(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Submit Request
@@ -172,20 +170,28 @@ export default function TenantMaintenance() {
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div className="flex gap-4 min-w-0">
-                  <div className={`p-3 rounded-lg flex-shrink-0 ${
-                    request.priority === 'emergency' ? 'bg-red-100' :
-                    request.priority === 'high' ? 'bg-orange-100' : 'bg-gray-100'
-                  }`}>
-                    <Wrench className={`h-6 w-6 ${
-                      request.priority === 'emergency' ? 'text-red-600' :
-                      request.priority === 'high' ? 'text-orange-600' : 'text-gray-600'
-                    }`} />
+                  <div
+                    className={`p-3 rounded-lg flex-shrink-0 ${
+                      request.priority === 'emergency'
+                        ? 'bg-red-100'
+                        : request.priority === 'high'
+                          ? 'bg-orange-100'
+                          : 'bg-gray-100'
+                    }`}
+                  >
+                    <Wrench
+                      className={`h-6 w-6 ${
+                        request.priority === 'emergency'
+                          ? 'text-red-600'
+                          : request.priority === 'high'
+                            ? 'text-orange-600'
+                            : 'text-gray-600'
+                      }`}
+                    />
                   </div>
                   <div className="min-w-0">
                     <h3 className="font-semibold text-gray-900">{request.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                      {request.description}
-                    </p>
+                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">{request.description}</p>
                     <p className="text-sm text-gray-500 mt-2 capitalize">
                       {request.category} | Submitted {new Date(request.createdAt).toLocaleDateString()}
                     </p>
@@ -195,9 +201,7 @@ export default function TenantMaintenance() {
                 <div className="flex sm:flex-col items-center sm:items-end gap-2 pl-14 sm:pl-0">
                   <div className="flex gap-2 flex-wrap">
                     <Badge variant={getPriorityBadge(request.priority)}>{request.priority}</Badge>
-                    <Badge variant={getStatusBadge(request.status)}>
-                      {request.status.replace('_', ' ')}
-                    </Badge>
+                    <Badge variant={getStatusBadge(request.status)}>{request.status.replace('_', ' ')}</Badge>
                   </div>
                   {request.status === 'completed' && !request.tenantRating && (
                     <Button
@@ -216,10 +220,7 @@ export default function TenantMaintenance() {
                   {request.tenantRating && (
                     <div className="flex items-center text-yellow-500">
                       {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${i < request.tenantRating ? 'fill-current' : ''}`}
-                        />
+                        <Star key={i} className={`h-4 w-4 ${i < request.tenantRating ? 'fill-current' : ''}`} />
                       ))}
                     </div>
                   )}
@@ -231,11 +232,7 @@ export default function TenantMaintenance() {
       )}
 
       {/* Create Request Modal */}
-      <Modal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        title="Submit Maintenance Request"
-      >
+      <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} title="Submit Maintenance Request">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Title"
@@ -272,7 +269,12 @@ export default function TenantMaintenance() {
           </div>
 
           <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-            <Button type="button" variant="secondary" onClick={() => setShowCreateModal(false)} className="w-full sm:w-auto">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setShowCreateModal(false)}
+              className="w-full sm:w-auto"
+            >
               Cancel
             </Button>
             <Button type="submit" loading={createMutation.isPending} className="w-full sm:w-auto">
@@ -300,9 +302,7 @@ export default function TenantMaintenance() {
                 <p className="text-gray-600">{selectedRequest.description}</p>
               </div>
               <div className="flex gap-2">
-                <Badge variant={getPriorityBadge(selectedRequest.priority)}>
-                  {selectedRequest.priority}
-                </Badge>
+                <Badge variant={getPriorityBadge(selectedRequest.priority)}>{selectedRequest.priority}</Badge>
                 <Badge variant={getStatusBadge(selectedRequest.status)}>
                   {selectedRequest.status.replace('_', ' ')}
                 </Badge>
@@ -316,24 +316,18 @@ export default function TenantMaintenance() {
               </div>
               <div className="flex justify-between sm:block">
                 <p className="text-gray-500">Submitted</p>
-                <p className="font-medium">
-                  {new Date(selectedRequest.createdAt).toLocaleString()}
-                </p>
+                <p className="font-medium">{new Date(selectedRequest.createdAt).toLocaleString()}</p>
               </div>
               {selectedRequest.scheduledDate && (
                 <div className="flex justify-between sm:block">
                   <p className="text-gray-500">Scheduled</p>
-                  <p className="font-medium">
-                    {new Date(selectedRequest.scheduledDate).toLocaleString()}
-                  </p>
+                  <p className="font-medium">{new Date(selectedRequest.scheduledDate).toLocaleString()}</p>
                 </div>
               )}
               {selectedRequest.completedAt && (
                 <div className="flex justify-between sm:block">
                   <p className="text-gray-500">Completed</p>
-                  <p className="font-medium">
-                    {new Date(selectedRequest.completedAt).toLocaleString()}
-                  </p>
+                  <p className="font-medium">{new Date(selectedRequest.completedAt).toLocaleString()}</p>
                 </div>
               )}
             </div>
@@ -348,9 +342,7 @@ export default function TenantMaintenance() {
                       <div className="h-2 w-2 mt-2 rounded-full bg-primary-500" />
                       <div>
                         <p className="font-medium capitalize">{entry.status.replace('_', ' ')}</p>
-                        <p className="text-sm text-gray-500">
-                          {new Date(entry.timestamp).toLocaleString()}
-                        </p>
+                        <p className="text-sm text-gray-500">{new Date(entry.timestamp).toLocaleString()}</p>
                         {entry.note && <p className="text-sm text-gray-600">{entry.note}</p>}
                       </div>
                     </div>
@@ -386,9 +378,7 @@ export default function TenantMaintenance() {
                     />
                   ))}
                 </div>
-                {selectedRequest.tenantFeedback && (
-                  <p className="text-gray-600">{selectedRequest.tenantFeedback}</p>
-                )}
+                {selectedRequest.tenantFeedback && <p className="text-gray-600">{selectedRequest.tenantFeedback}</p>}
               </div>
             )}
           </div>
@@ -426,9 +416,7 @@ export default function TenantMaintenance() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Feedback (optional)
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Feedback (optional)</label>
             <textarea
               className="input min-h-[100px]"
               placeholder="Share your experience..."

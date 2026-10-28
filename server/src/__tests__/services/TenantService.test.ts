@@ -32,11 +32,20 @@ describe('TenantService', () => {
     mockUnitModel = createMockUnitModel();
     mockTenantModel = createMockTenantModel();
 
+    const mockOwnerSettingsModel = {
+      findOne: jest.fn().mockResolvedValue(null),
+    };
+    const mockIdentityService = {
+      assertCanActivateTenant: jest.fn(),
+    };
+
     tenantService = new TenantService(
       mockUserModel as any,
       mockTenantModel as any,
       mockUnitModel as any,
-      mockPropertyModel as any
+      mockPropertyModel as any,
+      mockOwnerSettingsModel as any,
+      mockIdentityService as any
     );
   });
 
@@ -204,9 +213,7 @@ describe('TenantService', () => {
 
       // Act & Assert
       await expect(tenantService.createTenant(createTenantData)).rejects.toThrow(NotFoundError);
-      await expect(tenantService.createTenant(createTenantData)).rejects.toThrow(
-        'Property with ID'
-      );
+      await expect(tenantService.createTenant(createTenantData)).rejects.toThrow('Property with ID');
     });
 
     it('should throw NotFoundError when unit does not exist', async () => {
@@ -241,9 +248,7 @@ describe('TenantService', () => {
 
       // Act & Assert
       await expect(tenantService.createTenant(createTenantData)).rejects.toThrow(BadRequestError);
-      await expect(tenantService.createTenant(createTenantData)).rejects.toThrow(
-        'Unit is not available'
-      );
+      await expect(tenantService.createTenant(createTenantData)).rejects.toThrow('Unit is not available');
     });
 
     it('should throw BadRequestError when unit is under maintenance', async () => {
@@ -263,9 +268,7 @@ describe('TenantService', () => {
 
       // Act & Assert
       await expect(tenantService.createTenant(createTenantData)).rejects.toThrow(BadRequestError);
-      await expect(tenantService.createTenant(createTenantData)).rejects.toThrow(
-        'Unit is not available'
-      );
+      await expect(tenantService.createTenant(createTenantData)).rejects.toThrow('Unit is not available');
     });
   });
 
@@ -297,9 +300,7 @@ describe('TenantService', () => {
 
     it('should filter tenants by status', async () => {
       // Arrange
-      const mockTenants = [
-        createMockTenant({ ownerId: new Types.ObjectId(ownerId), status: 'active' }),
-      ];
+      const mockTenants = [createMockTenant({ ownerId: new Types.ObjectId(ownerId), status: 'active' })];
 
       const chainableQuery = createChainableQuery(mockTenants);
       mockTenantModel.find.mockReturnValue(chainableQuery);
@@ -313,9 +314,7 @@ describe('TenantService', () => {
       });
 
       // Assert
-      expect(mockTenantModel.find).toHaveBeenCalledWith(
-        expect.objectContaining({ status: 'active' })
-      );
+      expect(mockTenantModel.find).toHaveBeenCalledWith(expect.objectContaining({ status: 'active' }));
     });
 
     it('should filter tenants by property', async () => {
@@ -502,9 +501,7 @@ describe('TenantService', () => {
       mockTenantModel.findOne.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(
-        tenantService.updateTenant(tenantId, ownerId, { status: 'active' })
-      ).rejects.toThrow(NotFoundError);
+      await expect(tenantService.updateTenant(tenantId, ownerId, { status: 'active' })).rejects.toThrow(NotFoundError);
     });
   });
 

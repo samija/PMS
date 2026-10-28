@@ -10,6 +10,8 @@ process.env.JWT_EXPIRES_IN = '1d';
 process.env.BASE_URL = 'http://localhost:5000';
 process.env.FRONTEND_URL = 'http://localhost:5173';
 process.env.DEFAULT_PAYMENT_GATEWAY = 'chapa';
+process.env.IDENTITY_ENCRYPTION_KEY = 'a'.repeat(64);
+process.env.SIGNATURE_HMAC_KEY = 'b'.repeat(64);
 
 // Mock console methods if needed (optional - uncomment to suppress logs during tests)
 // jest.spyOn(console, 'log').mockImplementation(() => {});

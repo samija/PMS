@@ -207,6 +207,7 @@ export const createMockUnitModel = () => {
     countDocuments: jest.fn(),
     create: jest.fn(),
     deleteMany: jest.fn(),
+    aggregate: jest.fn().mockResolvedValue([]),
   };
   return mockUnitModel;
 };
