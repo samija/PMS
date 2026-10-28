@@ -1,9 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import fs from 'fs';
 
-// Resolve react from the monorepo root to ensure a single copy across all packages
-const reactDir = new URL('../node_modules/react', import.meta.url).pathname;
-const reactDomDir = new URL('../node_modules/react-dom', import.meta.url).pathname;
+// In a monorepo workspace, resolve react from the root to ensure a single copy.
+// In standalone builds (e.g., Docker), react is in the local node_modules.
+const rootReactPath = new URL('../node_modules/react', import.meta.url).pathname;
+const useRootAlias = fs.existsSync(rootReactPath);
+
+const reactDir = useRootAlias ? rootReactPath : undefined;
+const reactDomDir = useRootAlias ? new URL('../node_modules/react-dom', import.meta.url).pathname : undefined;
 
 export default defineConfig({
   plugins: [react()],
@@ -17,13 +22,15 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: {
-      'react/jsx-runtime': `${reactDir}/jsx-runtime.js`,
-      'react/jsx-dev-runtime': `${reactDir}/jsx-dev-runtime.js`,
-      'react-dom/client': `${reactDomDir}/client.js`,
-      'react-dom': reactDomDir,
-      react: reactDir,
-    },
+    ...(reactDir && reactDomDir ? {
+      alias: {
+        'react/jsx-runtime': `${reactDir}/jsx-runtime.js`,
+        'react/jsx-dev-runtime': `${reactDir}/jsx-dev-runtime.js`,
+        'react-dom/client': `${reactDomDir}/client.js`,
+        'react-dom': reactDomDir,
+        react: reactDir,
+      },
+    } : {}),
     dedupe: ['react', 'react-dom'],
   },
   test: {
