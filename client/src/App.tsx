@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
-import { Loader2 } from 'lucide-react';
 
 // Layouts (static imports - small, always needed)
 import DashboardLayout from './components/layout/DashboardLayout';
@@ -56,12 +55,31 @@ const LeaseList = React.lazy(() => import('./pages/owner/LeaseList'));
 
 // Public Pages (lazy)
 const Home = React.lazy(() => import('./pages/public/Home'));
+const NotFound = React.lazy(() => import('./pages/public/NotFound'));
 const Listings = React.lazy(() => import('./pages/public/Listings'));
 const ListingDetail = React.lazy(() => import('./pages/public/ListingDetail'));
 
 const PageLoader = () => (
-  <div className="flex items-center justify-center h-screen">
-    <Loader2 className="animate-spin w-8 h-8 text-gray-500" />
+  <div className="flex flex-col items-center justify-center h-screen bg-stone-950 gap-5">
+    {/* Branded logo mark */}
+    <div className="animate-pulse">
+      <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-9 h-9 text-stone-950"
+        >
+          <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+          <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+        </svg>
+      </div>
+    </div>
+
+    {/* Loading label */}
+    <span className="text-stone-400 text-sm tracking-wide" style={{ fontFamily: '"Outfit", sans-serif' }}>
+      Loading...
+    </span>
   </div>
 );
 
@@ -93,8 +111,14 @@ function App() {
         </Route>
 
         {/* Auth Routes */}
-        <Route path="/login" element={isAuthenticated ? <Navigate to={user?.role === 'owner' ? '/owner' : '/tenant'} /> : <Login />} />
-        <Route path="/register" element={isAuthenticated ? <Navigate to={user?.role === 'owner' ? '/owner' : '/tenant'} /> : <Register />} />
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to={user?.role === 'owner' ? '/owner' : '/tenant'} /> : <Login />}
+        />
+        <Route
+          path="/register"
+          element={isAuthenticated ? <Navigate to={user?.role === 'owner' ? '/owner' : '/tenant'} /> : <Register />}
+        />
         <Route path="/auth/callback" element={<AuthCallback />} />
 
         {/* Owner Routes */}
@@ -170,7 +194,7 @@ function App() {
         </Route>
 
         {/* Catch all */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

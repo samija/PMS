@@ -265,7 +265,7 @@ export default function Home() {
             </div>
 
             <h1
-              className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.9] tracking-tight animate-up opacity-0 delay-1"
+              className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.9] tracking-tight animate-up opacity-0 delay-1"
               style={{ animationFillMode: 'forwards' }}
             >
               Property Management, <span className="text-gradient">Reimagined</span>{' '}
@@ -302,7 +302,7 @@ export default function Home() {
 
             {/* Trust markers */}
             <div
-              className="flex flex-wrap items-center gap-8 mt-14 animate-up opacity-0 delay-4"
+              className="flex flex-wrap items-center gap-x-6 gap-y-4 sm:gap-x-8 mt-14 animate-up opacity-0 delay-4"
               style={{ animationFillMode: 'forwards' }}
             >
               {[
