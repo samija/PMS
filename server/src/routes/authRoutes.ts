@@ -78,7 +78,18 @@ router.post('/login', ValidationMiddleware.validate(LoginDto), authController.lo
  *       302:
  *         description: Redirect to Google OAuth
  */
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+const googleConfigured = !!(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
+
+router.get(
+  '/google',
+  (req, res, next) => {
+    if (!googleConfigured) {
+      return res.status(501).json({ success: false, message: 'Google login is not configured' });
+    }
+    next();
+  },
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
 
 /**
  * @swagger
@@ -93,6 +104,12 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
  */
 router.get(
   '/google/callback',
+  (req, res, next) => {
+    if (!googleConfigured) {
+      return res.status(501).json({ success: false, message: 'Google login is not configured' });
+    }
+    next();
+  },
   passport.authenticate('google', { session: false, failureRedirect: '/login' }),
   authController.googleCallback
 );

@@ -62,10 +62,6 @@ export default function Register() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = '/api/auth/google';
-  };
-
   return (
     <>
       {/* Google Fonts */}
@@ -189,12 +185,15 @@ export default function Register() {
               {/* Google button */}
               <button
                 type="button"
-                onClick={handleGoogleLogin}
-                className="w-full flex items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-stone-200 transition-all duration-200 hover:bg-white/10 active:scale-[0.98]"
+                disabled
+                className="w-full flex items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-stone-400"
                 style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  opacity: 0.5,
+                  cursor: 'not-allowed',
                 }}
+                title="Google Sign-In is not available yet"
               >
                 <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
                   <path
@@ -214,7 +213,7 @@ export default function Register() {
                     d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
                   />
                 </svg>
-                Continue with Google
+                Google Sign-In (Coming Soon)
               </button>
 
               {/* Divider */}

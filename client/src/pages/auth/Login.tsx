@@ -29,10 +29,6 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = '/api/auth/google';
-  };
-
   return (
     <>
       <style>{`
@@ -336,7 +332,13 @@ export default function Login() {
               </div>
 
               {/* Google */}
-              <button type="button" className="google-btn" onClick={handleGoogleLogin}>
+              <button
+                type="button"
+                className="google-btn"
+                disabled
+                style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                title="Google Sign-In is not available yet"
+              >
                 <svg width="18" height="18" viewBox="0 0 24 24">
                   <path
                     fill="#EA4335"
@@ -355,7 +357,7 @@ export default function Login() {
                     d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
                   />
                 </svg>
-                Continue with Google
+                Google Sign-In (Coming Soon)
               </button>
             </div>
 
