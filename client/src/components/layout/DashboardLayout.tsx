@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Building2,
@@ -25,6 +25,7 @@ import {
   FileText,
   Fingerprint,
   FolderOpen,
+  Bell,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { usePropertyStore } from '../../store/propertyStore';
@@ -41,6 +42,11 @@ export default function DashboardLayout() {
 
   const isOwner = user?.role === 'owner' || user?.role === 'admin';
   const basePath = isOwner ? '/owner' : '/tenant';
+
+  // Close user menu on route change
+  useEffect(() => {
+    setUserMenuOpen(false);
+  }, [location]);
 
   const globalNavItems = [
     { name: 'Dashboard', path: '/owner', icon: LayoutDashboard },
@@ -82,9 +88,10 @@ export default function DashboardLayout() {
   };
 
   const renderNavItem = (item: { name: string; path: string; icon: any }) => {
-    const isActive = item.path === basePath
-      ? location.pathname === item.path
-      : location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+    const isActive =
+      item.path === basePath
+        ? location.pathname === item.path
+        : location.pathname === item.path || location.pathname.startsWith(item.path + '/');
     return (
       <Link
         key={item.path}
@@ -92,24 +99,27 @@ export default function DashboardLayout() {
         onClick={() => setSidebarOpen(false)}
         aria-label={item.name}
         aria-current={isActive ? 'page' : undefined}
-        className={`flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-colors min-h-[44px] ${
-          isActive
-            ? 'bg-primary-50 text-primary-600'
-            : 'text-gray-600 hover:bg-gray-50'
+        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 min-h-[42px] group ${
+          isActive ? 'bg-amber-500/10 text-amber-400' : 'text-stone-400 hover:text-white hover:bg-white/5'
         }`}
       >
-        <item.icon className="h-5 w-5" aria-hidden="true" />
-        <span className="font-medium text-sm">{item.name}</span>
+        <item.icon
+          className={`h-[18px] w-[18px] flex-shrink-0 ${isActive ? 'text-amber-400' : 'text-stone-500 group-hover:text-stone-300'}`}
+          aria-hidden="true"
+        />
+        <span className="font-medium text-[13px]">{item.name}</span>
       </Link>
     );
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-stone-100" style={{ fontFamily: "'Outfit', system-ui, sans-serif" }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap');`}</style>
+
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
@@ -118,43 +128,60 @@ export default function DashboardLayout() {
       {/* Sidebar */}
       <aside
         aria-label="Main navigation"
-        aria-hidden={!sidebarOpen && undefined}
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 lg:translate-x-0 flex flex-col ${
+        className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-stone-950 transform transition-transform duration-300 ease-out lg:translate-x-0 flex flex-col border-r border-white/5 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b flex-shrink-0">
-          <Link to={basePath} className="flex items-center space-x-2">
-            <Building2 className="h-8 w-8 text-primary-600" />
-            <span className="text-xl font-bold text-gray-900">Enderase</span>
+        {/* Logo */}
+        <div className="flex items-center justify-between h-16 px-5 flex-shrink-0">
+          <Link to={basePath} className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-600/20">
+              <svg
+                viewBox="0 0 24 24"
+                className="w-4 h-4 text-stone-950"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            </div>
+            <span style={{ fontFamily: "'DM Serif Display', serif" }} className="text-lg text-white">
+              Enderase
+            </span>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-gray-500 hover:text-gray-700 p-2 -mr-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="lg:hidden text-stone-400 hover:text-white p-1.5 rounded-lg hover:bg-white/5 min-w-[36px] min-h-[36px] flex items-center justify-center"
             aria-label="Close menu"
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Property Switcher (owner only) */}
-        {isOwner && <PropertySwitcher onSelect={() => setSidebarOpen(false)} />}
+        {isOwner && (
+          <div className="px-3 py-2">
+            <PropertySwitcher onSelect={() => setSidebarOpen(false)} />
+          </div>
+        )}
 
-        {/* Scrollable nav area */}
-        <nav role="navigation" aria-label="Sidebar navigation" className="flex-1 overflow-y-auto p-4 space-y-1">
+        {/* Scrollable nav */}
+        <nav role="navigation" aria-label="Sidebar navigation" className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5">
           {isOwner ? (
             <>
-              {/* Global Section */}
-              <p className="px-4 pt-1 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <p className="px-3 pt-3 pb-2 text-[10px] font-semibold text-stone-600 uppercase tracking-[0.15em]">
                 General
               </p>
               {globalNavItems.map(renderNavItem)}
 
-              {/* Property Section */}
               {selectedProperty && (
                 <>
-                  <div className="my-3 border-t border-gray-200" />
-                  <p className="px-4 pt-1 pb-2 text-xs font-semibold text-primary-500 uppercase tracking-wider truncate">
+                  <div className="my-3 mx-3 border-t border-white/5" />
+                  <p className="px-3 pt-1 pb-2 text-[10px] font-semibold text-amber-600/80 uppercase tracking-[0.15em] truncate">
                     {selectedProperty.name}
                   </p>
                   {propertyNavItems.map(renderNavItem)}
@@ -162,90 +189,127 @@ export default function DashboardLayout() {
               )}
             </>
           ) : (
-            tenantNavItems.map(renderNavItem)
+            <>
+              <p className="px-3 pt-3 pb-2 text-[10px] font-semibold text-stone-600 uppercase tracking-[0.15em]">
+                Menu
+              </p>
+              {tenantNavItems.map(renderNavItem)}
+            </>
           )}
         </nav>
 
-        <div className="flex-shrink-0 p-4 border-t">
+        {/* User info + logout */}
+        <div className="flex-shrink-0 p-3 border-t border-white/5">
+          <div className="flex items-center gap-3 px-3 py-2 mb-2">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-stone-950 font-bold text-xs flex-shrink-0">
+              {user?.name
+                ?.split(' ')
+                .map((n) => n[0])
+                .join('')
+                .toUpperCase() || 'U'}
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-white truncate">{user?.name}</p>
+              <p className="text-[11px] text-stone-500 capitalize">{user?.role}</p>
+            </div>
+          </div>
           <button
             onClick={handleLogout}
             aria-label="Logout"
-            className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors min-h-[48px]"
+            className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-stone-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 min-h-[42px]"
           >
-            <LogOut className="h-5 w-5" aria-hidden="true" />
-            <span className="font-medium">Logout</span>
+            <LogOut className="h-[18px] w-[18px]" aria-hidden="true" />
+            <span className="font-medium text-[13px]">Logout</span>
           </button>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className="lg:pl-[260px]">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 bg-white shadow-sm">
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-stone-200/60">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-gray-500 hover:text-gray-700 p-2 -ml-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
-              aria-label="Open menu"
-            >
-              <Menu className="h-6 w-6" />
-            </button>
-
-            <div className="flex-1" />
-
-            {/* Notification bell */}
-            <NotificationBell />
-
-            {/* User menu */}
-            <div className="relative">
+            <div className="flex items-center gap-4">
               <button
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                aria-label={`User menu for ${user?.name}`}
-                aria-expanded={userMenuOpen}
-                aria-haspopup="menu"
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50"
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden text-stone-500 hover:text-stone-700 p-2 -ml-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-stone-100"
+                aria-label="Open menu"
               >
-                <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
-                  {user?.avatar ? (
-                    <img
-                      src={user.avatar}
-                      alt={user.name}
-                      className="h-8 w-8 rounded-full object-cover"
-                    />
-                  ) : (
-                    <User className="h-5 w-5 text-primary-600" aria-hidden="true" />
-                  )}
-                </div>
-                <div className="hidden sm:block text-left">
-                  <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                  <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
-                </div>
-                <ChevronDown className="h-4 w-4 text-gray-400" aria-hidden="true" />
+                <Menu className="h-5 w-5" />
               </button>
+              {/* Page breadcrumb */}
+              <div className="hidden sm:block">
+                <p className="text-sm text-stone-500">
+                  {location.pathname === basePath
+                    ? 'Welcome back'
+                    : location.pathname
+                        .split('/')
+                        .pop()
+                        ?.replace(/-/g, ' ')
+                        .replace(/^\w/, (c) => c.toUpperCase())}
+                </p>
+              </div>
+            </div>
 
-              {userMenuOpen && (
-                <div
-                  role="menu"
-                  aria-label="User account menu"
-                  className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-1"
+            <div className="flex items-center gap-2">
+              {/* Notification bell */}
+              <NotificationBell />
+
+              {/* User menu */}
+              <div className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  aria-label={`User menu for ${user?.name}`}
+                  aria-expanded={userMenuOpen}
+                  aria-haspopup="menu"
+                  className="flex items-center gap-3 py-1.5 px-2 rounded-xl hover:bg-stone-100 transition-colors"
                 >
-                  <Link
-                    to={`${basePath}/profile`}
-                    role="menuitem"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    Profile Settings
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    role="menuitem"
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-stone-950 font-bold text-xs">
+                    {user?.name
+                      ?.split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .toUpperCase() || 'U'}
+                  </div>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium text-stone-800">{user?.name}</p>
+                  </div>
+                  <ChevronDown className="h-4 w-4 text-stone-400 hidden sm:block" aria-hidden="true" />
+                </button>
+
+                {userMenuOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setUserMenuOpen(false)} />
+                    <div
+                      role="menu"
+                      aria-label="User account menu"
+                      className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-stone-200/60 py-1.5 z-20"
+                    >
+                      <div className="px-4 py-2 border-b border-stone-100">
+                        <p className="text-sm font-medium text-stone-800">{user?.name}</p>
+                        <p className="text-xs text-stone-400">{user?.email}</p>
+                      </div>
+                      <Link
+                        to={`${basePath}/settings`}
+                        role="menuitem"
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-800 transition-colors"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        <Settings className="h-4 w-4" />
+                        Settings
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        role="menuitem"
+                        className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </header>
