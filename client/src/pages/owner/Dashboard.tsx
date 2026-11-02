@@ -1,13 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Building,
-  Users,
-  CreditCard,
-  Wrench,
-  BarChart3,
-  LayoutGrid,
-} from 'lucide-react';
+import { Building, Users, CreditCard, Wrench, BarChart3, LayoutGrid } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { StatCard, PropertyHealthGrid, ActivityFeed, QuickActions } from '../../components/dashboard';
 import { RevenueChart, OccupancyChart, MaintenanceOverview, TenantSummary } from '../../components/analytics';
@@ -58,8 +51,8 @@ export default function OwnerDashboard() {
       title: 'Total Properties',
       value: totalProperties,
       icon: Building,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-amber-600',
+      bgColor: 'bg-amber-50',
       link: '/owner/properties',
       progress: { current: totalProperties, max: Math.max(totalProperties, 1) },
     },
@@ -67,8 +60,8 @@ export default function OwnerDashboard() {
       title: 'Active Tenants',
       value: totalTenants,
       icon: Users,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100',
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50',
       link: '/owner/tenants',
       progress: totalUnits > 0 ? { current: occupiedUnits, max: totalUnits } : undefined,
     },
@@ -76,35 +69,44 @@ export default function OwnerDashboard() {
       title: 'Revenue (This Year)',
       value: `${(completedPayments?.total || 0).toLocaleString()} ETB`,
       icon: CreditCard,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100',
+      color: 'text-violet-600',
+      bgColor: 'bg-violet-50',
       link: '/owner/payments',
     },
     {
       title: 'Pending Requests',
       value: pendingRequests,
       icon: Wrench,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100',
+      color: 'text-rose-600',
+      bgColor: 'bg-rose-50',
       link: '/owner/maintenance',
-      progress: maintenanceRequests.length > 0
-        ? { current: maintenanceRequests.length - pendingRequests, max: maintenanceRequests.length }
-        : undefined,
+      progress:
+        maintenanceRequests.length > 0
+          ? { current: maintenanceRequests.length - pendingRequests, max: maintenanceRequests.length }
+          : undefined,
     },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" style={{ fontFamily: "'Outfit', sans-serif" }}>
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl p-6 sm:p-8 text-white">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="relative bg-gradient-to-br from-stone-900 to-stone-800 rounded-2xl p-6 sm:p-8 text-white overflow-hidden">
+        {/* Subtle geometric pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">
+            <h1
+              className="text-2xl sm:text-3xl font-bold text-amber-400"
+              style={{ fontFamily: "'DM Serif Display', serif" }}
+            >
               Welcome back, {user?.name?.split(' ')[0] || 'there'}!
             </h1>
-            <p className="text-primary-100 mt-1">
-              Here's what's happening across your properties today.
-            </p>
+            <p className="text-stone-400 mt-1">Here's what's happening across your properties today.</p>
           </div>
           <QuickActions />
         </div>
@@ -112,13 +114,11 @@ export default function OwnerDashboard() {
 
       {/* View Toggle */}
       <div className="flex items-center justify-end">
-        <div className="flex items-center bg-gray-100 rounded-lg p-1">
+        <div className="flex items-center bg-stone-200/60 rounded-lg p-1">
           <button
             onClick={() => setView('overview')}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              view === 'overview'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+              view === 'overview' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-900'
             }`}
           >
             <LayoutGrid className="h-4 w-4" />
@@ -127,9 +127,7 @@ export default function OwnerDashboard() {
           <button
             onClick={() => setView('analytics')}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              view === 'analytics'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+              view === 'analytics' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-900'
             }`}
           >
             <BarChart3 className="h-4 w-4" />

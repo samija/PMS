@@ -21,6 +21,7 @@ export default function Login() {
 
       setAuth(user, token);
       toast.success('Login successful!');
+      document.body.style.backgroundColor = '#f5f5f4'; /* stone-100 — prevent dark flash */
       navigate(user.role === 'owner' ? '/owner' : '/tenant');
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Login failed');
@@ -68,9 +69,15 @@ export default function Login() {
           cursor: pointer;
           transition: opacity 0.2s, transform 0.15s;
           letter-spacing: 0.01em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
         }
         .amber-btn:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); }
         .amber-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-spinner { animation: spin 0.75s linear infinite; flex-shrink: 0; }
         .google-btn {
           width: 100%;
           padding: 0.8125rem 1rem;
@@ -268,6 +275,7 @@ export default function Login() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    autoFocus
                     autoComplete="email"
                   />
                 </div>
@@ -307,7 +315,25 @@ export default function Login() {
 
                 {/* Submit */}
                 <button type="submit" className="amber-btn" disabled={loading}>
-                  {loading ? 'Signing in…' : 'Sign in'}
+                  {loading ? (
+                    <>
+                      <svg
+                        className="btn-spinner"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      >
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                      </svg>
+                      Signing in…
+                    </>
+                  ) : (
+                    'Sign in'
+                  )}
                 </button>
               </form>
 
