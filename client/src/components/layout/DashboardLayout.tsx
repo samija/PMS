@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Building2,
   LayoutDashboard,
   Building,
   Users,
@@ -11,7 +10,6 @@ import {
   LogOut,
   Menu,
   X,
-  User,
   ChevronDown,
   Settings,
   Calendar,
@@ -25,7 +23,6 @@ import {
   FileText,
   Fingerprint,
   FolderOpen,
-  Bell,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { usePropertyStore } from '../../store/propertyStore';
